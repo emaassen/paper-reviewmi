@@ -1,0 +1,25 @@
+# writing files
+/submission/
+
+# open datasets index
+/data/open-data/
+
+# misc files
+*.txt
+*.rar
+*.Rhistory
+*.Rdata
+*.bib
+*.docx
+*.Rmd
+*.csl
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.log
+*.run.xml
+*.xml
+*.synctex.gz
+*.gz
+*.tex
