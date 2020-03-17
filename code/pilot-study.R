@@ -32,7 +32,7 @@ pilot.plos
 
 
 # Analysis of Pilot Data --------------------------------------------------
-df <- read_excel("../data/pilot-codebook.xlsx") # load data - change this if files are in the same folder
+df <- read_excel("../data/pilot-codebook.xlsx") # load data 
 
 # How many articles and journals studied?
 unique(df$paper_id) # 60
@@ -113,3 +113,126 @@ sum(df$reproduced, na.rm=T)
 # Within Journals, how many studies found that compare reflective scales across groups?
 table(df$journal_id,df$reflective)
 
+
+
+# Text analysis of pilot data ---------------------------------------------
+library(fulltext)
+library(tidytext)
+library(pdftools)
+library(XML)
+library(tm)
+
+getwd()
+setwd("../data/data-pilot/fulltext/") # change this to folder where the files are
+
+# load pilot codebook
+df <- read_excel("../data/pilot-codebook.xlsx") # load data
+
+# extract dois
+colnames(df)
+head(df$url_article)
+set <- which(df$paper_id > 20) # only need to extract dois from PS and Plos
+dois <- df$url_article[set]
+dois <- unique(dois) # remove doubles
+dois <- gsub('http://doi.org/', '', dois)
+dois <- gsub('https://doi.org/', '', dois);dois
+
+# download the articles (note that PS ones are behind a paywall)
+ft_get(dois) 
+
+# load pdf files
+pdffiles <- list.files(pattern = "pdf$")
+pdffiles <- c(sort(pdffiles[21:40]),sort(pdffiles[1:20])) # put them in right order
+pdfs <- lapply(pdffiles, pdf_text)
+
+# load xml files
+xmlfiles <- list.files(pattern = "xml$")
+xmlfiles <- sort(xmlfiles)
+
+# We want to analyze the differences in text use in articles that use a reflective scale
+# between groups, compared to those studies that do not.
+# article IDs that use a reflective scale
+ref <- unique(subset(df$paper_id, df$reflective == 1)) 
+# first 40 are for the pdf files (JDM and PS), last 20 are for the XML files (plos)
+ref1 <- ref[ref <= 40]
+ref2 <- ref[ref > 40]
+ref2 <- ref2 - 40 # numbering starts again with 1 in the XML file
+
+# Match the article IDs to the right pdf and xml files
+match <- unique(df$url_article)
+match <- c(sort(match[1:20]),sort(match[21:40]), sort(match[41:60])) # sort within journal
+
+# Subset the 60 articles in those with and those without reflective scales
+pdffiles.nref <- pdffiles[-ref1]
+pdffiles.ref <- pdffiles[ref1]
+xmlfiles.nref <- xmlfiles[-ref2]
+xmlfiles.ref <- xmlfiles[ref2]
+
+# there are in total 18 articles with one or more reflective scales that are compared
+# between groups, and 42 without one (or one without it being compared between groups). 
+
+# create corpus (database for text) for pdfs and xml
+corppdf.nref <- Corpus(URISource(pdffiles.nref),
+               readerControl = list(reader = readPDF))
+
+corppdf.ref <- Corpus(URISource(pdffiles.ref),
+                    readerControl = list(reader = readPDF))
+
+corpxml.nref <- Corpus(URISource(xmlfiles.nref),
+               readerControl = list(reader = readPlain))
+
+corpxml.ref <- Corpus(URISource(xmlfiles.ref),
+                readerControl = list(reader = readPlain))
+
+corp.nref <- c(corppdf.nref,corpxml.nref)
+corp.ref <- c(corppdf.ref,corpxml.ref)
+
+### create term document matrix
+# remove punctuation
+# remove stopwords (eg, the, of, in, etc.), 
+# convert text to lower case, stem the words, 
+# remove numbers
+# only count words that appear at least 3 times, add: "bounds = list(global = c(3, Inf))"
+
+tdm.nref <- TermDocumentMatrix(corp.nref,
+                          control = 
+                            list(removePunctuation = TRUE,
+                                 stopwords = TRUE,
+                                 tolower = TRUE,
+                                 stemming = TRUE,
+                                 removeNumbers = TRUE)) 
+
+tdm.ref <- TermDocumentMatrix(corp.ref,
+                               control = 
+                                 list(removePunctuation = TRUE,
+                                      stopwords = TRUE,
+                                      tolower = TRUE,
+                                      stemming = TRUE,
+                                      removeNumbers = TRUE)) 
+
+#inspect(tdm[1:10,])
+#findFreqTerms(tdm, lowfreq = 100, highfreq = Inf)
+#ft <- findFreqTerms(tdm, lowfreq = 100, highfreq = Inf)
+#as.matrix(tdm[ft,]) 
+#sort(apply(tdm, 1, sum), decreasing = TRUE)
+
+terms.nref <- Terms(tdm.nref)
+terms.ref <- Terms(tdm.ref)
+terms.nref
+terms.ref
+
+which(terms.nref == "construct")
+which(terms.ref == "construct")
+
+# Now we need to find out how often certain terms related to constructs are used
+
+
+## Irrelevant code
+#xmls <- lapply(xmlfiles,xmlParse)
+#xmltext <- lapply(xmls,xmlRoot) #gives content of root
+#xmlarticles <- list()
+
+
+#for (i in length(xmltext)) { 
+#  xmlarticles <- mapply(c, xmltext[[i]][["front"]][["article-meta"]][["abstract"]], xmltext[[i]][["body"]])
+#}

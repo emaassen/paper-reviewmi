@@ -4,6 +4,9 @@
 # open datasets index
 /data/article-index/
 
+# pdfs from pilot study
+/data/data-pilot/fulltext/
+
 # misc files
 *.txt
 *.rar
