@@ -4,8 +4,7 @@ library(foreign)
 library(semTools)
 
 # load data
-df = read.spss("Study3_warning.sav", to.data.frame=TRUE)
-df = read.table("Study4_geography.xlsx", sep = "", header=TRUE)
+df = read.spss("22-4.sav", to.data.frame=TRUE)
 
 df1 <- subset(df, warning == 0)
 df2 <- subset(df, warning == 1)

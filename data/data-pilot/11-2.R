@@ -6,13 +6,14 @@ library(semPlot)
 
 # load data
 # experiment 2 timepoint 1
-df1 <- read.csv("exp2part1.csv", sep = ";")
+df1 <- read.csv("11-2-1.csv", sep = ";")
 
 # experiment 2 timepoint 2
-df2 <- read.csv("exp2part2.csv", sep = ";")
+df2 <- read.csv("11-2-1.csv", sep = ";")
 
 # delete variables that do not occur in both datasets
 df1 <- subset(df1[,1:26])
+df2 <- subset(df2[,1:26])
   
 # create group variable in both datasets
 df1[,27] <- 1
@@ -62,3 +63,4 @@ semPaths(config)
 semPaths(weak, "mod", "est")
 semPaths(strong)
 semPaths(strict)
+

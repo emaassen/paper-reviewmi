@@ -5,7 +5,6 @@ library(semTools)
 library(readxl)
 
 # Study 1
-
 # load data - we needed to import the dataset via the menu because the code below does not work.
 df <- read.csv(file = '14-1.csv', sep = ";")
 

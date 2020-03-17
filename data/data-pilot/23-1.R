@@ -3,16 +3,15 @@ library(lavaan)
 library(foreign)
 library(semTools)
 library(readxl)
+library(haven)
 
 # load data
-df = read_spss("Does Hugging Provide Stress-Buffering Social Support_replication data set.sav")
+df = read_spss("23-1.sav")
 
 model <- ' SS =~ isel12tot '
 
 # measurement invariance check with function in semTools
 measurementInvariance(model = model, data = df, group = "sex", missing = "ML")
-summary(MI)
-
 
 # measurement invariance check by restricting step by step
 config <- cfa(model, data=df, group="warning") 

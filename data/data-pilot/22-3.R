@@ -4,7 +4,7 @@ library(foreign)
 library(semTools)
 
 # load data
-df = read.spss("Study3_warning.sav", to.data.frame=TRUE)
+df = read.spss("22-3.sav", to.data.frame=TRUE)
 
 df1 <- subset(df, warning == 0)
 df2 <- subset(df, warning == 1)

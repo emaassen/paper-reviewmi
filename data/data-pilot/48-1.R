@@ -6,7 +6,7 @@ library(readxl)
 
 # Study 1
 
-# load data - we needed to import the dataset via the menu because the code below does not work.
+# load data 
 df <- read_excel("48-1.xlsx", 1)
 
 # the paper uses 4 tests (trier, CP...) and 4 timepoints for each (.1, .2 etc.)
@@ -20,5 +20,5 @@ model <- 'trier1 =~ Tension.Trier.1 + Depression.Trier.1 + Anger.Trier.1 + Vigor
 # also, the scores seem to be centered, instead of item scores?
 
 # measurement invariance check with function in semTools
-measurementInvariance(model = model, data = df, group = "Condtion", missing = "ML")
+measurementInvariance(model = model, data = df, group = "Condition", missing = "ML")
 # no way to group groups so no MI test.

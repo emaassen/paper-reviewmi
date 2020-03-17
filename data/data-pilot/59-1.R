@@ -28,3 +28,4 @@ model <- 'model =~ mind + att + sleep + fat'
 measurementInvariance(model = model, data = df, group = "group")
 
 # scalar invariance
+

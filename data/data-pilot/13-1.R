@@ -1,10 +1,10 @@
 rm(list=ls())
-install.packages("lavaan")
+library(lavaan)
 library(foreign)
 library(semTools)
 
 # load data
-df = read.spss("data.sav", to.data.frame=TRUE)
+df = read.spss("13-1.sav", to.data.frame=TRUE)
 
 model <- ' sad =~ sadnovels + sadpaint + sadmovies + crysadmov + sadmusic 
            burn =~ burnmouth + spicyfood + eyetear + tacoshot + sweatburn
@@ -15,7 +15,6 @@ model <- ' sad =~ sadnovels + sadpaint + sadmovies + crysadmov + sadmusic
            exhst =~ exhaust + feelactiv
            bitter =~ bitterfoods + unswtoff '
 
-           
            
 # measurement invariance check with function in semTools
 measurementInvariance(model = model, data = df, group = "Mturk", missing = "ML")

@@ -7,8 +7,9 @@ library(dplyr)
 
 # Study 1
 
-# load data - we needed to import the dataset via the menu because the code below does not work.
+# load data
 df <- read.csv(file = '18-1.csv', sep = ";")
+
 # recode age into groups
 df$years_old[df$years_old==7] <- 1 # this one is not categorized as 1 in the paper, but we decided to.
 df$years_old[df$years_old==8] <- 1
