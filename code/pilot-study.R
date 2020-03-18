@@ -266,8 +266,8 @@ sort(apply(tdm.ref, 1, sum), decreasing = TRUE)
 tdm.ref.freq <- rowSums(as.matrix(tdm.ref))
 tdm.nref.freq <- rowSums(as.matrix(tdm.nref))
 
-tdm.ref.freq[grep("construct", names(freq))]
-tdm.nref.freq[grep("construct", names(freq))]
+tdm.ref.freq[grep("construct", names(tdm.ref.freq))]
+tdm.nref.freq[grep("construct", names(tdm.ref.freq))]
 
 # turn tdm into dense matrix and create frequency vector. 
 freq <- rowSums(as.matrix(tdm))
