@@ -1,7 +1,14 @@
 ### CODE FOR PILOT STUDY SYSTEMATIC REVIEW MEASUREMENT INVARIANCE ##
 #rm(list = ls()) # clear workspace
 options(scipen=999) # no scientific notation
-library(readxl) # packages
+library(fulltext)
+library(tidytext)
+library(pdftools)
+library(XML)
+library(tm)
+library(readxl)
+library(dplyr)
+
 
 # Sampling studies --------------------------------------------------------
 
@@ -116,17 +123,19 @@ table(df$journal_id,df$reflective)
 
 
 # Text analysis of pilot data ---------------------------------------------
-library(fulltext)
-library(tidytext)
-library(pdftools)
-library(XML)
-library(tm)
 
-getwd()
-setwd("../data/data-pilot/fulltext/") # change this to folder where the files are
+# We downloaded the 20 .pdf files for JDM by hand. Links to these articles can be
+# found in /data/pilot-codebook.xlsx, column 3 (article url).
+# For the other 40 articles (for PS and Plos) we had the doi, below is code to download 
+# these 40 articles automatically.
+# We've made use of the information here to analyze these data: https://www.tidytextmining.com/
 
 # load pilot codebook
 df <- read_excel("../data/pilot-codebook.xlsx") # load data
+
+# change working directory
+getwd()
+setwd("../data/data-pilot/fulltext/") # change this to folder where the text files are
 
 # extract dois
 colnames(df)
@@ -138,7 +147,7 @@ dois <- gsub('http://doi.org/', '', dois)
 dois <- gsub('https://doi.org/', '', dois);dois
 
 # download the articles (note that PS ones are behind a paywall)
-ft_get(dois) 
+#ft_get(dois) 
 
 # load pdf files
 pdffiles <- list.files(pattern = "pdf$")
@@ -169,7 +178,22 @@ xmlfiles.nref <- xmlfiles[-ref2]
 xmlfiles.ref <- xmlfiles[ref2]
 
 # there are in total 18 articles with one or more reflective scales that are compared
-# between groups, and 42 without one (or one without it being compared between groups). 
+# between groups, and 42 without one (or without it being compared between groups). 
+
+# Now we need to find out how often certain terms related to constructs are used
+refterms.c <- c("construct", "scale", "questionnaire", "reliability", "alpha", "cronbach", "chronbach", 
+                "KR20", "KR-20", "factor analysis", "internal", "consistency", "self-report", "items", "latent", "trait",
+                "convergent", "validity", "classical test theory", "CTT", "sumscore", "sum score",
+                "true score", "scale score", "t-test", "t test", "test retest", "test re-test")
+
+refterms.m <- c("measurement invariance", "non-invariance", "non invariance", "noninvariance", 
+                "equivalence", "non-equivalence", "nonequivalence", "partial", "DIF", 
+                "differential item functioning", "measurement model", "constraint", 
+                "measurement bias")
+
+refterms.g <- c("groups", "between-group", "between group", "within-group", "within group",
+                "control group", "experimental group", "treatment group")           
+
 
 # create corpus (database for text) for pdfs and xml
 corppdf.nref <- Corpus(URISource(pdffiles.nref),
@@ -188,10 +212,20 @@ corp.nref <- c(corppdf.nref,corpxml.nref)
 corp.ref <- c(corppdf.ref,corpxml.ref)
 
 ### create term document matrix
+# we want to analyze sets of words (bigram) instead of single words, so we need a BigramTokenizer
+# set for 2 words now: (words(x), 2). We add "tokenize = BigramTokenizer" to the TermDocumentMatrix 
+# function below
+
+BigramTokenizer <-
+  function(x)
+    unlist(lapply(ngrams(words(x), 2), paste, collapse = " "), use.names = FALSE)
+
 # remove punctuation
 # remove stopwords (eg, the, of, in, etc.), 
 # convert text to lower case, stem the words, 
 # remove numbers
+# remove english stop words
+# use bigramtokanizer from above, indexing 2 words
 # only count words that appear at least 3 times, add: "bounds = list(global = c(3, Inf))"
 
 tdm.nref <- TermDocumentMatrix(corp.nref,
@@ -200,7 +234,9 @@ tdm.nref <- TermDocumentMatrix(corp.nref,
                                  stopwords = TRUE,
                                  tolower = TRUE,
                                  stemming = TRUE,
-                                 removeNumbers = TRUE)) 
+                                 removeNumbers = TRUE,
+                                 removeWords, stopwords("english"),
+                                 tokenize = BigramTokenizer)) 
 
 tdm.ref <- TermDocumentMatrix(corp.ref,
                                control = 
@@ -208,24 +244,110 @@ tdm.ref <- TermDocumentMatrix(corp.ref,
                                       stopwords = TRUE,
                                       tolower = TRUE,
                                       stemming = TRUE,
-                                      removeNumbers = TRUE)) 
+                                      removeNumbers = TRUE,
+                                      removeWords, stopwords("english"),
+                                      tokenize = BigramTokenizer)) 
 
-#inspect(tdm[1:10,])
-#findFreqTerms(tdm, lowfreq = 100, highfreq = Inf)
-#ft <- findFreqTerms(tdm, lowfreq = 100, highfreq = Inf)
-#as.matrix(tdm[ft,]) 
-#sort(apply(tdm, 1, sum), decreasing = TRUE)
 
+### I AM STUCK HERE- trying to find a way to analyze the double words (measurement invariance)
+# and the single words. Might have to split up the reference terms into vectors with single words
+# and one with double words.
+
+
+# Different ways to display or analyze the data:
+inspect(tdm.ref[1:10,])
+inspect(removeSparseTerms(tdm.ref, 0.7))
+findFreqTerms(tdm.ref, lowfreq = 100, highfreq = Inf)
+ft.ref <- findFreqTerms(tdm.ref, lowfreq = 100, highfreq = Inf)
+as.matrix(tdm.ref[ft.ref,]) 
+sort(apply(tdm.ref, 1, sum), decreasing = TRUE)
+
+# turn tdm into dense matrix and create frequency vector 
+tdm.ref.freq <- rowSums(as.matrix(tdm.ref))
+tdm.nref.freq <- rowSums(as.matrix(tdm.nref))
+
+tdm.ref.freq[grep("construct", names(freq))]
+tdm.nref.freq[grep("construct", names(freq))]
+
+# turn tdm into dense matrix and create frequency vector. 
+freq <- rowSums(as.matrix(tdm))
+
+
+
+
+
+
+
+
+
+
+freq["crude"]
+crude 
+21 
+freq["oil"]
+oil 
+85 
+
+
+
+
+
+# Find most occuring terms (single words only)
 terms.nref <- Terms(tdm.nref)
 terms.ref <- Terms(tdm.ref)
 terms.nref
 terms.ref
 
-which(terms.nref == "construct")
-which(terms.ref == "construct")
+# Tidy the term document matrix (single words only)
+tidy.nref <- tidy(tdm.nref)
+tidy.ref <- tidy(tdm.ref)
+tidy.ref
 
-# Now we need to find out how often certain terms related to constructs are used
+# We may be interested in finding the words most specific to each of the documents 
+# This could be quantified by calculating the tf-idf of each term-speech 
+# pair using the bind_tf_idf() function.
 
+tidy.nref.tfidf <- tidy.nref %>%
+  bind_tf_idf(term, document, count) %>%
+  arrange(desc(tf_idf))
+
+tidy.ref.tfidf <- tidy.ref %>%
+  bind_tf_idf(term, document, count) %>%
+  arrange(desc(tf_idf))
+
+tidy.nref.tfidf;tidy.ref.tfidf
+
+# Since these files only contain single words, words like "measurement invariance" will never be found:
+
+
+tidy.nref.tfidf[which(tdm.ref == refterms.c),]
+
+tidy.nref.tfidf[which(tidy.nref.tfidf[,1] == refterms.c),]
+tidy.ref.tfidf[which(tidy.ref.tfidf[,1] == refterms.c),]
+
+tidy.nref.tfidf[which(tidy.nref.tfidf[,1] == refterms.m),]
+tidy.ref.tfidf[which(tidy.ref.tfidf[,1] == refterms.m),]
+
+tidy.nref.tfidf[which(tidy.nref.tfidf[,1] == refterms.g),]
+tidy.ref.tfidf[which(tidy.ref.tfidf[,1] == refterms.g),]
+
+
+tidy.nref.tfidf[is.any(tidy.nref.tfidf[,1] == "main"),]
+tidy.ref.tfidf[which(tidy.ref.tfidf[,1] == "cronbach"),]
+
+# By seeing how often word X is followed by word Y, we can then build a model of the 
+# relationships between them. Setting n to the number of words we wish to capture in 
+# each n-gram. When we set n to 2, we are examining pairs of two consecutive words, 
+# often called "bigrams"
+
+tidy.nref %>%
+  unnest_tokens(word, text)
+
+aa<- austen_books() %>%
+  unnest_tokens(bigram, text, token = "ngrams", n = 2)
+
+tidy_books <- pdf.nref %>%
+  unnest_tokens(word, text)
 
 ## Irrelevant code
 #xmls <- lapply(xmlfiles,xmlParse)
