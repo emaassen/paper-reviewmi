@@ -152,7 +152,7 @@ dois <- gsub('https://doi.org/', '', dois);dois
 # load pdf files
 pdffiles <- list.files(pattern = "pdf$")
 pdffiles <- c(sort(pdffiles[21:40]),sort(pdffiles[1:20])) # put them in right order
-pdfs <- lapply(pdffiles, pdf_text)
+# dit mag weg: pdfs <- lapply(pdffiles, pdf_text)
 
 # load xml files
 xmlfiles <- list.files(pattern = "xml$")
@@ -181,19 +181,30 @@ xmlfiles.ref <- xmlfiles[ref2]
 # between groups, and 42 without one (or without it being compared between groups). 
 
 # Now we need to find out how often certain terms related to constructs are used
-refterms.c <- c("construct", "scale", "questionnaire", "reliability", "alpha", "cronbach", "chronbach", 
-                "KR20", "KR-20", "factor analysis", "internal", "consistency", "self-report", "items", "latent", "trait",
-                "convergent", "validity", "classical test theory", "CTT", "sumscore", "sum score",
+refterms.c1 <- c("KR-20", "factor analysis", "self-report", 
+                "classical test", "sum score",
                 "true score", "scale score", "t-test", "t test", "test retest", "test re-test")
 
-refterms.m <- c("measurement invariance", "non-invariance", "non invariance", "noninvariance", 
-                "equivalence", "non-equivalence", "nonequivalence", "partial", "DIF", 
-                "differential item functioning", "measurement model", "constraint", 
+refterms.c2 <- c("construct", "scale", "questionnaire", "reliability", "alpha", "cronbach", "chronbach", 
+                "KR20", "factor", "analysis", "internal", "consistency", "selfreport", "items", "latent", "trait",
+                "convergent", "validity", "CTT", "sumscore", "sum", "score",
+                "t-test", "retest")
+
+
+refterms.m1 <- c("measurement invariance", "non-invariance", "non invariance",  
+                "non-equivalence", "differential item", "item functioning", "measurement model", 
                 "measurement bias")
 
-refterms.g <- c("groups", "between-group", "between group", "within-group", "within group",
+refterms.m2 <- c("measurement", "invariance", "noninvariance", 
+                "equivalence", "nonequivalence", "partial", "DIF", 
+                "constraint", 
+                "bias")
+
+refterms.g1 <- c("between-group", "between group", "within-group", "within group",
                 "control group", "experimental group", "treatment group")           
 
+refterms.g2 <- c("groups", 
+                "control", "experimental", "treatment")   
 
 # create corpus (database for text) for pdfs and xml
 corppdf.nref <- Corpus(URISource(pdffiles.nref),
@@ -248,12 +259,6 @@ tdm.ref <- TermDocumentMatrix(corp.ref,
                                       removeWords, stopwords("english"),
                                       tokenize = BigramTokenizer)) 
 
-
-### I AM STUCK HERE- trying to find a way to analyze the double words (measurement invariance)
-# and the single words. Might have to split up the reference terms into vectors with single words
-# and one with double words.
-
-
 # Different ways to display or analyze the data:
 inspect(tdm.ref[1:10,])
 inspect(removeSparseTerms(tdm.ref, 0.7))
@@ -266,31 +271,114 @@ sort(apply(tdm.ref, 1, sum), decreasing = TRUE)
 tdm.ref.freq <- rowSums(as.matrix(tdm.ref))
 tdm.nref.freq <- rowSums(as.matrix(tdm.nref))
 
-tdm.ref.freq[grep("construct", names(tdm.ref.freq))]
-tdm.nref.freq[grep("construct", names(tdm.ref.freq))]
 
-# turn tdm into dense matrix and create frequency vector. 
-freq <- rowSums(as.matrix(tdm))
+# DOUBLE WORD ANALYSIS ----------------------------------------------------
+
+tdm.nref <- TermDocumentMatrix(corp.nref,
+                               control = 
+                                 list(removePunctuation = TRUE,
+                                      stopwords = TRUE,
+                                      tolower = TRUE,
+                                      stemming = TRUE,
+                                      removeNumbers = TRUE,
+                                      removeWords, stopwords("english"),
+                                      tokenize = BigramTokenizer)) 
+
+tdm.ref <- TermDocumentMatrix(corp.ref,
+                              control = 
+                                list(removePunctuation = TRUE,
+                                     stopwords = TRUE,
+                                     tolower = TRUE,
+                                     stemming = TRUE,
+                                     removeNumbers = TRUE,
+                                     removeWords, stopwords("english"),
+                                     tokenize = BigramTokenizer)) 
+
+# CONSTUCT TERMS
+for (i in 1:length(refterms.c1)) {
+  print(tdm.ref.freq[grep(refterms.c1[i], names(tdm.ref.freq))], na.rm=T)
+}
+
+# terms: testretest 1
+# total terms: 1
+
+for (i in 1:length(refterms.c1)) {
+  print(tdm.nref.freq[grep(refterms.c1[i], names(tdm.nref.freq))], na.rm=T)
+}
+
+# terms: none that are explically related to our search terms
+# total terms: 0
 
 
 
 
+# MEASUREMENT TERMS
+for (i in 1:length(refterms.m1)) {
+  print(tdm.ref.freq[grep(refterms.m1[i], names(tdm.ref.freq))], na.rm=T)
+}
+
+# terms: differential item 1
+# total terms: 1
+
+for (i in 1:length(refterms.m1)) {
+  print(tdm.nref.freq[grep(refterms.m1[i], names(tdm.nref.freq))], na.rm=T)
+}
+
+# terms: none that are explically related to our search terms
+# total terms: 0
 
 
 
 
+# GROUP TERMS
+for (i in 1:length(refterms.g1)) {
+  print(tdm.ref.freq[grep(refterms.g1[i], names(tdm.ref.freq))], na.rm=T)
+}
+
+# terms: 
+# between group 1
+# within group 1
+# control group 23
+# experimental group 1
+# total terms: 26
+
+for (i in 1:length(refterms.g1)) {
+  print(tdm.nref.freq[grep(refterms.g1[i], names(tdm.nref.freq))], na.rm=T)
+}
+
+# terms: none that are explically related to our search terms
+
+# terms: 
+# between group 4
+# within group 1
+# control group 25
+# experimental group 18
+# treatment group 1
+# total terms: 49
 
 
-freq["crude"]
-crude 
-21 
-freq["oil"]
-oil 
-85 
+# SINGLE WORD ANALYSIS ----------------------------------------------------
 
+# We create new term document matrices, now without the BigramTokanizer because
+# we do not need double words.
 
+tdm.nref <- TermDocumentMatrix(corp.nref,
+                               control = 
+                                 list(removePunctuation = TRUE,
+                                      stopwords = TRUE,
+                                      tolower = TRUE,
+                                      stemming = TRUE,
+                                      removeNumbers = TRUE,
+                                      removeWords, stopwords("english"))) 
 
-
+tdm.ref <- TermDocumentMatrix(corp.ref,
+                              control = 
+                                list(removePunctuation = TRUE,
+                                     stopwords = TRUE,
+                                     tolower = TRUE,
+                                     stemming = TRUE,
+                                     removeNumbers = TRUE,
+                                     removeWords, stopwords("english")))
 
 # Find most occuring terms (single words only)
 terms.nref <- Terms(tdm.nref)
@@ -317,39 +405,112 @@ tidy.ref.tfidf <- tidy.ref %>%
 
 tidy.nref.tfidf;tidy.ref.tfidf
 
-# Since these files only contain single words, words like "measurement invariance" will never be found:
+# Check the frequency of word occurence
+
+# CONSTUCT TERMS
+tidy.ref.tfidf[which(tidy.ref.tfidf[,1] == refterms.c2),]
+
+# terms
+# selfreport 13
+# scale 20 (2 papers)
+# factor 7 
+# total unique papers: 4 (out of 18 = 22%)
+
+tidy.nref.tfidf[which(tidy.nref.tfidf[,1] == refterms.c2),]
+
+# terms
+# score 34
+# scale 13
+# selfreport 1
+# trait 1
+# total unique papers: 4 (out of 42 = 10%)
 
 
-tidy.nref.tfidf[which(tdm.ref == refterms.c),]
 
-tidy.nref.tfidf[which(tidy.nref.tfidf[,1] == refterms.c),]
-tidy.ref.tfidf[which(tidy.ref.tfidf[,1] == refterms.c),]
+# MEASUREMENT TERMS
+tidy.ref.tfidf[which(tidy.ref.tfidf[,1] == refterms.m2),]
 
-tidy.nref.tfidf[which(tidy.nref.tfidf[,1] == refterms.m),]
-tidy.ref.tfidf[which(tidy.ref.tfidf[,1] == refterms.m),]
+# terms
+# partial 18 (2 papers)
+# total unique papers: 2 (out of 18 = 11%)
 
-tidy.nref.tfidf[which(tidy.nref.tfidf[,1] == refterms.g),]
-tidy.ref.tfidf[which(tidy.ref.tfidf[,1] == refterms.g),]
+tidy.nref.tfidf[which(tidy.nref.tfidf[,1] == refterms.m2),]
+
+# GROUP TERMS
+# terms
+# bias 23 (7 papers)
+# construct 5 (2 papers)
+# partial 5 (5 papers)
+# total unique papers: 13 (out of 42 = 31%)
 
 
-tidy.nref.tfidf[is.any(tidy.nref.tfidf[,1] == "main"),]
+
+
+# GROUP TERMS
+tidy.ref.tfidf[which(tidy.ref.tfidf[,1] == refterms.g2),]
+
+# terms
+# treatment 4 (2 papers)
+# control 20 (3 papers)
+# total unique papers: 5 (out of 18 = 28%)
+
+tidy.nref.tfidf[which(tidy.nref.tfidf[,1] == refterms.g2),]
+
+# terms
+# control 75 (8 papers)
+# treatment 4 (2 papers)
+# total unique papers: 10 (out of 42 = 24%)
+
+
+for (i in 1:length(refterms.c2)) {
+print(tidy.ref.tfidf[which(tidy.ref.tfidf[,1] == refterms.c2[i]),])
+  
+}
+
+# I don't know why the word construct isn't found in the above code. 
+# Looping over the refterms vector also doesnt work.
+tidy.ref.tfidf[which(tidy.ref.tfidf[,1] == "construct"),]
+# 8 out of 18 = 44%
+
+tidy.nref.tfidf[which(tidy.nref.tfidf[,1] == "construct"),]
+# 18 out of 42 = 43%
+
+
+tidy.ref.tfidf[which(tidy.ref.tfidf[,1] == "scale"),]
+# 12 out of 18 = 67%
+
+tidy.nref.tfidf[which(tidy.nref.tfidf[,1] == "scale"),]
+# 27 out of 42 = 65%
+
 tidy.ref.tfidf[which(tidy.ref.tfidf[,1] == "cronbach"),]
+# 1 out of 18 = 6%
+
+tidy.nref.tfidf[which(tidy.nref.tfidf[,1] == "cronbach"),]
+# 1 out of 42 = 2%
+
+
+
+
+
+
+## Irrelevant code
+
 
 # By seeing how often word X is followed by word Y, we can then build a model of the 
 # relationships between them. Setting n to the number of words we wish to capture in 
 # each n-gram. When we set n to 2, we are examining pairs of two consecutive words, 
 # often called "bigrams"
 
-tidy.nref %>%
-  unnest_tokens(word, text)
+#tidy.nref %>%
+#  unnest_tokens(word, text)
 
-aa<- austen_books() %>%
-  unnest_tokens(bigram, text, token = "ngrams", n = 2)
+#aa<- austen_books() %>%
+#  unnest_tokens(bigram, text, token = "ngrams", n = 2)
 
-tidy_books <- pdf.nref %>%
-  unnest_tokens(word, text)
+#tidy_books <- pdf.nref %>%
+#  unnest_tokens(word, text)
 
-## Irrelevant code
+
 #xmls <- lapply(xmlfiles,xmlParse)
 #xmltext <- lapply(xmls,xmlRoot) #gives content of root
 #xmlarticles <- list()
