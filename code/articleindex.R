@@ -1,5 +1,4 @@
 library("rplos")
-library("rcrossref")
 library("dplyr")
 library("tidyr")
 
@@ -38,15 +37,13 @@ backup <- res
 res$data$publication_date <- substr(res$data$publication_date, 1, 4)
 res
 
-# filter year - without doctype full we have 5169 left
-# filter year - with doctype full we have 5169 left
+# filter year 
 index2019 <- res$data[which(res$data$publication_date == 2019),]
 index2018 <- res$data[which(res$data$publication_date == 2018),]
 
 # find unique ids
 length(unique(index2019$id)) # 4233
 length(unique(index2018$id)) # 4122
-
 
 # Don't  be  surprised  if  queries  you  perform  in  a  scripting  
 # language,  like  using rplos in  R,  give different results than when 
@@ -85,7 +82,5 @@ sample.em <- rbind(sample.plos.em,sample.ps.em)
 sample.edd <- rbind(sample.plos.edd,sample.ps.edd)
 
 # Save to file to input in main codebook
-writeLines(sample.em, "sample-em.txt")
-writeLines(sample.edd, "sample-edd.txt")
-
-
+write.table(sample.em, file = "sample-em.txt", sep = "")
+write.table(sample.edd, file = "sample-edd.txt", sep = "")
