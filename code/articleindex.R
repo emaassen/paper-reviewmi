@@ -55,8 +55,8 @@ length(unique(index2018$id)) # 4122
 
 # Sample 99 articles from 2019, 114 from 2018
 set.seed(17080904)
-sample2019 <- sample(index2019$id,2, replace = F)
-sample2018 <- sample(index2018$id,2, replace = F)
+sample2019 <- sample(index2019$id,99, replace = F)
+sample2018 <- sample(index2018$id,114, replace = F)
 sample2019 <- cbind(sample2019,rep(2019,length(sample2019)))
 sample2018 <- cbind(sample2018,rep(2018,length(sample2018)))
 plossample <- as.data.frame(rbind(sample2018,sample2019))
