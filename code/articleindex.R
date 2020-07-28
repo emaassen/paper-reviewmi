@@ -55,13 +55,37 @@ length(unique(index2018$id)) # 4122
 
 # Sample 99 articles from 2019, 114 from 2018
 set.seed(17080904)
-sample2019 <- sample(index2019$id,99)
-sample2018 <- sample(index2018$id,114)
+sample2019 <- sample(index2019$id,2, replace = F)
+sample2018 <- sample(index2018$id,2, replace = F)
 sample2019 <- cbind(sample2019,rep(2019,length(sample2019)))
 sample2018 <- cbind(sample2018,rep(2018,length(sample2018)))
-plossample <- rbind(sample2018,sample2019)
+plossample <- as.data.frame(rbind(sample2018,sample2019))
+
+# load the psychological science sample
+pssample <- read.table("sample-ps.txt", sep = "")
+
+names(pssample) <- names(plossample) <- c("doi","year")
+
+# Two coders will code all articles, but we will randomize the order in which they will appear in the separate codebooks
+
+# Randomize the rows in the PLOS and PS sample for both coders
+rows.plos.em <- sample(nrow(plossample), replace = F)
+rows.plos.edd <- sample(nrow(plossample), replace = F) 
+rows.ps.em <- sample(nrow(pssample), replace = F)
+rows.ps.edd <- sample(nrow(pssample), replace = F) 
+
+# Reorder the dataframes based on the row order selected previously
+sample.plos.em <- plossample[rows.plos.em, ]
+sample.ps.em <- pssample[rows.ps.em,]
+sample.plos.edd <- plossample[rows.plos.edd, ]
+sample.ps.edd <- pssample[rows.ps.edd,]
+
+# Combine the two samples 
+sample.em <- rbind(sample.plos.em,sample.ps.em)
+sample.edd <- rbind(sample.plos.edd,sample.ps.edd)
 
 # Save to file to input in main codebook
-writeLines(plossample, "plossample.txt")
+writeLines(sample.em, "sample-em.txt")
+writeLines(sample.edd, "sample-edd.txt")
 
 
