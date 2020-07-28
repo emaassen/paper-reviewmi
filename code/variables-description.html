@@ -460,23 +460,13 @@ First author of the article
 </tr>
 <tr>
 <td style="text-align:left;width: 8em;  padding-left: 2em;" indentlevel="1">
-title
-</td>
-<td style="text-align:left;width: 35em; ">
-Title of the article
-</td>
-<td style="text-align:left;width: 35em; ">
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: 8em;  padding-left: 2em;" indentlevel="1">
 study
 </td>
 <td style="text-align:left;width: 35em; ">
 Number of study within the paper
 </td>
 <td style="text-align:left;width: 35em; ">
-0 = the article contains only one study
+1 = the article contains only one study
 </td>
 </tr>
 <tr>
@@ -492,10 +482,10 @@ Is the article empirical?
 </tr>
 <tr>
 <td style="text-align:left;width: 8em;  padding-left: 2em;" indentlevel="1">
-compare_groups
+compare_group
 </td>
 <td style="text-align:left;width: 35em; ">
-Are group comparisons conducted in the article?
+Are group (within or between) or time comparisons conducted in the article?
 </td>
 <td style="text-align:left;width: 35em; ">
 0 = no, 1 = yes
@@ -535,6 +525,17 @@ Is a scale, or construct, measured in the article, that is compared between grou
 </tr>
 <tr>
 <td style="text-align:left;width: 8em;  padding-left: 2em;" indentlevel="1">
+reflective
+</td>
+<td style="text-align:left;width: 35em; ">
+Is the scale reflective?
+</td>
+<td style="text-align:left;width: 35em; ">
+0 = no, 1 = yes
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 8em;  padding-left: 2em;" indentlevel="1">
 name_scale
 </td>
 <td style="text-align:left;width: 35em; ">
@@ -562,7 +563,7 @@ measure_scale
 Level of measurement for the scale
 </td>
 <td style="text-align:left;width: 35em; ">
-0 = ordinal (from 3 to 5 categories) , 1 = Continous (more than 5 categories)
+0 = dichotomous (0 to 1) =, 1 = ordinal (from 3 to 5 categories) , 2 = continous (more than 5 categories)
 </td>
 </tr>
 <tr>
@@ -573,18 +574,7 @@ width_scale
 Width of the scale
 </td>
 <td style="text-align:left;width: 35em; ">
-E.g., 7 for a seven-point Likert scale
-</td>
-</tr>
-<tr>
-<td style="text-align:left;width: 8em;  padding-left: 2em;" indentlevel="1">
-reflective
-</td>
-<td style="text-align:left;width: 35em; ">
-Is the scale reflective?
-</td>
-<td style="text-align:left;width: 35em; ">
-0 = no, 1 = yes
+E.g., 1-7 for a seven-point Likert scale
 </td>
 </tr>
 <tr>
@@ -592,10 +582,10 @@ Is the scale reflective?
 power
 </td>
 <td style="text-align:left;width: 35em; ">
-Is there an estimate of statistical power reported for the comparison?
+What is the estimate of statistical power reported for the test used to make the comparison?
 </td>
 <td style="text-align:left;width: 35em; ">
-0 = no, 1 = yes
+NA = not available
 </td>
 </tr>
 <tr>
@@ -748,7 +738,7 @@ miresult_rep
 Scale reported to be measurement invariant?
 </td>
 <td style="text-align:left;width: 35em; ">
-0 = no, 1 = yes
+0 = no, 1 = yes, NA = not applicable
 </td>
 </tr>
 <tr>
@@ -759,7 +749,7 @@ milevel_rep
 Reported level of measurement invariance found
 </td>
 <td style="text-align:left;width: 35em; ">
-0 = none, 1 = configural, 2 = metric/non-uniform/slope/weak, 3 = scalar/uniform/intercept/strong, 4 = residual/strict, 5 = partial invariance
+0 = none, 1 = configural, 2 = metric/non-uniform/slope/weak, 3 = scalar/uniform/intercept/strong, 4 = residual/strict, 5 = partial invariance, NA = not applicable
 </td>
 </tr>
 <tr>
@@ -770,12 +760,7 @@ open_data
 Is the data to make group comparisons on the scale freely available?
 </td>
 <td style="text-align:left;width: 35em; ">
-0 = no, 1 = yes
-</td>
-</tr>
-<tr grouplength="5">
-<td colspan="3" style="border-bottom: 1px solid;">
-<strong>Reproduced variables</strong>
+0 = no, 1 = yes, NA = not applicable
 </td>
 </tr>
 <tr>
@@ -786,7 +771,12 @@ data_usability
 Is the data readable, interpretable?
 </td>
 <td style="text-align:left;width: 35em; ">
-0 = no, 1 = yes
+0 = no, 1 = yes, NA = not applicable
+</td>
+</tr>
+<tr grouplength="5">
+<td colspan="3" style="border-bottom: 1px solid;">
+<strong>Reproduced variables</strong>
 </td>
 </tr>
 <tr>
@@ -797,7 +787,7 @@ open_scale
 Can we construct a scale from the data?
 </td>
 <td style="text-align:left;width: 35em; ">
-0 = no, 1 = yes
+0 = no, 1 = yes, NA = not applicable
 </td>
 </tr>
 <tr>
@@ -808,7 +798,7 @@ open_group
 Can we construct groups from the data?
 </td>
 <td style="text-align:left;width: 35em; ">
-0 = no, 1 = yes
+0 = no, 1 = yes, NA = not applicable
 </td>
 </tr>
 <tr>
@@ -832,7 +822,7 @@ Reproduced total sample size group 1
 </td>
 </tr>
 <tr>
-<td style="text-align:left;width: 8em; ">
+<td style="text-align:left;width: 8em;  padding-left: 2em;" indentlevel="1">
 n2_res
 </td>
 <td style="text-align:left;width: 35em; ">
@@ -912,7 +902,7 @@ reproduced
 Could we reproduce the reported results on measurement invariance?
 </td>
 <td style="text-align:left;width: 35em; ">
-0 = no, 1 = yes, NA = not applicable (no MI results reported)
+0 = no, 1 = yes, NA = not applicable
 </td>
 </tr>
 <tr>
