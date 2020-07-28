@@ -1,0 +1,183 @@
+---
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Load libraries
+library(knitr)
+library(kableExtra)
+
+```
+```{r table codebook, results='asis', echo=FALSE}
+
+# Vector of variable names
+varnames1 <- c("article_id",
+"journal_id	",
+"url_article	",
+"url_data",
+"year",
+"author",
+"study	",
+"empirical",
+"compare_group",
+"type_group",
+"name_group",
+"scale",
+"reflective",
+"name_scale	",
+"type_scale",
+"measure_scale",
+"width_scale	",
+"power",
+"n_rep",
+"n1_rep",
+"n2_rep",
+"n3_rep",
+"n4_rep",
+"n5_rep",
+"reltot	",
+"rel1",
+"rel2",
+"rel3",
+"rel4",
+"rel5",
+"mitest_rep",
+"mimethod_rep",
+"miresult_rep",
+"milevel_rep",
+"open_data",
+"data_usability",
+"open_scale",
+"open_group",
+"n_res",
+"n1_res",
+"n2_res",
+"n3_res",
+"n4_res",
+"n5_res",
+"mitest",
+"miresult",
+"milevel",
+"reproduced",
+"comments")
+
+# Vector of variable descriptions
+vardes1 <- c("Article ID",
+"Journal ID	",
+"URL to the article",
+"URL to the data file",
+"Year the article was published",
+"First author of the article",
+"Number of study within the paper",
+"Is the article empirical?",
+"Are group (within or between) or time comparisons conducted in the article?",
+"Are groups constructed for the study or do they already exist?",
+"Name of the groups being compared",
+"Is a scale, or construct, measured in the article, that is compared between groups?",
+"Is the scale reflective?",
+"Name of the scale",
+"Type of the scale",
+"Level of measurement for the scale",
+"Width of the scale",
+"What is the estimate of statistical power reported for the test used to make the comparison?",
+"Reported total sample size",
+"Reported total sample size group 1",
+"Reported total sample size group 2",
+"Reported total sample size group 3",
+"Reported total sample size group 4",
+"Reported total sample size group 5",
+"Reliability estimate (Chronbach's alpha) for the scale",
+"Reliability estimate (Chronbach's alpha) for the scale in group 1",
+"Reliability estimate (Chronbach's alpha) for the scale in group 2",
+"Reliability estimate (Chronbach's alpha) for the scale in group 3",
+"Reliability estimate (Chronbach's alpha) for the scale in group 4",
+"Reliability estimate (Chronbach's alpha) for the scale in group 5",
+"Does the article report on measurement invariance of a MI check with regard to the measured scale?",
+"Reported method of measurement invariance check used",
+"Scale reported to be measurement invariant?",
+"Reported level of measurement invariance found",
+"Is the data to make group comparisons on the scale freely available?",
+"Is the data readable, interpretable?",
+"Can we construct a scale from the data?",
+"Can we construct groups from the data?	",
+"Reproduced total sample size",
+"Reproduced total sample size group 1",
+"Reproduced total sample size group 2",
+"Reproduced total sample size group 3",
+"Reproduced total sample size group 4",
+"Reproduced total sample size group 5",
+"Are we able to test for measurement invariance?",
+"Do our results show there is measurement invariance?",
+"Level of measurement invariance found",
+"Could we reproduce the reported results on measurement invariance?",
+"Comments related to the study")
+
+# Vector of additional info (e.g., measurements)
+info1  <-  c("",
+"0 = PLOSONE, 1 = PS",
+"",
+"",
+"",
+"",
+"1 = the article contains only one study",
+"0 = no, 1 = yes",
+"0 = no, 1 = yes",
+"0 = existing group (e.g., Americans), 1 = new group (e.g., treatment group)",
+"",
+"0 = no, 1 = yes",
+"0 = no, 1 = yes",
+"",
+"0 = existing or validated scale, 1 = ad hoc scale",
+"0 = dichotomous (0 to 1) =, 1 = ordinal (from 3 to 5 categories) , 2 = continous (more than 5 categories)",
+"E.g., 1-7 for a seven-point Likert scale",
+"NA = not available",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"0 = no, 1 = yes",
+"1 = scale-based (includes CFA, CCFA, MIMIC, LCFA), 2 = item-based (IRT, LRT, logistic regression), 3 = other (in comments), NA = not applicable",
+"0 = no, 1 = yes, NA = not applicable",
+"0 = none, 1 = configural, 2 = metric/non-uniform/slope/weak, 3 = scalar/uniform/intercept/strong, 4 = residual/strict, 5 = partial invariance,  NA = not applicable",
+"0 = no, 1 = yes, NA = not applicable",
+"0 = no, 1 = yes, NA = not applicable",
+"0 = no, 1 = yes, NA = not applicable",
+"0 = no, 1 = yes, NA = not applicable",
+"",
+"",
+"",
+"",
+"",
+"",
+"0 = no, 1 = yes",
+"0 = no, 1 = yes",
+"0 = none, 1 = configural, 2 = metric/non-uniform/slope/weak, 3 = scalar/uniform/intercept/strong, 4 = residual/strict, 5 = partial invariance",
+"0 = no, 1 = yes, NA = not applicable",
+"")
+
+# Combine vectors into a table
+tabledf1 <- cbind(varnames1,vardes1,info1)
+colnames(tabledf1) <- c("Variable name", "Variable label", "Additional information") # column names
+
+# Make table
+kable(tabledf1, caption='Variables included in the main study codebook and a description of each variable.', booktabs=T) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
+                full_width = TRUE) %>%
+                column_spec(1, width = "8em") %>% 
+                column_spec(2, width = "35em") %>% 
+                column_spec(3, width = "35em") %>% 
+                pack_rows("Reported variables", 1, 36) %>% 
+                pack_rows("Reproduced variables", 37, 41)
+
+```
+

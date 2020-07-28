@@ -8,13 +8,11 @@
 /data/data-pilot/fulltext/
 
 # misc files
-*.txt
 *.rar
 *.Rhistory
 *.Rdata
 *.bib
 *.docx
-*.Rmd
 *.csl
 *.aux
 *.bbl
