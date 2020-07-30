@@ -8,7 +8,7 @@ library("tidyr")
 # Only show full text availability
 
 # Check how many articles there are
-res <- plossubject(q = "\"psychology\"", 
+res <- plossubject(q = "psychology", 
             fl=c('id',
                  'publication_date'),
             fq=list('journal_key:PLoSONE',
@@ -21,7 +21,7 @@ res <- plossubject(q = "\"psychology\"",
 r <- res$meta$numFound
 
 # Index all articles from 0 to r
-res <- plossubject(q = "\"psychology\"", 
+res <- plossubject(q = "psychology", 
                    fl=c('id',
                         'publication_date'),
                    fq=list('journal_key:PLoSONE',
@@ -42,8 +42,8 @@ index2019 <- res$data[which(res$data$publication_date == 2019),]
 index2018 <- res$data[which(res$data$publication_date == 2018),]
 
 # find unique ids
-length(unique(index2019$id)) # 4233
-length(unique(index2018$id)) # 4122
+length(unique(index2019$id)) # 4233 3218
+length(unique(index2018$id)) # 4122 3491
 
 # Don't  be  surprised  if  queries  you  perform  in  a  scripting  
 # language,  like  using rplos in  R,  give different results than when 
