@@ -1,4 +1,8 @@
-rm(list=ls())
+### CODE FOR PILOT STUDY SYSTEMATIC REVIEW MEASUREMENT INVARIANCE ##
+### This is code to perform reproducibility checks in our pilot study
+### This is example code we used to read in datasets, construct measurement models, and perform measurement invariance checks
+
+#rm(list = ls()) # clear workspace
 
 # Relevant packages
 library(lavaan)

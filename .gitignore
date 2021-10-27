@@ -1,11 +1,15 @@
 # writing files
 /submission/
 
-# open datasets index
+# individual codebooks for main study
+/data/codebook-main-reporting-edd.xlsx
+/data/codebook-main-reporting-em.xlsx
+
+# index used to sample open data articles from in pilot study
 /data/article-index/
 
-# pdfs from pilot study
-/data/data-pilot/fulltext/
+# data and pdfs used for the reproducibility step of the pilot study
+/data/data-pilot/
 
 # misc files
 *.rar
