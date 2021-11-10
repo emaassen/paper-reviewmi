@@ -361,7 +361,7 @@ article7_2 <- read_sav(filename)
 # Article 20: Chang ---------------------------------------------------------------------------
 # Raw data is shared as supplemental material: https://doi.org/10.1371/journal.pone.0195982.s001
 url <- 'https://doi.org/10.1371/journal.pone.0195982.s001'
-filename <- '../data/data-main/article20.xlxs'
+filename <- '../data/data-main/article20.xlsx'
 GET(url, write_disk(filename, overwrite = TRUE))
 article20 <- read_excel(filename)
 
