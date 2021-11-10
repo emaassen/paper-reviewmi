@@ -3,13 +3,7 @@
 
 #rm(list = ls()) # clear workspace
 options(scipen=999) # no scientific notation
-library(fulltext)
-library(tidytext)
-library(pdftools)
-library(XML)
-library(tm)
 library(readxl)
-library(dplyr)
 
 # Analysis of Pilot Data --------------------------------------------------
 df <- read_excel("../data/codebook-pilot.xlsx") # load data 
@@ -34,11 +28,11 @@ sum(df$type_group, na.rm = T);sum(df$type_group, na.rm = T)/Ng
 # Of those empirical studies that compare groups (85), how many use scales/constructs? / 37, 44%
 sum(df$scale, na.rm = T); sum(df$scale, na.rm = T)/Ng
 
-# Of those empirical studies that compare groups (85), how many use reflective scales / 37, 44%
+# Of those empirical studies that compare groups (85), how many use reflective scales / 36, 42%
 sum(df$reflective, na.rm = T); sum(df$reflective, na.rm = T)/Ng
 
 # How many of those scales (37) were reflective? / 36, 97%
-sum(df$reflective, na.rm=T); sum(df$reflective, na.rm=T)/Ns
+sum(df$reflective, na.rm=T); sum(df$reflective, na.rm=T)/Ng
 Nfinal <- sum(df$reflective, na.rm=T)
 
 # Of all studies we sampled, how many use scales? / 37, 32% of all 117 studies
@@ -55,13 +49,13 @@ sum(df$type_scale == "existing", na.rm=T); sum(df$type_scale == "existing", na.r
 sum(df$open_data, na.rm=T);sum(df$open_data,na.rm=T)/Nfinal
 Nd <- sum(df$open_data,na.rm=T)
 
-# From those that share their data, can we construct scales based on the data? / 15, 50%
+# From those that share their data, can we construct scales based on the data? / 16, 53%
 sum(df$open_scale, na.rm=T);sum(df$open_scale, na.rm=T)/Nd
 
 # From those that share their data, can we construct groups based on the data? / 22, 73%
 sum(df$open_group, na.rm=T);sum(df$open_group, na.rm=T)/Nd
 
-# From those that share their data, can we construct both scales and groups / 15, 50%
+# From those that share their data, can we construct both scales and groups / 16, 53%
 sum(df$open_scale == 1 & df$open_group == 1, na.rm=T)
 sum(df$open_scale == 1 & df$open_group == 1, na.rm=T)/Nd
 
@@ -75,16 +69,19 @@ sum(df$mitest_rep, na.rm=T); sum(df$mitest_rep, na.rm=T)/Nfinal
 sum(df$mitest_rep == 1 & df$miresult_rep == 1, na.rm=T)
 
 # From all studies that have reflective scales and share their data (30), 
-# How many have interpretable data / 23, 77%
+# How many have interpretable data / 25, 83%
 sum(df$data_usability, na.rm=T);sum(df$data_usability, na.rm=T)/Nd
 
-# From all studies that have reflective scales share their data (30), for how many can we run MI analysis? / 13, 43%
+# From all studies that have reflective scales share their data (30), for how many can we run MI analysis? / 16, 53%
 sum(df$mitest, na.rm=T);sum(df$mitest, na.rm=T)/Nd
+
+# What kind of MI holds?
+table(df$milevel)
 
 # From all studies that have reflective scales share their data, for how many do we find MI? / 11, 37%
 sum(df$miresult, na.rm=T);sum(df$miresult, na.rm=T)/Nd
 
-# From all studies that we checked MI (15), for how many do we find MI? / 11, 85%
+# From all studies that we checked MI (16), for how many do we find MI? / 11, 85%
 sum(df$miresult, na.rm=T);sum(df$miresult, na.rm=T)/sum(df$mitest, na.rm=T)
 
 # For how many studies do we reproduce their MI result? # 1

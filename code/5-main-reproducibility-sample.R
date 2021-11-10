@@ -1,12 +1,12 @@
 ### CODE FOR MAIN STUDY SYSTEMATIC REVIEW MEASUREMENT INVARIANCE ##
 ### This is code to sample articles for which we will attempt to perform measurement invariance checks
 
-rm(list=ls())
+# rm(list=ls()) # clean workspace
 
 # packages
-library("readxl")
-library("lavaan")
-library("writexl")
+require("readxl")
+require("lavaan")
+require("writexl")
 
 # function to check how many groups are compared for each study
 assign.groups <- function(x) {

@@ -8,8 +8,9 @@
 # index used to sample open data articles from in pilot study
 /data/article-index/
 
-# data and pdfs used for the reproducibility step of the pilot study
+# data and pdfs used for the reproducibility step of the pilot and mainstudy
 /data/data-pilot/
+/data/data-main/
 
 # misc files
 *.rar
