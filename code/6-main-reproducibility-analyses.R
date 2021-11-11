@@ -19,14 +19,13 @@ require("readxl") # to load xlsx files into R
 
 
 # Article 22: Moreira -------------------------------------------------------------------------
-# The data shared are results from MI checks, but no raw data: https://doi.org/10.1371/journal.pone.0204012.s001
-# Correlations between composite variables (i.e. sum scores) are given but no correlations between separate items
-# We cannot do a MI test with this data, we cannot make grouping variables or constructs
-url <- 'https://doi.org/10.1371/journal.pone.0204012.s001'
-filename <- '../data/data-main/article22.xlsx'
+# Raw data is shared via OSF
+url <- 'https://osf.io/3qda9///?action=download'
+filename <- '../data/data-main/article22.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
-article22 <- read_excel(filename)
-
+article22 <- read_sav(filename)
+# We can make a grouping variable (time) but we do not have item scores, only the sumscore for the Factor.
+# As such, we cannot do a MI test 
 
 # Article 77: Schulze -------------------------------------------------------------------------
 # Data shared are covariance matrices for 5 groups in a word document, copied from here:
