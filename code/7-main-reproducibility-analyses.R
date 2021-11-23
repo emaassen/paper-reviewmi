@@ -6,22 +6,15 @@ require("httr") # to load data from OSF into R
 require("haven") # to load sav files into R
 require("readxl") # to load xlsx files into R
 
-#require("httr")
-#url <- 'https://osf.io/gdr4q//?action=download'
-#filename <- 'osf_dataframe.csv'
-#GET(url, write_disk(filename, overwrite = TRUE))
-#data <- read.csv2(filename, header=TRUE, na.strings="NA")
-
-#url <- 'https://osf.io/3qda9/?action=download'
-#filename <- '../data/data-main/article22.sav'
-#GET(url, write_disk(filename, overwrite = TRUE))
-#article22 <- read_sav(filename)
-
+library(psych)
+library(lavaan)
+library(semTools)
+library(GPArotation)
 
 # Article 22: Moreira -------------------------------------------------------------------------
 # Raw data is shared via OSF
 url <- 'https://osf.io/3qda9///?action=download'
-filename <- '../data/data-main/article22.sav'
+filename <- '../article22.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article22 <- read_sav(filename)
 # We can make a grouping variable (time) but we do not have item scores, only the sumscore for the Factor.
@@ -99,6 +92,104 @@ india <- matrix(c(1.17,0.76,0.73,0.82,0.50,0.57,0.44,0.36,0.54,0.28,0.06,0.62,0.
 # variables for factor: item1 until item15
 # grouping variables are the countries (us1, us2, ger1, ger2, india)
 
+# Create list of correlation matrices to fit to lavaan
+sigma.pop.Schulze <- list(ger1, ger2, us1, us2)
+
+# Provide column names for covariance matrices
+for(i in 1:length(sigma.pop.Schulze)){
+  colnames(sigma.pop.Schulze[[i]]) <- paste0("V", 1:15)
+}
+
+# Create model for dataset based on article
+
+Mod.Schulze_4F <- "
+F1 =~ V1 + V2 + V4 
+F2 =~ V5 + V6 + V7 + V13
+F3 =~ V8 + V9 + V10 + V11 
+F4 =~ V13 + V14 + V15
+
+F1 ~~ F2
+F1 ~~ F3
+F1 ~~ F4
+F2 ~~ F3
+F2 ~~ F4
+F3 ~~ F4
+"
+
+#Mod.schulze <- NA
+#for(l in 1:ncol(sigma.pop.Schulze[[1]])){
+#  Mod.schulze[l] <- c(paste0("F1 =~", 'V', l))
+#}
+
+# Create vector of sample size based on information provided by authors
+sample.schulze <- c(146, 194, 155, 193, 432)
+
+# Specify measurement model based on the type of data. In this case, the data are ordinal, and therefore
+# the model specifications and constraints proposed by Wu and Estabrook (2016; https://link.springer.com/article/10.1007%2Fs11336-016-9506-0) should be used )
+# However, since DWLS requires full data, we ran the analysis using a classic (i.e., linear) CFA with ML 
+# Note that, for 5 categories items (such as the ones used here), 
+# Rehmtulla et al. (2012; link) indicated that CFA may be appropriate. In this case, we a
+
+
+# Fit the configural model
+Conf.fit.schulze <- cfa(model = Mod.Schulze_4F, 
+                        sample.cov = sigma.pop.Schulze, 
+                        sample.nobs = c(146, 194, 193, 432),
+                        estimator = "ML"
+)
+
+# Create results table and store configural goodness-of-fit measures
+all.results.schulze <- matrix(NA, ncol = 9, nrow = 3)
+colnames(all.results.schulze) <- c("chisq","df","pvalue", 
+                                   "rmsea", "cfi", "srmr", "diffRMSEA", "diffCFI", "lavtestLRT")
+
+all.results.schulze[1,1:6]<-round(data.matrix(fitmeasures(Conf.fit.schulze,
+                                                          fit.measures = c("chisq","df","pvalue", 
+                                                                           "rmsea", "cfi", "srmr"))), digits=3)
+
+
+# Fit the loadings invariant model
+Load.fit.schulze <- cfa(model = Mod.Schulze_4F, 
+                        sample.cov = sigma.pop.Schulze, 
+                        sample.nobs = c(146, 194,193, 432),
+                        estimator = "ML",
+                        group.equal = "loadings"
+)
+
+# Store loadings invariance model goodness-of-fit measures results
+all.results.schulze[2,1:6]<-round(data.matrix(fitmeasures(Load.fit.schulze,
+                                                          fit.measures = c("chisq","df","pvalue", 
+                                                                           "rmsea", "cfi", "srmr"))), digits=3)
+
+# Fit the intercepts invariance model
+Int.fit.schulze <- cfa(model = Mod.Schulze_4F, 
+                       sample.cov = sigma.pop.Schulze, 
+                       sample.nobs = c(146, 194, 193, 432),
+                       estimator = "ML",
+                       group.equal = c("loadings", "intercepts")
+)
+
+# Store the intercepts invariance model goodness-of-fit measures results
+all.results.schulze[3,1:6]<-round(data.matrix(fitmeasures(Int.fit.schulze,
+                                                          fit.measures = c("chisq","df","pvalue", 
+                                                                           "rmsea", "cfi", "srmr"))), digits=3)
+
+
+# Compute the difference in goodness-of-fit measures
+all.results.schulze[2,7:8] <- all.results.schulze[2,4:5] - all.results.schulze[1,4:5]
+all.results.schulze[3,7:8] <- all.results.schulze[3,4:5] - all.results.schulze[2,4:5]
+
+# Compute the LRT between the different models and store the p-value result
+all.results.schulze[2,9] <- lavTestLRT(Conf.fit.schulze, Load.fit.schulze)$`Pr(>Chisq)`[2]
+all.results.schulze[3,9] <- lavTestLRT(Load.fit.schulze, Int.fit.schulze)$`Pr(>Chisq)`[2]
+
+
+
+# Results do not match those presented by the authors (up to model 3). However, the authors reported 
+# that the Satorra-Bentler values were adjusted and that BSEM was used. This, unfortunately, is not directly reproducible in R,
+# and thus we stopped with the analyses.
+# Note that, we still tried to reproduce the analyses using lavaan, but our results differ
+# from those in the article. Such differences, are due to the different estimators/models (classical CFA vs BSEM).
 
 # Article 133: Abdin --------------------------------------------------------------------------
 # The article does not share raw data or correlations between items.  Statement Data Availability: "The data underlying the 
@@ -114,7 +205,7 @@ india <- matrix(c(1.17,0.76,0.73,0.82,0.50,0.57,0.44,0.36,0.54,0.28,0.06,0.62,0.
 # https://dx.plos.org/10.1371/journal.pone.0221696.s001
 
 url <- 'https://dx.plos.org/10.1371/journal.pone.0221696.s001'
-filename <- '../data/data-main/article207.sav'
+filename <- '../article207.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article207 <- read_sav(filename)
 
@@ -123,11 +214,189 @@ article207 <- read_sav(filename)
 # grouping variable for id 868: education (variable name: curso: primero ESO & segundo ESO)
 # labels: primary -10 to 12 years old- versus secondary students -13 to 15 years old
 
+# The authors reported using an ESEM two factors model to test for MI. However, it is not clear how the ESEM model is obtained 
+# nor constructed. Here is our attempt at reproducing their analyses
+
+
+#1) Estimate EFA on full sample 
+
+polycor207<- polychoric(article207[,5:24])
+
+Ortuno_Sierra_efa <- fa(polycor207$rho, nfact = 2, rotate = "geominQ", cor= "poly")
+
+#Ortuno_Sierra_efa <- fa(article207[,5:24], nfact = 2, rotate = "varimax")
+
+Ortuno_Sierra_load <- zapsmall(matrix(round(Ortuno_Sierra_efa$loadings,3),
+                                      nrow = 20, ncol = 2))
+
+rownames(Ortuno_Sierra_load) <- colnames(article207[,5:24])
+
+#Create model
+Model_Ortuno_Sierra <- NA
+
+
+for (l in 1:ncol(Ortuno_Sierra_load)) {
+  Model_Ortuno_Sierra[l] <- paste0("F", l, "=???", paste0(c(Ortuno_Sierra_load[,l]), "*",
+                                                          rownames(Ortuno_Sierra_load), collapse =  "+" ))
+}
+
+
+#Create results matrix
+all.results.Ortuno_Sierra <- matrix(NA, ncol = 9, nrow = 3)
+colnames(all.results.Ortuno_Sierra) <- c("chisq","df","pvalue", 
+                                         "rmsea", "cfi", "srmr", "diffRMSEA", "diffCFI", "lavtestLRT")
+
+# Since DWLS was used to etimate the data (i.e., acccounting for their ordinality), we used the guidelines proposed by
+# Wu and Estabrook (2016) for MI testing with ordinal data. 
+
+
+#1 Create configural MI model following Wu and Estabrook (2016)
+
+Configural_Ortuno_Sierra <- measEq.syntax(Model_Ortuno_Sierra, 
+                                          ID.fac = "std.lv", 
+                                          ID.cat = "Wu",
+                                          ordered = colnames(article207[,5:24]),
+                                          parameterization = "delta",
+                                          data = article207,
+                                          group = "CURSO_RECO", 
+                                          group.equal = "configural", 
+                                          orthogonal = T)
+
+# Fit the configural model
+Conf.fit.Ortuno_Sierra <- cfa(as.character(Configural_Ortuno_Sierra),
+                              article207, 
+                              ordered = colnames(article207[,5:24]),
+                              group = "CURSO_RECO", 
+                              estimator = "WLSMV")
+
+# Store configural invariance model goodness-of-fit measures results
+all.results.Ortuno_Sierra[1,1:6]<-round(data.matrix(fitmeasures(Conf.fit.Ortuno_Sierra,
+                                                                fit.measures = c("chisq.scaled","df.scaled","pvalue.scaled", 
+                                                                                 "rmsea.scaled", "cfi.scaled", "srmr"))), digits=3)
+
+# Create the thresholds invariance model following Wu and Estabrook (2016)
+Thr_Ortuno_Sierra <- measEq.syntax(Model_Ortuno_Sierra, 
+                                   ID.fac = "std.lv", 
+                                   ID.cat = "Wu",
+                                   ordered = colnames(article207[,5:24]),
+                                   parameterization = "delta",
+                                   data = article207,
+                                   group = "CURSO_RECO", 
+                                   group.equal = "thresholds", 
+                                   orthogonal = T)
+# Fit the thresholds invariance model
+Thr.fit.Ortuno_Sierra <- cfa(as.character(Thr_Ortuno_Sierra),
+                             article207, 
+                             ordered = colnames(article207[,5:24]),
+                             group = "CURSO_RECO", 
+                             estimator = "WLSMV")
+
+# Store thresholds invariance model goodness-of-fit measures results
+all.results.Ortuno_Sierra[2,1:6] <-round(data.matrix(fitmeasures(Thr.fit.Ortuno_Sierra,
+                                                                 fit.measures = c("chisq.scaled","df.scaled","pvalue.scaled", 
+                                                                                  "rmsea.scaled", "cfi.scaled", "srmr"))), digits=3)
+
+# Create the thresholds invariance model following Wu and Estabrook (2016)
+Load_Ortuno_Sierra <- measEq.syntax(Model_Ortuno_Sierra, 
+                                    ID.fac = "std.lv", 
+                                    ID.cat = "Wu",
+                                    ordered = colnames(article207[,5:24]),
+                                    parameterization = "delta",
+                                    data = article207,
+                                    group = "CURSO_RECO", 
+                                    group.equal = c("thresholds","loadings"), 
+                                    orthogonal = T)
+
+# Fit the loadings invariance model
+Load.fit.Ortuno_Sierra <- cfa(as.character(Load_Ortuno_Sierra),
+                              article207, 
+                              ordered = colnames(article207[,5:24]),
+                              group = "CURSO_RECO", 
+                              estimator = "WLSMV")
+
+# Store loadings invariance model goodness-of-fit measures results
+all.results.Ortuno_Sierra[3,1:6] <-round(data.matrix(fitmeasures(Load.fit.Ortuno_Sierra,
+                                                                 fit.measures = c("chisq.scaled","df.scaled","pvalue.scaled", 
+                                                                                  "rmsea.scaled", "cfi.scaled", "srmr"))), digits=3)
+
+# Compute the difference in goodness-of-fit measures
+all.results.Ortuno_Sierra[2,7:8] <- all.results.Ortuno_Sierra[2,][4:5] - all.results.Ortuno_Sierra[1,][4:5]
+all.results.Ortuno_Sierra[3,7:8] <- all.results.Ortuno_Sierra[3,][4:5] - all.results.Ortuno_Sierra[2,][4:5]
+
+# Compute the LRT between the different models and store the p-value result
+all.results.Ortuno_Sierra[2,9] <- lavTestLRT(Conf.fit.Ortuno_Sierra, Thr.fit.Ortuno_Sierra)$`Pr(>Chisq)`[2]
+all.results.Ortuno_Sierra[3,9] <- lavTestLRT(Thr.fit.Ortuno_Sierra, Load.fit.Ortuno_Sierra)$`Pr(>Chisq)`[2]
+
+# Results could not be fully reproduced due to lack of documenting how the ESEM two factor model that was used for 
+# invariance testing is specified. We tried to reproduce the results following the standard approach
+# for ESEM MI testing (Fischer and Karl, 2019; https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6657455/pdf/fpsyg-10-01507.pdf)
+# and MI holds both for loadings and intercepts (as reported by the authors) but chi-squared statistics and df differ.
+
+
+#------
 
 # comparison 2:
 # variables for scale: PAN01 until PAN20
 # grouping variable for id 869: gender (variable name: Género)
 # labels: males versus females
+
+#Add variable to dataset based on Género to make sure that is numeric and can be recognized by lavaan
+
+article207$gender <- as.numeric(article207$Género)
+#Create results matrix
+all.results.Ortuno_Sierra_2 <- matrix(NA, ncol = 9, nrow = 3)
+colnames(all.results.Ortuno_Sierra_2) <- c("chisq","df","pvalue", 
+                                           "rmsea", "cfi", "srmr", "diffRMSEA", "diffCFI", "lavtestLRT")
+
+# Since models were generated for the earlier comparison we can skip the syntax generation step here and skip to model estimation
+# and storing the results.
+
+Conf.fit.Ortuno_Sierra_2 <- cfa(as.character(Configural_Ortuno_Sierra),
+                                article207, 
+                                ordered = colnames(article207[,5:24]),
+                                group = "gender", 
+                                estimator = "WLSMV")
+
+all.results.Ortuno_Sierra_2[1,1:6]<-round(data.matrix(fitmeasures(Conf.fit.Ortuno_Sierra_2,
+                                                                  fit.measures = c("chisq.scaled","df.scaled","pvalue.scaled", 
+                                                                                   "rmsea.scaled", "cfi.scaled", "srmr"))), digits=3)
+
+# Fit the thresholds invariance model
+Thr.fit.Ortuno_Sierra_2 <- cfa(as.character(Thr_Ortuno_Sierra),
+                               article207, 
+                               ordered = colnames(article207[,5:24]),
+                               group = "gender", 
+                               estimator = "WLSMV")
+
+# Store thresholds invariance model goodness-of-fit measures results
+all.results.Ortuno_Sierra_2[2,1:6] <-round(data.matrix(fitmeasures(Thr.fit.Ortuno_Sierra_2,
+                                                                   fit.measures = c("chisq.scaled","df.scaled","pvalue.scaled", 
+                                                                                    "rmsea.scaled", "cfi.scaled", "srmr"))), digits=3)
+
+# Fit the loadings invariance model
+Load.fit.Ortuno_Sierra_2 <- cfa(as.character(Load_Ortuno_Sierra_2),
+                                article207, 
+                                ordered = colnames(article207[,5:24]),
+                                group = "gender", 
+                                estimator = "WLSMV")
+
+# Store loadings invariance model goodness-of-fit measures results
+all.results.Ortuno_Sierra_2[3,1:6] <-round(data.matrix(fitmeasures(Load.fit.Ortuno_Sierra_2,
+                                                                   fit.measures = c("chisq.scaled","df.scaled","pvalue.scaled", 
+                                                                                    "rmsea.scaled", "cfi.scaled", "srmr"))), digits=3)
+
+# Compute the difference in goodness-of-fit measures
+all.results.Ortuno_Sierra_2[2,7:8] <- all.results.Ortuno_Sierra_2[2,][4:5] - all.results.Ortuno_Sierra_2[1,][4:5]
+all.results.Ortuno_Sierra_2[3,7:8] <- all.results.Ortuno_Sierra_2[3,][4:5] - all.results.Ortuno_Sierra_2[2,][4:5]
+
+# Compute the LRT between the different models and store the p-value result
+all.results.Ortuno_Sierra_2[2,9] <- lavTestLRT(Conf.fit.Ortuno_Sierra_2, Thr.fit.Ortuno_Sierra_2)$`Pr(>Chisq)`[2]
+all.results.Ortuno_Sierra_2[3,9] <- lavTestLRT(Thr.fit.Ortuno_Sierra_2, Load.fit.Ortuno_Sierra_2)$`Pr(>Chisq)`[2]
+
+# Results could not be fully reproduced due to lack of documenting how the ESEM two factor model that was used for 
+# invariance testing is specified. We tried to reproduce the results following the standard approach
+# for ESEM MI testing (Fischer and Karl, 2019; https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6657455/pdf/fpsyg-10-01507.pdf)
+# and MI holds both for loadings and intercepts (as reported by the authors) but chi-squared statistics and df differ.
 
 
 # Article 351: Kievit -------------------------------------------------------------------------
@@ -135,7 +404,7 @@ article207 <- read_sav(filename)
 # https://osf.io/pz8es/ 
 
 url <- 'https://osf.io/pz8es//?action=download'
-filename <- '../data/data-main/article351.csv'
+filename <- '../article351.csv'
 GET(url, write_disk(filename, overwrite = TRUE))
 article351 <- read.csv2(filename, header=TRUE, na.strings="NA", sep=',')
 cogdat <- article351 # cogdat is the name in the original code
@@ -296,15 +565,84 @@ summary(est_mutualism_free_lv_mg, fit.measures=TRUE, standardized=TRUE, rsquare=
 anova(est_mutualism_constrained_lv_mg,est_mutualism_free_lv_mg)
 
 
+#Results could be fully reproduced using the data and the code provided by the authors.
+
 # Article 710: Protzko ------------------------------------------------------------------------
 # Data shared is raw data in .sav file: https://osf.io/x7c8w/ 
 url <- 'https://osf.io/x7c8w//?action=download'
-filename <- '../data/data-main/article710.sav'
+filename <- '../article710.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article710 <- read_sav(filename)
 
 # variables for scale: Psd1, sd2R, sd3, sd4R, sd5, sd6R, s7R, sd8R, sd9, sd10 
 # grouping variable: fast 
+
+#Create model
+Model_Protzko <- 'F1 =~ sd1 +  sd2R + sd3 + sd4R + sd5 + sd6R + s7R +  sd8R + sd9 + sd10'
+
+#Create results matrix
+all.results.Protzko <- matrix(NA, ncol = 9, nrow = 3)
+colnames(all.results.Protzko) <- c("chisq","df","pvalue", 
+                                   "rmsea", "cfi", "srmr", "diffRMSEA", "diffCFI", "lavtestLRT")
+
+#change type of variables to numeric for estimating the model
+article710$sd1 <- as.numeric(article710$sd1)
+article710$sd2R <- as.numeric(article710$sd2R)
+article710$sd3 <- as.numeric(article710$sd3)
+article710$sd4R <- as.numeric(article710$sd4R)
+article710$sd5 <- as.numeric(article710$sd5)
+article710$sd6R <- as.numeric(article710$sd6R)
+article710$s7R <- as.numeric(article710$s7R)
+article710$sd8R <- as.numeric(article710$sd8R)
+article710$sd9 <- as.numeric(article710$sd9)
+article710$sd10 <- as.numeric(article710$sd10)
+article710$fast <- as.numeric(article710$fast)
+
+# Fit the configural invariance model
+Conf.fit.Protzko <- cfa(Model_Protzko,
+                        article710, 
+                        group = "fast")
+
+# Store configural invariance model goodness-of-fit measures results
+all.results.Protzko[1,1:6] <-round(data.matrix(fitmeasures(Conf.fit.Protzko,
+                                                           fit.measures = c("chisq","df","pvalue", 
+                                                                            "rmsea", "cfi", "srmr"))), digits=3)
+
+# Fit the loadings invariance model
+Load.fit.Protzko <- cfa(Model_Protzko,
+                        article710, 
+                        group = "fast",
+                        group.equal = "loadings")
+
+# Store loadings invariance model goodness-of-fit measures results
+all.results.Protzko[2,1:6] <-round(data.matrix(fitmeasures(Load.fit.Protzko,
+                                                           fit.measures = c("chisq","df","pvalue", 
+                                                                            "rmsea", "cfi", "srmr"))), digits=3)
+
+# Fit the intercepts invariance model
+Int.fit.Protzko <- cfa(Model_Protzko,
+                       article710, 
+                       estimator = "ML", 
+                       group = "fast",
+                       group.equal =  c("loadings", "intercepts"))
+
+# Store intercepts invariance model goodness-of-fit measures results
+all.results.Protzko[3,1:6] <-round(data.matrix(fitmeasures(Int.fit.Protzko,
+                                                           fit.measures = c("chisq","df","pvalue", 
+                                                                            "rmsea", "cfi", "srmr"))), digits=3)
+
+
+# Compute the difference in goodness-of-fit measures
+all.results.Protzko[2,7:8] <- all.results.Protzko[2,][4:5] - all.results.Protzko[1,][4:5]
+all.results.Protzko[3,7:8] <- all.results.Protzko[3,][4:5] - all.results.Protzko[2,][4:5]
+
+# Compute the LRT between the different models and store the p-value result
+all.results.Protzko[2,9] <- lavTestLRT(Conf.fit.Protzko, Load.fit.Protzko)$`Pr(>Chisq)`[2]
+all.results.Protzko[3,9] <- lavTestLRT(Load.fit.Protzko, Int.fit.Protzko)$`Pr(>Chisq)`[2]
+
+# Results do not entirely match those reported by the authors. Specifically, the cfi highly deviates from that reported
+# by the authors in all steps (authors: confcfi = 0.905, loadcfi = 0.905, intcfi = 0.901; reproduced 
+# confcfi = 840, loadcfi = 0.838, intcfi = 0.827). The rmsea only slightly deviates.
 
 
 # Article 711: Obaidi -------------------------------------------------------------------------
@@ -318,7 +656,7 @@ article710 <- read_sav(filename)
 # Data shared is raw data in .sav file, including .sps code file: https://osf.io/yxvuk/files/
 # study 1; 3 comparisons
 url <- 'https://osf.io/mzyh5//?action=download'
-filename <- '../data/data-main/article7_1.sav'
+filename <- '../article7_1.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article7_1 <- read_sav(filename)
 
@@ -326,29 +664,252 @@ article7_1 <- read_sav(filename)
 # variables for scale: 
 # grouping: confederate (black / white)
 
+#variable for scale could not be found, and thus we could not reproduce this comparison. 
+
 # comparison 2: 
 # variables for scale: post negative affect (DV_sad, DV_hopeless, DV_Discouraged, DV_angry, DV_resentful, DV_annoyed, DV_fatigued, DV_wornout, DV_exhausted, DV_vigor, DV_lively, DV_cheer)
 # grouping: C_CnCI (low and high self-disclosure)
 
+#Create model
+Model_Leitner <- 'F1 =~ DV_sad +  DV_hopeless + DV_Discouraged + DV_angry + DV_resentful + DV_annoyed + DV_fatigued +
+                  DV_wornout +  DV_exchausted + DV_vigor + DV_lively + DV_cheer'
+
+#Create results matrix
+all.results.Leitner <- matrix(NA, ncol = 9, nrow = 3)
+colnames(all.results.Leitner) <- c("chisq","df","pvalue", 
+                                   "rmsea", "cfi", "srmr", "diffRMSEA", "diffCFI", "lavtestLRT")
+
+#change type of variables to numeric for estimating the model
+article7_1$group <- as.numeric(article7_1$C_CnCls)
+
+# Fit the configural invariance model
+Conf.fit.Leitner<- cfa(Model_Leitner,
+                       article7_1, 
+                       group = "group")
+
+# Store configural invariance model goodness-of-fit measures results
+all.results.Leitner[1,1:6] <-round(data.matrix(fitmeasures(Conf.fit.Leitner,
+                                                           fit.measures = c("chisq","df","pvalue", 
+                                                                            "rmsea", "cfi", "srmr"))), digits=3)
+
+# Fit the loadings invariance model
+Load.fit.Leitner <- cfa(Model_Leitner,
+                        article7_1, 
+                        group = "group",
+                        group.equal = "loadings")
+
+# Store loadings invariance model goodness-of-fit measures results
+all.results.Leitner[2,1:6] <-round(data.matrix(fitmeasures(Load.fit.Leitner,
+                                                           fit.measures = c("chisq","df","pvalue", 
+                                                                            "rmsea", "cfi", "srmr"))), digits=3)
+
+# Fit the intercepts invariance model
+Int.fit.Leitner <- cfa(Model_Leitner,
+                       article7_1, 
+                       group = "group",
+                       group.equal = c("loadings", "intercepts"))
+
+# Store loadings invariance model goodness-of-fit measures results
+all.results.Leitner[3,1:6] <-round(data.matrix(fitmeasures(Int.fit.Leitner,
+                                                           fit.measures = c("chisq","df","pvalue", 
+                                                                            "rmsea", "cfi", "srmr"))), digits=3)
+
+
+# Compute the difference in goodness-of-fit measures
+all.results.Leitner[2,7:8] <- all.results.Leitner[2,][4:5] - all.results.Leitner[1,][4:5]
+all.results.Leitner[3,7:8] <- all.results.Leitner[3,][4:5] - all.results.Leitner[2,][4:5]
+
+# Compute the LRT between the different models and store the p-value result
+all.results.Leitner[2,9] <- lavTestLRT(Conf.fit.Leitner, Load.fit.Leitner)$`Pr(>Chisq)`[2]
+all.results.Leitner[3,9] <- lavTestLRT(Load.fit.Leitner, Int.fit.Leitner)$`Pr(>Chisq)`[2]
+
+
+#MI test rejected at the configural invariance level.
+
 # comparison 3: 
 # variables for scale: post negative affect (DV_sad, DV_hopeless, DV_Discouraged, DV_angry, DV_resentful, DV_annoyed, DV_fatigued, DV_wornout, DV_exhausted, DV_vigor, DV_lively, DV_cheer)
 # grouping: confederate (black / white)
-
-# study 2; 2 comparisons
-url <- 'https://osf.io/g85jp//?action=download'
-filename <- '../data/data-main/article7_2.sav'
+url <- 'https://osf.io/mzyh5//?action=download'
+filename <- '../article7_1.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article7_2 <- read_sav(filename)
 
+# study 2; 2 comparisons
+
+#Create model
+Model_Leitner_2 <- 'F1 =~ DV_sad +  DV_hopeless + DV_Discouraged + DV_angry + DV_resentful + DV_annoyed + DV_fatigued +
+                  DV_wornout +  DV_exchausted + DV_vigor + DV_lively + DV_cheer'
+
+#Create results matrix
+all.results.Leitner_2 <- matrix(NA, ncol = 9, nrow = 3)
+colnames(all.results.Leitner_2) <- c("chisq","df","pvalue", 
+                                     "rmsea", "cfi", "srmr", "diffRMSEA", "diffCFI", "lavtestLRT")
+
+
+# Fit the configural invariance model
+Conf.fit.Leitner_2<- cfa(Model_Leitner_2,
+                         article7_2, 
+                         group = "ConfederateRace")
+
+# Store configural invariance model goodness-of-fit measures results
+all.results.Leitner_2[1,1:6] <-round(data.matrix(fitmeasures(Conf.fit.Leitner_2,
+                                                             fit.measures = c("chisq","df","pvalue", 
+                                                                              "rmsea", "cfi", "srmr"))), digits=3)
+
+# Fit the loadings invariance model
+Load.fit.Leitner_2 <- cfa(Model_Leitner_2,
+                          article7_2, 
+                          group = "ConfederateRace",
+                          group.equal = "loadings")
+
+# Store loadings invariance model goodness-of-fit measures results
+all.results.Leitner_2[2,1:6] <-round(data.matrix(fitmeasures(Load.fit.Leitner_2,
+                                                             fit.measures = c("chisq","df","pvalue", 
+                                                                              "rmsea", "cfi", "srmr"))), digits=3)
+
+# Fit the intercepts invariance model
+Int.fit.Leitner_2 <- cfa(Model_Leitner_2,
+                         article7_2, 
+                         group = "ConfederateRace",
+                         group.equal = c("loadings", "intercepts"))
+
+# Store loadings invariance model goodness-of-fit measures results
+all.results.Leitner_2[3,1:6] <-round(data.matrix(fitmeasures(Int.fit.Leitner_2,
+                                                             fit.measures = c("chisq","df","pvalue", 
+                                                                              "rmsea", "cfi", "srmr"))), digits=3)
+
+
+# Compute the difference in goodness-of-fit measures
+all.results.Leitner_2[2,7:8] <- all.results.Leitner_2[2,][4:5] - all.results.Leitner_2[1,][4:5]
+all.results.Leitner_2[3,7:8] <- all.results.Leitner_2[3,][4:5] - all.results.Leitner_2[2,][4:5]
+
+# Compute the LRT between the different models and store the p-value result
+all.results.Leitner_2[2,9] <- lavTestLRT(Conf.fit.Leitner_2, Load.fit.Leitner_2)$`Pr(>Chisq)`[2]
+all.results.Leitner_2[3,9] <- lavTestLRT(Load.fit.Leitner_2, Int.fit.Leitner_2)$`Pr(>Chisq)`[2]
+
+#MI test rejected at the configural invariance level.
+
 # comparison 4: 
 # variables for scale: negative affect after speech but before feedback 
-# POMS_prefdbk_hopeless,POMS_prefdbk_discouraged, POMS_prefdbk_angry, POMS_prefdbk_resent, POMS_prefdbk_annyd, POMS_prefdbk_fatigued, POMS_prefdbk_wornout, POMS_prefdbk_exhauste, POMS_vigor_prefdbk_R, POMS_lively_prefdbk_R, POMS_cheer_prefdbk_R
+# POMS_prefdbk_hopeless,POMS_prefdbk_discouraged, POMS_prefdbk_angry, POMS_prefdbk_resent, POMS_prefdbk_annyd, POMS_prefdbk_fatigued, POMS_prefdbk_wornout, POMS_prefdbk_exhauste
 # grouping: confederate C_CnCI (low and high self-disclosure)
+url <- 'https://osf.io/g85jp//?action=download'
+filename <- '../article7_2.sav'
+GET(url, write_disk(filename, overwrite = TRUE))
+article7_3 <- read_sav(filename)
+
+#change grouping variable class
+article7_3$group <- as.numeric(article7_3$C_CnCl)
+
+
+#Create model using the variables colnames for the POMS scale prefdbk
+Model_Leitner_3 <- NA
+for (i in 1:12){
+  Model_Leitner_3[i] <- paste0("F1 =~" , colnames(article7_3[,i+19]))
+}
+
+#Create results matrix
+all.results.Leitner_3 <- matrix(NA, ncol = 9, nrow = 3)
+colnames(all.results.Leitner_3) <- c("chisq","df","pvalue", 
+                                     "rmsea", "cfi", "srmr", "diffRMSEA", "diffCFI", "lavtestLRT")
+
+
+# Fit the configural invariance model
+Conf.fit.Leitner_3<- cfa(Model_Leitner_3,
+                         article7_3, 
+                         group = "group")
+
+# Store configural invariance model goodness-of-fit measures results
+all.results.Leitner_3[1,1:6] <-round(data.matrix(fitmeasures(Conf.fit.Leitner_3,
+                                                             fit.measures = c("chisq","df","pvalue", 
+                                                                              "rmsea", "cfi", "srmr"))), digits=3)
+
+# Fit the loadings invariance model
+Load.fit.Leitner_3 <- cfa(Model_Leitner_3,
+                          article7_3, 
+                          group = "group",
+                          group.equal = "loadings")
+
+# Store loadings invariance model goodness-of-fit measures results
+all.results.Leitner_3[2,1:6] <-round(data.matrix(fitmeasures(Load.fit.Leitner_3,
+                                                             fit.measures = c("chisq","df","pvalue", 
+                                                                              "rmsea", "cfi", "srmr"))), digits=3)
+
+# Fit the intercepts invariance model
+Int.fit.Leitner_3 <- cfa(Model_Leitner_3,
+                         article7_3, 
+                         group = "group",
+                         group.equal = c("loadings", "intercepts"))
+
+# Store loadings invariance model goodness-of-fit measures results
+all.results.Leitner_3[3,1:6] <-round(data.matrix(fitmeasures(Int.fit.Leitner_3,
+                                                             fit.measures = c("chisq","df","pvalue", 
+                                                                              "rmsea", "cfi", "srmr"))), digits=3)
+
+
+# Compute the difference in goodness-of-fit measures
+all.results.Leitner_3[2,7:8] <- all.results.Leitner_3[2,][4:5] - all.results.Leitner_3[1,][4:5]
+all.results.Leitner_3[3,7:8] <- all.results.Leitner_3[3,][4:5] - all.results.Leitner_3[2,][4:5]
+
+# Compute the LRT between the different models and store the p-value result
+all.results.Leitner_3[2,9] <- lavTestLRT(Conf.fit.Leitner_3, Load.fit.Leitner_3)$`Pr(>Chisq)`[2]
+all.results.Leitner_3[3,9] <- lavTestLRT(Load.fit.Leitner_3, Int.fit.Leitner_3)$`Pr(>Chisq)`[2]
+
+#MI test rejected at the configural invariance level.
 
 # comparison 5: 
 # variables for scale: negative affect after speech but before feedback 
 # POMS_prefdbk_hopeless,POMS_prefdbk_discouraged, POMS_prefdbk_angry, POMS_prefdbk_resent, POMS_prefdbk_annyd, POMS_prefdbk_fatigued, POMS_prefdbk_wornout, POMS_prefdbk_exhauste, POMS_vigor_prefdbk_R, POMS_lively_prefdbk_R, POMS_cheer_prefdbk_R
 # grouping: confederate confederate (black / white)
+
+#Create results matrix
+all.results.Leitner_4 <- matrix(NA, ncol = 9, nrow = 3)
+colnames(all.results.Leitner_4) <- c("chisq","df","pvalue", 
+                                     "rmsea", "cfi", "srmr", "diffRMSEA", "diffCFI", "lavtestLRT")
+
+
+# Fit the configural invariance model
+Conf.fit.Leitner_4<- cfa(Model_Leitner_3,
+                         article7_3, 
+                         group = "RaceCondition")
+
+# Store configural invariance model goodness-of-fit measures results
+all.results.Leitner_4[1,1:6] <-round(data.matrix(fitmeasures(Conf.fit.Leitner_4,
+                                                             fit.measures = c("chisq","df","pvalue", 
+                                                                              "rmsea", "cfi", "srmr"))), digits=3)
+
+# Fit the loadings invariance model
+Load.fit.Leitner_4 <- cfa(Model_Leitner_3,
+                          article7_3, 
+                          group = "RaceCondition",
+                          group.equal = "loadings")
+
+# Store loadings invariance model goodness-of-fit measures results
+all.results.Leitner_4[2,1:6] <-round(data.matrix(fitmeasures(Load.fit.Leitner_4,
+                                                             fit.measures = c("chisq","df","pvalue", 
+                                                                              "rmsea", "cfi", "srmr"))), digits=3)
+
+# Fit the intercepts invariance model
+Int.fit.Leitner_4 <- cfa(Model_Leitner_3,
+                         article7_3, 
+                         group = "RaceCondition",
+                         group.equal = c("loadings", "intercepts"))
+
+# Store loadings invariance model goodness-of-fit measures results
+all.results.Leitner_4[3,1:6] <-round(data.matrix(fitmeasures(Int.fit.Leitner_4,
+                                                             fit.measures = c("chisq","df","pvalue", 
+                                                                              "rmsea", "cfi", "srmr"))), digits=3)
+
+
+# Compute the difference in goodness-of-fit measures
+all.results.Leitner_4[2,7:8] <- all.results.Leitner_4[2,][4:5] - all.results.Leitner_4[1,][4:5]
+all.results.Leitner_4[3,7:8] <- all.results.Leitner_4[3,][4:5] - all.results.Leitner_4[2,][4:5]
+
+# Compute the LRT between the different models and store the p-value result
+all.results.Leitner_4[2,9] <- lavTestLRT(Conf.fit.Leitner_4, Load.fit.Leitner_4)$`Pr(>Chisq)`[2]
+all.results.Leitner_4[3,9] <- lavTestLRT(Load.fit.Leitner_4, Int.fit.Leitner_4)$`Pr(>Chisq)`[2]
+
+#MI test rejected at the configural invariance level.
 
 
 # Article 18: Bisallah ------------------------------------------------------------------------
@@ -371,7 +932,7 @@ article20 <- read_excel(filename)
 
 # Article 56: AlMahmoud -----------------------------------------------------------------------
 url <- 'https://doi.org/10.1371/journal.pone.0202466.s002'
-filename <- '../data/data-main/article56.xlxs'
+filename <- '../article56.xlxs'
 GET(url, write_disk(filename, overwrite = TRUE))
 article56 <- read_excel(filename)
 
@@ -379,9 +940,128 @@ article56 <- read_excel(filename)
 # variables for scale: EIC1, EIC2, EIC3, EIC4, EIC5, EIC6, EIC7, EIC8, EIC9
 # grouping: Gender
 
+#change colnames for first variables 
+
+article56_1 <- article56[,c(2:10,47) ]
+
+colnames(article56_1) <- c("EIC1", "EIC2", "EIC3", "EIC4", "EIC5", "EIC6", "EIC7", "EIC8", "EIC9", "Gender")
+
+#Create model using the variables colnames for the POMS scale prefdbk
+Model_AlMahmoud_1 <- NA
+for (i in 1:9){
+  Model_AlMahmoud_1[i] <- paste0("F1 =~" , "EIC", i)
+}
+
+#Create results matrix
+all.results.AlMahmoud_1 <- matrix(NA, ncol = 9, nrow = 3)
+colnames(all.results.AlMahmoud_1) <- c("chisq","df","pvalue", 
+                                       "rmsea", "cfi", "srmr", "diffRMSEA", "diffCFI", "lavtestLRT")
+
+
+# Fit the configural invariance model
+Conf.fit.AlMahmoud_1<- cfa(Model_AlMahmoud_1,
+                           article56_1, 
+                           group = "Gender")
+
+# Store configural invariance model goodness-of-fit measures results
+all.results.AlMahmoud_1[1,1:6] <-round(data.matrix(fitmeasures(Conf.fit.AlMahmoud_1,
+                                                               fit.measures = c("chisq","df","pvalue", 
+                                                                                "rmsea", "cfi", "srmr"))), digits=3)
+
+# Fit the loadings invariance model
+Load.fit.AlMahmoud_1 <- cfa(Model_AlMahmoud_1,
+                            article56_1, 
+                            group = "Gender",
+                            group.equal = "loadings")
+
+# Store loadings invariance model goodness-of-fit measures results
+all.results.AlMahmoud_1[2,1:6] <-round(data.matrix(fitmeasures(Load.fit.AlMahmoud_1,
+                                                               fit.measures = c("chisq","df","pvalue", 
+                                                                                "rmsea", "cfi", "srmr"))), digits=3)
+
+# Fit the intercepts invariance model
+Int.fit.AlMahmoud_1 <- cfa(Model_AlMahmoud_1,
+                           article56_1, 
+                           group = "Gender",
+                           group.equal = c("loadings", "intercepts"))
+
+# Store loadings invariance model goodness-of-fit measures results
+all.results.AlMahmoud_1[3,1:6] <-round(data.matrix(fitmeasures(Int.fit.AlMahmoud_1,
+                                                               fit.measures = c("chisq","df","pvalue", 
+                                                                                "rmsea", "cfi", "srmr"))), digits=3)
+
+
+# Compute the difference in goodness-of-fit measures
+all.results.AlMahmoud_1[2,7:8] <- all.results.AlMahmoud_1[2,][4:5] - all.results.AlMahmoud_1[1,][4:5]
+all.results.AlMahmoud_1[3,7:8] <- all.results.AlMahmoud_1[3,][4:5] - all.results.AlMahmoud_1[2,][4:5]
+
+# Compute the LRT between the different models and store the p-value result
+all.results.AlMahmoud_1[2,9] <- lavTestLRT(Conf.fit.AlMahmoud_1, Load.fit.AlMahmoud_1)$`Pr(>Chisq)`[2]
+all.results.AlMahmoud_1[3,9] <- lavTestLRT(Load.fit.AlMahmoud_1, Int.fit.AlMahmoud_1)$`Pr(>Chisq)`[2]
+
+
+
+
 # comparison 2:
 # variables for scale: EBEI1, EBEI2, EBEI3, EBEI4, EBEI5, EBEI6, EBEI7, EBEI8, EBEI9, EBEI10
 # grouping: Gender
+
+article56_2 <- article56[,c(11:20,47) ]
+
+colnames(article56_2) <- c("EBEI1", "EBEI2", "EBEI3", "EBEI4", "EBEI5", "EBEI6", "EBEI7", "EBEI8", "EBEI9", "EBEI10", "Gender")
+
+#Create model using the variables colnames for the POMS scale prefdbk
+Model_AlMahmoud_2 <- NA
+for (i in 1:9){
+  Model_AlMahmoud_2[i] <- paste0("F1 =~" , "EBEI", i)
+}
+
+#Create results matrix
+all.results.AlMahmoud_2 <- matrix(NA, ncol = 9, nrow = 3)
+colnames(all.results.AlMahmoud_2) <- c("chisq","df","pvalue", 
+                                       "rmsea", "cfi", "srmr", "diffRMSEA", "diffCFI", "lavtestLRT")
+
+
+# Fit the configural invariance model
+Conf.fit.AlMahmoud_2<- cfa(Model_AlMahmoud_2,
+                           article56_2, 
+                           group = "Gender")
+
+# Store configural invariance model goodness-of-fit measures results
+all.results.AlMahmoud_2[1,1:6] <-round(data.matrix(fitmeasures(Conf.fit.AlMahmoud_2,
+                                                               fit.measures = c("chisq","df","pvalue", 
+                                                                                "rmsea", "cfi", "srmr"))), digits=3)
+
+# Fit the loadings invariance model
+Load.fit.AlMahmoud_2 <- cfa(Model_AlMahmoud_2,
+                            article56_2, 
+                            group = "Gender",
+                            group.equal = "loadings")
+
+# Store loadings invariance model goodness-of-fit measures results
+all.results.AlMahmoud_2[2,1:6] <-round(data.matrix(fitmeasures(Load.fit.AlMahmoud_2,
+                                                               fit.measures = c("chisq","df","pvalue", 
+                                                                                "rmsea", "cfi", "srmr"))), digits=3)
+
+# Fit the intercepts invariance model
+Int.fit.AlMahmoud_2 <- cfa(Model_AlMahmoud_2,
+                           article56_2, 
+                           group = "Gender",
+                           group.equal = c("loadings", "intercepts"))
+
+# Store loadings invariance model goodness-of-fit measures results
+all.results.AlMahmoud_2[3,1:6] <-round(data.matrix(fitmeasures(Int.fit.AlMahmoud_2,
+                                                               fit.measures = c("chisq","df","pvalue", 
+                                                                                "rmsea", "cfi", "srmr"))), digits=3)
+
+
+# Compute the difference in goodness-of-fit measures
+all.results.AlMahmoud_2[2,7:8] <- all.results.AlMahmoud_2[2,][4:5] - all.results.AlMahmoud_2[1,][4:5]
+all.results.AlMahmoud_2[3,7:8] <- all.results.AlMahmoud_2[3,][4:5] - all.results.AlMahmoud_2[2,][4:5]
+
+# Compute the LRT between the different models and store the p-value result
+all.results.AlMahmoud_2[2,9] <- lavTestLRT(Conf.fit.AlMahmoud_2, Load.fit.AlMahmoud_2)$`Pr(>Chisq)`[2]
+all.results.AlMahmoud_2[3,9] <- lavTestLRT(Load.fit.AlMahmoud_2, Int.fit.AlMahmoud_2)$`Pr(>Chisq)`[2]
 
 # comparison 3:s
 # variables for scale: ECOVP1, ECOVP2, ECOVP3, ECOVP4, ECOVP5, ECOVP6, ECOVP7, ECOVP8, ECOVP9, ECOVP10,
@@ -389,11 +1069,68 @@ article56 <- read_excel(filename)
 # ECOVP22, ECOVP23, ECOVP24, ECOVP25
 # grouping: Gender
 
+article56_3 <- article56[,c(21:45,47) ]
 
+colnames(article56_3) <- c("ECOVP1", "ECOVP2", "ECOVP3", "ECOVP4", "ECOVP5", "ECOVP6", "ECOVP7", "ECOVP8", "ECOVP9", "ECOVP10",
+                           "ECOVP11", "ECOVP12", "ECOVP13", "ECOVP14", "ECOVP15", "ECOVP16", "ECOVP17", "ECOVP18" , 
+                           "ECOVP19", "ECOVP20", "ECOVP21", "ECOVP22", "ECOVP23", "ECOVP24", "ECOVP25", "Gender")
+
+#Create model using the variables colnames for the POMS scale prefdbk
+Model_AlMahmoud_3 <- NA
+for (i in 1:9){
+  Model_AlMahmoud_3[i] <- paste0("F1 =~" , "ECOVP", i)
+}
+
+#Create results matrix
+all.results.AlMahmoud_3 <- matrix(NA, ncol = 9, nrow = 3)
+colnames(all.results.AlMahmoud_3) <- c("chisq","df","pvalue", 
+                                       "rmsea", "cfi", "srmr", "diffRMSEA", "diffCFI", "lavtestLRT")
+
+
+# Fit the configural invariance model
+Conf.fit.AlMahmoud_3<- cfa(Model_AlMahmoud_3,
+                           article56_3, 
+                           group = "Gender")
+
+# Store configural invariance model goodness-of-fit measures results
+all.results.AlMahmoud_3[1,1:6] <-round(data.matrix(fitmeasures(Conf.fit.AlMahmoud_3,
+                                                               fit.measures = c("chisq","df","pvalue", 
+                                                                                "rmsea", "cfi", "srmr"))), digits=3)
+
+# Fit the loadings invariance model
+Load.fit.AlMahmoud_3 <- cfa(Model_AlMahmoud_3,
+                            article56_3, 
+                            group = "Gender",
+                            group.equal = "loadings")
+
+# Store loadings invariance model goodness-of-fit measures results
+all.results.AlMahmoud_3[2,1:6] <-round(data.matrix(fitmeasures(Load.fit.AlMahmoud_3,
+                                                               fit.measures = c("chisq","df","pvalue", 
+                                                                                "rmsea", "cfi", "srmr"))), digits=3)
+
+# Fit the intercepts invariance model
+Int.fit.AlMahmoud_3 <- cfa(Model_AlMahmoud_3,
+                           article56_3, 
+                           group = "Gender",
+                           group.equal = c("loadings", "intercepts"))
+
+# Store loadings invariance model goodness-of-fit measures results
+all.results.AlMahmoud_3[3,1:6] <-round(data.matrix(fitmeasures(Int.fit.AlMahmoud_3,
+                                                               fit.measures = c("chisq","df","pvalue", 
+                                                                                "rmsea", "cfi", "srmr"))), digits=3)
+
+
+# Compute the difference in goodness-of-fit measures
+all.results.AlMahmoud_3[2,7:8] <- all.results.AlMahmoud_3[2,][4:5] - all.results.AlMahmoud_3[1,][4:5]
+all.results.AlMahmoud_3[3,7:8] <- all.results.AlMahmoud_3[3,][4:5] - all.results.AlMahmoud_3[2,][4:5]
+
+# Compute the LRT between the different models and store the p-value result
+all.results.AlMahmoud_3[2,9] <- lavTestLRT(Conf.fit.AlMahmoud_3, Load.fit.AlMahmoud_3)$`Pr(>Chisq)`[2]
+all.results.AlMahmoud_3[3,9] <- lavTestLRT(Load.fit.AlMahmoud_3, Int.fit.AlMahmoud_3)$`Pr(>Chisq)`[2]
 
 # Article 74: Cardoso -------------------------------------------------------------------------
 url <- 'https://doi.org/10.1371/journal.pone.0205352.s002'
-filename <- '../data/data-main/article74.csv'
+filename <- '../article74.csv'
 GET(url, write_disk(filename, overwrite = TRUE))
 article74 <- read.csv2(filename, header=F, na.strings="NA", sep=",")
 
@@ -409,7 +1146,7 @@ article74 <- read.csv2(filename, header=F, na.strings="NA", sep=",")
 
 # Article 131: Senanayake ---------------------------------------------------------------------
 url <- 'https://doi.org/10.1371/journal.pone.0211604.s001'
-filename <- '../data/data-main/article131.xlsx'
+filename <- '../article131.xlsx'
 GET(url, write_disk(filename, overwrite = TRUE))
 article131 <- read_excel(filename)
 
@@ -417,9 +1154,176 @@ article131 <- read_excel(filename)
 # variables for scale: Eq5Dmob, Eq5Dselfc, Eq5Duact, Eq5Dpain, Eq5Dmood
 # grouping: depression
 
+#Create model 
+Model_Senanayake_1 <- 'F1 =~ Eq5Dmob +  Eq5Dselfc + Eq5Duact +  Eq5Dpain + Eq5Dmood'
+
+
+#Create results matrix
+all.results.Senanayake_1 <- matrix(NA, ncol = 9, nrow = 3)
+colnames(all.results.Senanayake_1) <- c("chisq","df","pvalue", 
+                                        "rmsea", "cfi", "srmr", "diffRMSEA", "diffCFI", "lavtestLRT")
+
+
+# Fit the configural invariance model
+Conf.Mod.Senanayake_1<- measEq.syntax(Model_Senanayake_1,
+                                      ID.fac = "std.lv",
+                                      ID.cat = "Wu",
+                                      ordered = c("Eq5Dmob", "Eq5Dselfc", "Eq5Duact", "Eq5Dpain", "Eq5Dmood"),
+                                      group = "depression", 
+                                      parameterization = "delta", 
+                                      data = article131,
+                                      group.equal = "configural") 
+
+Conf.fit.Senanayake_1<- cfa(as.character(Conf.Mod.Senanayake_1),
+                            article131, 
+                            group = "depression", 
+                            estimator = "WLSMV")
+
+# Store configural invariance model goodness-of-fit measures results
+all.results.Senanayake_1[1,1:6] <-round(data.matrix(fitmeasures(Conf.fit.Senanayake_1,
+                                                                fit.measures = c("chisq.scaled","df.scaled","pvalue", 
+                                                                                 "rmsea.scaled", "cfi.scaled", "srmr"))), digits=3)
+
+# Fit the loadings invariance model
+Thr.Mod.Senanayake_1<- measEq.syntax(Model_Senanayake_1,
+                                     ID.fac = "std.lv",
+                                     ID.cat = "Wu",
+                                     ordered = c("Eq5Dmob", "Eq5Dselfc", "Eq5Duact", "Eq5Dpain", "Eq5Dmood"),
+                                     group = "depression", 
+                                     parameterization = "delta", 
+                                     data = article131,
+                                     group.equal = c("thresholds")) 
+
+
+Thr.fit.Senanayake_1 <- cfa(as.character(Thr.Mod.Senanayake_1),
+                            article131, 
+                            group = "depression", 
+                            estimator = "WLSMV")
+
+# Store loadings invariance model goodness-of-fit measures results
+all.results.Senanayake_1[2,1:6] <-round(data.matrix(fitmeasures(Thr.fit.Senanayake_1,
+                                                                fit.measures = c("chisq.scaled","df.scaled","pvalue", 
+                                                                                 "rmsea.scaled", "cfi.scaled", "srmr"))), digits=3)
+
+# Fit the intercepts invariance model
+Load.Mod.Senanayake_1<- measEq.syntax(Model_Senanayake_1,
+                                      ID.fac = "std.lv",
+                                      ID.cat = "Wu",
+                                      ordered = c("Eq5Dmob", "Eq5Dselfc", "Eq5Duact", "Eq5Dpain", "Eq5Dmood"),
+                                      group = "depression", 
+                                      parameterization = "delta", 
+                                      data = article131,
+                                      group.equal = c("thresholds", "loadings")) 
+
+
+Load.fit.Senanayake_1 <- cfa(as.character(Load.Mod.Senanayake_1),
+                             article131, 
+                             group = "depression", 
+                             estimator = "WLSMV")
+
+# Store loadings invariance model goodness-of-fit measures results
+all.results.Senanayake_1[3,1:6] <-round(data.matrix(fitmeasures(Load.fit.Senanayake_1,
+                                                                fit.measures = c("chisq.scaled","df.scaled","pvalue", 
+                                                                                 "rmsea.scaled", "cfi.scaled", "srmr"))), digits=3)
+
+
+# Compute the difference in goodness-of-fit measures
+all.results.Senanayake_1[2,7:8] <- all.results.Senanayake_1[2,][4:5] - all.results.Senanayake_1[1,][4:5]
+all.results.Senanayake_1[3,7:8] <- all.results.Senanayake_1[3,][4:5] - all.results.Senanayake_1[2,][4:5]
+
+# Compute the LRT between the different models and store the p-value result
+all.results.Senanayake_1[2,9] <- lavTestLRT(Conf.fit.Senanayake_1, Thr.fit.Senanayake_1)$`Pr(>Chisq)`[2]
+all.results.Senanayake_1[3,9] <- lavTestLRT(Thr.fit.Senanayake_1, Load.fit.Senanayake_1)$`Pr(>Chisq)`[2]
+
+
+
 # comparison 2:
 # variables for scale: Eq5Dmob, Eq5Dselfc, Eq5Duact, Eq5Dpain, Eq5Dmood
 # grouping: distress
+
+#Create model 
+Model_Senanayake_2 <- 'F1 =~ Eq5Dmob +  Eq5Dselfc + Eq5Duact +  Eq5Dpain + Eq5Dmood'
+
+# Note that since in 1 group there is a 0 cell problem (not observed score for the variables Eq5Dmob, selfc, Duact, mood)
+# we decided to collapse categories 3 scores in 2
+
+article131_collapsed <- article131
+article131_collapsed$Eq5Dmob <- ifelse(article131_collapsed$Eq5Dmob >=2, 2, 1)
+article131_collapsed$Eq5Dselfc <- ifelse(article131_collapsed$Eq5Dselfc >=2, 2, 1)
+article131_collapsed$Eq5Duact <- ifelse(article131_collapsed$Eq5Duact >=2, 2, 1)
+article131_collapsed$Eq5Dmood <- ifelse(article131_collapsed$Eq5Dmood >=2, 2, 1)
+
+
+#Create results matrix
+# Fit the configural invariance model
+Conf.Mod.Senanayake_2<- measEq.syntax(Model_Senanayake_2,
+                                      ID.fac = "std.lv",
+                                      ID.cat = "Wu",
+                                      ordered = c("Eq5Dmob", "Eq5Dselfc", "Eq5Duact", "Eq5Dpain", "Eq5Dmood"),
+                                      group = "distress", 
+                                      parameterization = "delta", 
+                                      data = article131_collapsed,
+                                      group.equal = "configural") 
+
+Conf.fit.Senanayake_2<- cfa(as.character(Conf.Mod.Senanayake_2),
+                            article131_collapsed, 
+                            group = "distress", 
+                            estimator = "WLSMV")
+
+# Store configural invariance model goodness-of-fit measures results
+all.results.Senanayake_2[1,1:6] <-round(data.matrix(fitmeasures(Conf.fit.Senanayake_2,
+                                                                fit.measures = c("chisq.scaled","df.scaled","pvalue", 
+                                                                                 "rmsea.scaled", "cfi.scaled", "srmr"))), digits=3)
+
+# Fit the loadings invariance model
+Thr.Mod.Senanayake_2<- measEq.syntax(Model_Senanayake_2,
+                                     ID.fac = "std.lv",
+                                     ID.cat = "Wu",
+                                     ordered = c("Eq5Dmob", "Eq5Dselfc", "Eq5Duact", "Eq5Dpain", "Eq5Dmood"),
+                                     group = "distress", 
+                                     parameterization = "delta", 
+                                     data = article131_collapsed,
+                                     group.equal = "thresholds") 
+
+Thr.fit.Senanayake_2<- cfa(as.character(Thr.Mod.Senanayake_2),
+                           article131_collapsed, 
+                           group = "distress", 
+                           estimator = "WLSMV")
+
+# Store loadings invariance model goodness-of-fit measures results
+all.results.Senanayake_2[2,1:6] <-round(data.matrix(fitmeasures(Thr.fit.Senanayake_2,
+                                                                fit.measures = c("chisq.scaled","df.scaled","pvalue", 
+                                                                                 "rmsea.scaled", "cfi.scaled", "srmr"))), digits=3)
+
+# Fit the intercepts invariance model
+Load.Mod.Senanayake_2<- measEq.syntax(Model_Senanayake_2,
+                                      ID.fac = "std.lv",
+                                      ID.cat = "Wu",
+                                      ordered = c("Eq5Dmob", "Eq5Dselfc", "Eq5Duact", "Eq5Dpain", "Eq5Dmood"),
+                                      group = "distress", 
+                                      parameterization = "delta", 
+                                      data = article131_collapsed,
+                                      group.equal = c("thresholds", "loadings")) 
+
+Load.fit.Senanayake_2<- cfa(as.character(Conf.Mod.Senanayake_2),
+                            article131_collapsed, 
+                            group = "distress", 
+                            estimator = "WLSMV")
+
+# Store loadings invariance model goodness-of-fit measures results
+all.results.Senanayake_2[3,1:6] <-round(data.matrix(fitmeasures(Load.fit.Senanayake_2,
+                                                                fit.measures = c("chisq.scaled","df.scaled","pvalue", 
+                                                                                 "rmsea.scaled", "cfi.scaled", "srmr"))), digits=3)
+
+
+# Compute the difference in goodness-of-fit measures
+all.results.Senanayake_2[2,7:8] <- all.results.Senanayake_2[2,][4:5] - all.results.Senanayake_2[1,][4:5]
+all.results.Senanayake_2[3,7:8] <- all.results.Senanayake_2[3,][4:5] - all.results.Senanayake_2[2,][4:5]
+
+# Compute the LRT between the different models and store the p-value result
+all.results.Senanayake_2[2,9] <- lavTestLRT(Conf.fit.Senanayake_2, Thr.fit.Senanayake_2)$`Pr(>Chisq)`[2]
+all.results.Senanayake_2[3,9] <- lavTestLRT(Thr.fit.Senanayake_2, Load.fit.Senanayake_2)$`Pr(>Chisq)`[2]
+
 
 
 # Article 142: Lingren ------------------------------------------------------------------------
