@@ -14,14 +14,124 @@ unique(df$journal_id) # 2
 nrow(df) # 1845 comparisons
 N <- nrow(df)
 
-# Empirical data (sum of comparisons and percentage)
+# Quantitative data (sum of comparisons and percentage)
 sum(df$empirical)       # 1749 
 sum(df$empirical)/N*100 # 94.8% of 1845
 
 # Group comparison
-sum(df$compare_group, na.rm=T)                        # 1617
-sum(df$compare_group, na.rm=T)/N*100                  # 87.6% of 1845
-sum(df$compare_group, na.rm=T)/sum(df$empirical)*100  # 92.5% of 1749 (empirical)
+sum(df$compare_group, na.rm=T)                        # 1620
+sum(df$compare_group, na.rm=T)/N*100                  # 87.8% of 1845 (total)
+sum(df$compare_group, na.rm=T)/sum(df$empirical)*100  # 92.6% of 1749 (quantitative)
+
+# Type of group comparison
+sum(df$compare_group, na.rm=T)                                     # 1620  
+table(CompareGroup=df$compare_group,TypeGroup=df$type_group)       # 0 = 416, 1 = 1204
+sum(df$type_group==0, na.rm=T)/sum(df$compare_group, na.rm=T)*100  # 25.7% of 1620 (group comparisons)
+sum(df$type_group==1, na.rm=T)/sum(df$compare_group, na.rm=T)*100  # 74.3% of 1620 (group comparisons)
+
+# Comparison made on scale + (non-)reflective scale
+sum(df$scale, na.rm=T)                                     # 1295
+sum(df$scale, na.rm=T)/sum(df$compare_group, na.rm=T)*100  # 79.9% of 1620 (group comparisons)
+table(UsedScale=df$scale,Reflective=df$reflective)         # 0 = 374, 1 = 921
+sum(df$reflective==0, na.rm=T)/sum(df$scale, na.rm=T)*100  # 28.9% of 1295 (scales)
+sum(df$reflective==1, na.rm=T)/sum(df$scale, na.rm=T)*100  # 71.1% of 1295 (scales)
+
+# Delete rows from dataframe that do not have a comparison on a reflective scale
+df <- subset(df,reflective == 1)
+N <- nrow(df)
+
+# Type of scale
+table(TypeScale=df$type_scale)        # 0 = 448, 1 = 473
+sum(df$type_scale==0, na.rm=T)/N*100  # 48.6% of 912 (total reflective comparisons)
+sum(df$type_scale==1, na.rm=T)/N*100  # 51.4% of 912 (total reflective comparisons)
+
+# Measure scale 
+table(df$measure_scale)
+sum(df$measure_scale=="0.0", na.rm=T)/N*100 # 3.0% of 912 - dichotomous (0 to 1)
+sum(df$measure_scale=="1.0", na.rm=T)/N*100 # 33.8% of 912 - ordinal (from 3 to 5 categories)
+sum(df$measure_scale=="2.0", na.rm=T)/N*100 # 29.1% of 912 - continuous (more than 5 categories)
+sum(df$measure_scale=="NA", na.rm=T)/N*100  # 34.1% of 912 
+
+# Width scale
+table(as.numeric(df$width_scale))
+summary(as.numeric(df$width_scale))
+
+# Number of items
+table(df$no_items) 
+table(as.numeric(df$no_items))
+summary(as.numeric(df$no_items))
+
+# Power estimate
+# first check how to finish coding for this variable
+
+# Sample size total
+sum(is.na(as.numeric(df$n_rep)))        # 81 (8.8%) did not report total sample size
+sum(is.na(as.numeric(df$n_rep)))/N*100  # 81 (8.8%) did not report total sample size
+summary(as.numeric(df$n_rep))
+
+# Sample size per group
+# temporarily delete the scales that do not report total sample size
+temp <- subset(df,!is.na(as.numeric(df$n_rep)))
+# If the sample size for group 1 is not reported, we know there are no group sample sizes reported overall
+sum(is.na(as.numeric(temp$n1_rep)))        # 242 (31.7%) did not report total sample size
+sum(is.na(as.numeric(temp$n1_rep)))/N*100  # 242 (31.7%) did not report total sample size
+
+# Reliability total
+sum(is.na(as.numeric(df$reltot)))        # 552 (59.9%) did not report total sample size
+sum(is.na(as.numeric(df$reltot)))/N*100  # 552 (59.9%) did not report total sample size
+summary(as.numeric(df$reltot))
+
+# Reliability per group
+# temporarily delete the scales that do not report total reliability
+temp <- subset(df,!is.na(as.numeric(df$reltot)))
+# If the reliability for group 1 is not reported, we know there are no group sample sizes reported overall
+sum(is.na(as.numeric(temp$rel1)))        # 358 (38.8%) did not report total sample size
+sum(is.na(as.numeric(temp$rel1)))/N*100  # 358 (38.8%) did not report total sample size
+
+# MI tested
+sum(df$mitest_rep)        # 41 scales reported MI testing
+table(df$mitest_rep)      # 0 = 880, 1 = 41
+sum(df$mitest_rep) /N*100 # 41 (4.5%) did report on MI
+
+# MI method
+table(df$mimethod_rep, useNA="always")
+sum(df$mimethod_rep=="1.0", na.rm=T)/sum(df$mitest_rep)*100 # 24.4% of 41 
+sum(df$mimethod_rep=="2.0", na.rm=T)/sum(df$mitest_rep)*100 # 73.2% of 41 
+
+# MI result
+table(df$miresult_rep, useNA="always")
+sum(df$miresult_rep=="0.0", na.rm=T)/sum(df$mimethod_rep == "1.0" | df$mimethod_rep == "2.0", na.rm=T)*100 # 25% of 40 
+sum(df$miresult_rep=="1.0", na.rm=T)/sum(df$mimethod_rep == "1.0" | df$mimethod_rep == "2.0", na.rm=T)*100 # 75% of 40 
+
+# MI level
+table(df$milevel_rep, useNA="always")
+sum(df$miresult_rep=="0.0", na.rm=T)/sum(df$mimethod_rep == "1.0" | df$mimethod_rep == "2.0", na.rm=T)*100 # 25% of 40 
+sum(df$miresult_rep=="1.0", na.rm=T)/sum(df$mimethod_rep == "1.0" | df$mimethod_rep == "2.0", na.rm=T)*100 # 75% of 40 
+
+
+
+
+
+
+
+
+
+
+
+# End -----------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
