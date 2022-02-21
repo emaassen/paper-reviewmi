@@ -29,4 +29,4 @@
 *.xml
 *.synctex.gz
 *.gz
-*.tex
+*.tex.DS_Store
