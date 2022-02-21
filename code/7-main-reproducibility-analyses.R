@@ -6,9 +6,8 @@ require("httr") # to load data from OSF into R
 require("haven") # to load sav files into R
 require("readxl") # to load xlsx files into R
 require("psych")
-require("lavaan")
+require("lavaan") # to test for measurement invariance
 require("semTools")
-require("GPArotation")
 
 # Article 22: Moreira -------------------------------------------------------------------------
 # Raw data is shared via OSF
@@ -100,7 +99,6 @@ for(i in 1:length(sigma.pop.Schulze)){
 }
 
 # Create model for dataset based on article
-
 Mod.Schulze_4F <- "
 F1 =~ V1 + V2 + V4 
 F2 =~ V5 + V6 + V7 + V13
@@ -189,6 +187,10 @@ all.results.schulze[3,10] <- AIC(Int.fit.schulze)
 all.results.schulze[1,11] <- BIC(Conf.fit.schulze)
 all.results.schulze[2,11] <- BIC(Load.fit.schulze)
 all.results.schulze[3,11] <- BIC(Int.fit.schulze)
+
+# view results
+all.results.schulze
+# Configural model has rmsea > .08 & CFI < .95, so level of invariance = 0. 
 
 # Results do not match those presented by the authors (up to model 3). However, the authors reported 
 # that the Satorra-Bentler values were adjusted and that BSEM was used. This, unfortunately, is not directly reproducible in R,
@@ -352,12 +354,12 @@ all.results.Ortuno_Sierra[3,9] <- lavTestLRT(Thr.fit.Ortuno_Sierra, Load.fit.Ort
 
 # comparison 2:
 # variables for scale: PAN01 until PAN20
-# grouping variable for id 869: gender (variable name: Género)
+# grouping variable for id 869: gender (variable name: G?nero)
 # labels: males versus females
 
-#Add variable to dataset based on Género to make sure that is numeric and can be recognized by lavaan
+#Add variable to dataset based on G?nero to make sure that is numeric and can be recognized by lavaan
 
-article207$gender <- as.numeric(article207$Género)
+article207$gender <- as.numeric(article207$G?nero)
 #Create results matrix
 all.results.Ortuno_Sierra_2 <- matrix(NA, ncol = 11, nrow = 3)
 colnames(all.results.Ortuno_Sierra_2) <- c("chisq","df","pvalue", 
@@ -672,6 +674,8 @@ all.results.Protzko[3,10] <- AIC(Int.fit.Protzko)
 all.results.Protzko[1,11] <- BIC(Conf.fit.Protzko)
 all.results.Protzko[2,11] <- BIC(Load.fit.Protzko)
 all.results.Protzko[3,11] <- BIC(Int.fit.Protzko)
+
+all.results.Protzko
 
 # Results do not entirely match those reported by the authors. Specifically, the cfi highly deviates from that reported
 # by the authors in all steps (authors: confcfi = 0.905, loadcfi = 0.905, intcfi = 0.901; reproduced 
@@ -1439,8 +1443,10 @@ rm(list = ls()) # clear workspace
 options(scipen=999) # no scientific notation
 library(readxl)
 
-reproducibility_codebook_Sheet1 <- read_csv("reproducibility-codebook - Sheet1.csv")
-# df <- read_excel("../data/codebook-main-reporting.xlsx") # load data 
+df <- read.csv("../data/codebook-main-reproducibility.csv")
+df <- read_excel("codebook-main-reproducibility.xlsx") # load data 
+
+codebook_main_reproducibility_Sheet1_20_01 <- read_csv("codebook-main-reproducibility - Sheet1 - 20-01.csv")
 
 df <- reproducibility_codebook_Sheet1
 colnames(df)
@@ -1455,14 +1461,19 @@ round(nrow(df_MI_yes)/nrow(df),3); nrow(df_MI_yes) #41 (22.5)
 df_MI_no <- subset(df, df$mitest_rep == 0)
 round(nrow(df_MI_no)/nrow(df),3); nrow(df_MI_no) #141
 
+df$open_group <- as.numeric(df$open_group)
+df_MI_no$open_group <- as.numeric(df_MI_no$open_group)
+df_MI_yes$open_group <- as.numeric(df_MI_yes$open_group)
+
+
 # How many studies actually had available data?      
 
 #For those that did conduct a MI test
-round(sum(df_MI_yes$`data availability`, na.rm = T)/nrow(df_MI_yes),3); sum(df_MI_yes$`data availability`, na.rm = T) #6 (0.14)
-Nav_yes <- sum(df_MI_yes$`data availability`, na.rm = T) #6
+round(sum(df_MI_yes$open_data, na.rm = T)/nrow(df_MI_yes),3); sum(df_MI_yes$open_data, na.rm = T) #6 (0.14)
+Nav_yes <- sum(df_MI_yes$open_data, na.rm = T) #6
 
-round(sum(df_MI_no$`data availability`, na.rm = T)/nrow(df_MI_no),3); sum(df_MI_no$`data availability`, na.rm = T) #72 (0.51)
-Nav_no <- sum(df_MI_no$`data availability`, na.rm = T)
+round(sum(df_MI_no$open_data, na.rm = T)/nrow(df_MI_no),3); sum(df_MI_no$open_data, na.rm = T) #72 (0.51)
+Nav_no <- sum(df_MI_no$open_data, na.rm = T)
 
 # Of those that had available data (78), for how many could we construct a grouping variable?
 round(sum(df_MI_yes$open_group, na.rm = T)/Nav_yes,3); sum(df_MI_yes$open_group, na.rm=T) #6 (1.0)
@@ -1470,7 +1481,7 @@ round(sum(df_MI_yes$open_group, na.rm = T)/Nav_yes,3); sum(df_MI_yes$open_group,
 round(sum(df_MI_no$open_group, na.rm = T)/Nav_no,3); sum(df_MI_no$open_group, na.rm=T) #64 (0.89)
 
 # Of those that had available data (78), for how many could we construct a scale?
-round(sum(df_MI_yes$open_scale, na.rm = T)/Nav_yes,3); sum(df_MI_yes$open_scale, na.rm=T) #5 (0.83)
+round(sum(df_MI_yes$open_scale, na.rm = T)/Nav_yes,3);sum(df_MI_yes$open_scale, na.rm=T) #5 (0.83)
 
 round(sum(df_MI_no$open_scale, na.rm = T)/Nav_no,3); sum(df$open_scale, na.rm=T) #15 (0.139)
 
@@ -1505,3 +1516,33 @@ mi_level_yes
 #does MI level obtain match that reported? 
 df_MI_yes_hold$milevel == df_MI_yes_hold$milevel_rep #Only for 2 (0.5)
 
+#------------------------------------------------------------------------------------------------------#
+#Exclusion of articles prior to final analyses per journal
+dfPLOS <- subset(df, df$journal_id == 0)
+dfPS <- subset(df, df$journal_id == 1)
+
+#How many comparisons had enough power?
+nrow(dfPLOS) #175
+nrow(dfPS) #7
+
+#How many comparisons had data availbale?
+sum(dfPLOS$data.availability, na.rm = T) #76
+sum(dfPS$data.availability, na.rm = T) #2
+
+#For how many, of those that were available, could we construct a grouping variable?
+sum(dfPLOS$open_group, na.rm = T) #68
+sum(dfPS$open_group, na.rm = T) #2
+
+#For how many, of those that were available, could we construct a scale?
+sum(dfPLOS$open_scale, na.rm = T) #13
+sum(dfPS$open_scale, na.rm = T) #2
+
+#For how many, of those that were available, could we construct a grouping variable and a scale?
+length(which(dfPLOS$open_scale == 1 & dfPLOS$open_group == 1))
+length(which(dfPS$open_scale == 1 & dfPS$open_group == 1))
+
+articlePLOS <- subset(dfPLOS, dfPLOS$data.availability == 1 & dfPLOS$open_group == 1 & dfPLOS$open_scale == 1)
+articlePS <- subset(dfPS, dfPS$data.availability == 1 & dfPS$open_group == 1 & dfPS$open_scale == 1)
+
+length(unique(articlePLOS$article_id))
+length(unique(articlePS$article_id))

@@ -40,6 +40,9 @@ sum(df$reflective==1, na.rm=T)/sum(df$scale, na.rm=T)*100  # 71.1% of 1295 (scal
 df <- subset(df,reflective == 1)
 N <- nrow(df)
 
+# How many articles studied?
+length(unique(df$article_id_recoded)) # 97
+
 # Type of scale
 table(TypeScale=df$type_scale)        # 0 = 448, 1 = 473
 sum(df$type_scale==0, na.rm=T)/N*100  # 48.6% of 912 (total reflective comparisons)
@@ -53,6 +56,7 @@ sum(df$measure_scale=="2.0", na.rm=T)/N*100 # 29.1% of 912 - continuous (more th
 sum(df$measure_scale=="NA", na.rm=T)/N*100  # 34.1% of 912 
 
 # Width scale
+sum(df$width_scale == "NA")
 table(as.numeric(df$width_scale))
 summary(as.numeric(df$width_scale))
 
@@ -61,7 +65,10 @@ table(df$no_items)
 table(as.numeric(df$no_items))
 summary(as.numeric(df$no_items))
 
-# Power estimate
+# Power mentioned
+round((length(which(df$power == "NA"))) /N,3);(length(which(df$power == "NA")) + length(which(is.na(df$power)==T)))
+#628 (0.541) did not report power analysis
+
 # first check how to finish coding for this variable
 
 # Sample size total
@@ -104,10 +111,11 @@ sum(df$miresult_rep=="0.0", na.rm=T)/sum(df$mimethod_rep == "1.0" | df$mimethod_
 sum(df$miresult_rep=="1.0", na.rm=T)/sum(df$mimethod_rep == "1.0" | df$mimethod_rep == "2.0", na.rm=T)*100 # 75% of 40 
 
 # MI level
-table(df$milevel_rep, useNA="always")
-sum(df$miresult_rep=="0.0", na.rm=T)/sum(df$mimethod_rep == "1.0" | df$mimethod_rep == "2.0", na.rm=T)*100 # 25% of 40 
-sum(df$miresult_rep=="1.0", na.rm=T)/sum(df$mimethod_rep == "1.0" | df$mimethod_rep == "2.0", na.rm=T)*100 # 75% of 40 
-
+df.mi <- subset(df, df$miresult_rep == "1.0")
+table(df.mi$milevel_rep, useNA="always")
+sum(df.mi$milevel_rep=="2.0", na.rm=T)/nrow(df.mi)*100 # 16.7% of 30 
+sum(df.mi$milevel_rep=="3.0", na.rm=T)/nrow(df.mi)*100 # 10% of 30 
+sum(df.mi$milevel_rep=="NA", na.rm=T)/nrow(df.mi)*100 # 16.7% of 30 
 
 
 
