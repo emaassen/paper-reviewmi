@@ -22,6 +22,36 @@ article22 <- read_sav(filename)
 # Data shared are covariance matrices for 5 groups in a word document, copied from here:
 # https://doi.org/10.1371/journal.pone.0207331.s003
 
+# The article mentions the following on measurement invariance:
+
+# Following Chen’s [45] recommendations for unequal sample sizes, we retained the hypothesis of loading invariance when the chi-square 
+# change was insignificant (α > .05), or a decrease in CFI < .010 was accompanied by an increase in RMSEA < .010 or an increase in SRMR 
+# < .030. When concerning intercept and residual invariance the same rules applied except an increase in SRMR < .005 [45].
+
+# Measurement invariance was thus only evaluated using maximum-likelihood CFA.
+
+# In this manner, we derived a model with a fourth factor (called philanthropy) and excluded items 3 and 12 in the process due to 
+# high residual correlations with other items indicating redundancy. 
+
+# Following the results from the CFA and BSEM estimations, the 4F model displayed satisfying fit in all four Western samples, but not 
+# in the Indian sample (see Table 2). The two descendants of the stakeholder factor, environmental CSR and philanthropy, were rather 
+# strongly correlated in all samples (.77 < r < .88). In order to avoid an overfitted model, we compared model 4F with a simplified variant, 
+# where these two factors were melted into one and all other model properties were left unchanged. Likelihood ratio tests of for these two 
+# competing models revealed significant better fit of model 4F for all five samples (ps < .017). We thus concluded to keep four factors 
+# despite high factor correlations.
+
+# The configural model showed sufficient model fit when estimated simultaneously across the four groups (see Table 3). When the 
+# loadings were constrained to equality, statistically insignificant change in chi-square was observed. Weak invariance was therefore 
+# accepted for the four Western groups.
+
+# In contrast, strong invariance could not be obtained (see Table 3). Restraining item intercepts to equality led to a statistically 
+# significant chi-square difference as well as a sizeable change in the fit indices. When examining the source of invariance regarding 
+# the intercepts, we found that items 6 and 9 were the most important causes, reducing noninvariance considerably with differences in 
+# the fit indices being close to their cut-offs.
+
+# As the stage of strong invariance could not be verified, strict invariance could not be obtained, too, although the change in fit indices 
+# was marginal and non-substantial when the item residuals were set equal. 
+
 us1 <- matrix(c(1.60,0.94,1.36,0.84,0.80,0.84,0.74,0.54,0.45,0.49,0.43,0.52,0.48,0.29,0.39,0.94,1.62,0.99,1.07,0.81,
                 0.91,0.77,0.70,0.64,0.63,0.67,0.64,0.55,0.42,0.30,1.36,0.99,1.71,0.91,0.87,0.87,0.72,0.59,0.50,0.64,
                 0.55,0.53,0.56,0.35,0.39,0.84,1.07,0.91,1.43,0.89,0.89,0.70,0.59,0.60,0.60,0.57,0.58,0.73,0.49,0.46,
@@ -190,7 +220,20 @@ all.results.schulze[3,11] <- BIC(Int.fit.schulze)
 
 # view results
 all.results.schulze
-# Configural model has rmsea > .08 & CFI < .95, so level of invariance = 0. 
+
+# step 2: the authors first fit a 3F model that does not fit well in any sample. Through the use of modifiction indices they
+# end up with the 4F model we test here. Then, they use the following cutoffs to decide on loading/intercept invariance:
+
+# Following Chen’s [45] recommendations for unequal sample sizes, we retained the hypothesis of loading invariance when the 
+# chi-square change was insignificant (α > .05), or a decrease in CFI < .010 was accompanied by an increase in RMSEA < .010 or 
+# an increase in SRMR < .030. When concerning intercept and residual invariance the same rules applied except an increase in 
+# SRMR < .005 [45].
+
+# We see the chisquare change from model 1 (config) to model 2 (loadings) is significant, there is a decrease in CFI of -0.003,
+# a decrease of RMSEA of -0.003, and an increase of SRMR of 0.004. That means that the change in fit indices is enough to indicate 
+# loading invariance, but since the chisquare test is significant, we still reject loading invariance according to this cutoff.
+
+# step 3: Configural model has rmsea > .08 & CFI < .95, so level of invariance = 0. 
 
 # Results do not match those presented by the authors (up to model 3). However, the authors reported 
 # that the Satorra-Bentler values were adjusted and that BSEM was used. This, unfortunately, is not directly reproducible in R,
@@ -210,6 +253,20 @@ all.results.schulze
 # Article 207: Ortuno-Sierra ------------------------------------------------------------------
 # Data shared is .sav file as supporting information to the article
 # https://dx.plos.org/10.1371/journal.pone.0221696.s001
+
+# The authors state the following on MI: 
+
+# Attending to the limitations of the Δχ2 regarding its sensitivity to sample size, we followed the change in CFI (ΔCFI), 
+# proposed by Cheung and Rensvold [57] as a more suitable criterion, to determine whether nested models are practically equivalent. 
+# Latent mean differences across gender and educational level groups were estimated, fixing the latent mean values to zero in the 
+# male and in the Primary students groups. For comparisons among groups in the latent means, statistical significance was based 
+# on the z statistic. The group in which the latent mean was fixed to zero was considered as the reference group 
+
+# In order to achieve a good fit of the data to the model, the values of CFI and TLI over 0.95 are considered adequate and over .90 
+# acceptable, # and the RMSEA values should be under 0.08 for a reasonable fit and under 0.05 for a good fit [53–55]. 
+
+# The comparison between the configural and scalar invariance models showed differences in CFI (ΔCFI) below .01 across gender and educational 
+# level. Thus, the hypothesis of MI was confirmed by these two variables
 
 url <- 'https://dx.plos.org/10.1371/journal.pone.0221696.s001'
 filename <- '../article207.sav'
@@ -349,6 +406,11 @@ all.results.Ortuno_Sierra[3,9] <- lavTestLRT(Thr.fit.Ortuno_Sierra, Load.fit.Ort
 # for ESEM MI testing (Fischer and Karl, 2019; https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6657455/pdf/fpsyg-10-01507.pdf)
 # and MI holds both for loadings and intercepts (as reported by the authors) but chi-squared statistics and df differ.
 
+all.results.Ortuno_Sierra
+
+# Step 2: the cutoffs used by Cheung and Rensvold for CFI are 0.10 change. Technically we also find less of a difference
+# but, the chisquare values and dfs are not correct, nor is the CFI. As such, irreproducible. 
+
 
 #------
 
@@ -359,7 +421,7 @@ all.results.Ortuno_Sierra[3,9] <- lavTestLRT(Thr.fit.Ortuno_Sierra, Load.fit.Ort
 
 #Add variable to dataset based on G?nero to make sure that is numeric and can be recognized by lavaan
 
-article207$gender <- as.numeric(article207$G?nero)
+article207$gender <- as.numeric(article207$Género)
 #Create results matrix
 all.results.Ortuno_Sierra_2 <- matrix(NA, ncol = 11, nrow = 3)
 colnames(all.results.Ortuno_Sierra_2) <- c("chisq","df","pvalue", 
@@ -425,6 +487,7 @@ all.results.Ortuno_Sierra_2[3,9] <- lavTestLRT(Thr.fit.Ortuno_Sierra_2, Load.fit
 # for ESEM MI testing (Fischer and Karl, 2019; https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6657455/pdf/fpsyg-10-01507.pdf)
 # and MI holds both for loadings and intercepts (as reported by the authors) but chi-squared statistics and df differ.
 
+all.results.Ortuno_Sierra_2
 
 # Article 351: Kievit -------------------------------------------------------------------------
 # Data shared is raw data .csv file and R code. The code below is copied from this R file: https://osf.io/8g96x/
@@ -601,6 +664,49 @@ filename <- '../article710.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article710 <- read_sav(filename)
 
+# The authors say this about measurement invariance: To
+#investigate this possibility, we conducted a series of tests
+#of measurement invariance to determine whether the
+#speeded manipulation affected the latent social-desirability
+#factor or some other aspect of the measurement process
+#(e.g., on only some items). This procedure tested whether,
+#given the same latent score on the measure, there were
+#equal factor loadings or (more germanely) difference inter-
+#  cepts on the individual items. Violations of intercept
+#invariance would suggest that some items were being
+#affected by the manipulation over others. 
+
+#To test this, we
+#fitted a series of models decreasing in equivalence param-
+#  eters. We started with a strict invariance model, testing the
+#two groups in a multigroup confirmatory factor analysis
+#because the groups were created through randomization
+#and did not naturally occur.
+#We fitted the same single-factor model to the data
+#and reduced the equivalence parameters, testing for
+#decrements in model fit. We followed the convention
+#that a change in comparative fit index (ΔCFI) greater
+#than .01 or a change in the root-mean-square error of
+#approximation (ΔRMSEA) greater than 0.015 (Cheung
+#                                           & Rensvold, 2002) indicates that model fit significantly
+#worsened after equal factor loadings and intercept con-
+#  straints were imposed. 
+
+#the results showed that con-
+#  straining factor loadings to be equal among the groups
+#did not cause a significant change in model fit (baseline
+#                                                 CFI = .905, configural CFI = .905; baseline RMSEA =
+#                                                   0.067, configural RMSEA = 0.067). Further restricting
+#the loading and intercepts to be invariant between the
+#groups also did not show a significant reduction in
+#model fit (strict CFI = .901, strict RMSEA = 0.065)
+
+# The authors seem to define strict invariance as when loadings and intercepts are restricted together. 
+# I don't understand what they mean with that they started with strict invariance.
+# What's the difference between baseline CFI and configural CFI? 
+
+
+
 # variables for scale: Psd1, sd2R, sd3, sd4R, sd5, sd6R, s7R, sd8R, sd9, sd10 
 # grouping variable: fast 
 
@@ -676,6 +782,8 @@ all.results.Protzko[2,11] <- BIC(Load.fit.Protzko)
 all.results.Protzko[3,11] <- BIC(Int.fit.Protzko)
 
 all.results.Protzko
+
+# the CFI and the RMSEA difference is below the cutoff but our CFI and RMSEA estiamtes are different than reported.
 
 # Results do not entirely match those reported by the authors. Specifically, the cfi highly deviates from that reported
 # by the authors in all steps (authors: confcfi = 0.905, loadcfi = 0.905, intcfi = 0.901; reproduced 

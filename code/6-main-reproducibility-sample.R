@@ -1,12 +1,9 @@
 ### CODE FOR MAIN STUDY SYSTEMATIC REVIEW MEASUREMENT INVARIANCE ##
-### This is code to sample articles for which we will attempt to perform measurement invariance checks
+### This is code to sample articles for which we will attempt to perform measurement invariance checks for step 2, 3, and 4
 
-# rm(list=ls()) # clean workspace
-
-# packages
-require("readxl")
-require("lavaan")
-require("writexl")
+rm(list=ls()) # clean workspace
+require("lavaan") # to simulate factor model and run MI tests
+require("writexl") # to write away final codebooks
 
 # function to check how many groups are compared for each study
 assign.groups <- function(x) {
@@ -23,14 +20,14 @@ assign.groups <- function(x) {
 }
 
 # load data from main study
-df <- read_excel('../data/codebook-main-reporting.xlsx')
+df <- read.csv("../data/codebook-main-step1.csv") # load data
 
 # give all data points a unique id so we can delete doubles later
 df$id <- 1:nrow(df)
 
 # filter out studies that reported on doing a measurement invariance check
 df$mitest_rep <- as.numeric(df$mitest_rep)
-df.checked <- subset(df,mitest_rep == 1)
+df.checked <- subset(df,mitest_rep == 1) 
 
 # check distribution of reliabilities of all studies
 df$reltot <- as.numeric(df$reltot)
@@ -41,8 +38,11 @@ mean(df$reltot, na.rm=T)
 df$no_items <- as.numeric(df$no_items)
 hist(df$no_items)
 
+# remove studies that checked for MI
+df.notchecked <- subset(df,mitest_rep == 0)
+
 # select only studies that report reliability and number of items
-dfs <- df[!is.na(df$reltot) & df$no_items != "NA" & !is.na(df$no_items),]
+dfs <- df.notchecked[!is.na(df.notchecked$reltot) & df.notchecked$no_items != "NA" & !is.na(df.notchecked$no_items),]
 
 # some studies have sample sizes for groups but not the total one. 
 # we will assign n_rep = sum of all the group sample sizes
@@ -216,13 +216,17 @@ for (i in 1:nrow(dfs)) {
 }
 
 # select only those studies that have a power to detect non-invariance of > 0.80
-df.select <- dfs[dfs$powerncp > 0.80,1:36]
+df.select <- dfs[dfs$powerncp > 0.80,1:39]
 
-# merge the dataset of selected studies with the dataset of studies that reported on doing measurement invariance checks
-df.rep <- rbind(df.checked,df.select)
+# are the colnames for the selected studies and the ones reporting on MI the same?
+colnames(df.select) == colnames(df.checked)
 
-# IDs 178, 868 and 869 are duplicated, remove them
-df.rep <- df.rep[!duplicated(df.rep$id), ] 
+# multiple ids in both dataframes?
+unique(df.checked$id) %in% unique(df.select$id)
+unique(df.select$id) %in% unique(df.checked$id)
+
+# save dataset of studies that investigated MI (step 2 and step 3)
+write_xlsx(df.checked, "../data/codebook-main-step2step3-sample-without-results.xlsx")
 
 # save final dataset of studies that we will attempt to reproduce
-write_xlsx(df.rep, "../data/codebook-main-reproducibility.xlsx")
+write_xlsx(df.select, "../data/codebook-main-step4-sample-without-results.xlsx")

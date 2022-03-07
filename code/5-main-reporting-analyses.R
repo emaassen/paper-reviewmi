@@ -3,73 +3,120 @@
 
 rm(list = ls()) # clear workspace
 options(scipen=999) # no scientific notation
-library(readxl)
+library(dplyr) # for function to count the total number of studies
 
-df <- read_excel("../data/codebook-main-reporting.xlsx") # load data 
-colnames(df)
+# function to count the total number of articles and studies in a dataframe
+count_articles <- function(x) {
+  length(unique(x$article_id_recoded))
+}
 
-# How many articles and journals studied?
-length(unique(df$article_id_recoded)) # 426
-unique(df$journal_id) # 2
-nrow(df) # 1845 comparisons
-N <- nrow(df)
+count_studies <- function(x) {
+  df.temp <- x %>%
+    distinct(article_id, study_recoded) %>%
+    group_by(article_id) %>%
+    summarize("studies" = n())
+  no_studies <- sum(df.temp$studies) 
+  return(no_studies)
+}
 
-# Quantitative data (sum of comparisons and percentage)
-sum(df$empirical)       # 1749 
-sum(df$empirical)/N*100 # 94.8% of 1845
+df <- read.csv("../data/codebook-main-reporting.csv") # load data
+colnames(df) # check if column names are correct
+
+# How many journals, articles, studies in total?
+unique(df$journal_id)                             # 2 journals
+count_articles(df)                                # 426 articles
+count_studies(df)                                 # 839 studies
+nrow(df)                                          # 1845 rows
+
+# Quantitative data
+temp <- filter(df, empirical == 1)
+count_articles(temp)                              # 340 articles
+count_articles(temp) / count_articles(df) * 100   # 80% of articles contain empirical data
+count_studies(temp)                               # 744 studies
+count_studies(temp) / count_studies(df) * 100     # 89% of studies contain empirical data
+nrow(temp)                                        # 1749 rows
 
 # Group comparison
-sum(df$compare_group, na.rm=T)                        # 1620
-sum(df$compare_group, na.rm=T)/N*100                  # 87.8% of 1845 (total)
-sum(df$compare_group, na.rm=T)/sum(df$empirical)*100  # 92.6% of 1749 (quantitative)
+temp <- filter(df, compare_group == 1)
+count_articles(temp)                              # 275 articles
+count_articles(temp) / count_articles(df) * 100   # 65% of articles contain group comparisons
+count_studies(temp)                               # 616 studies
+count_studies(temp) / count_studies(df) * 100     # 73% of studies contain group comparisons
+nrow(temp)                                        # 1620 rows
 
-# Type of group comparison
-sum(df$compare_group, na.rm=T)                                     # 1620  
-table(CompareGroup=df$compare_group,TypeGroup=df$type_group)       # 0 = 416, 1 = 1204
-sum(df$type_group==0, na.rm=T)/sum(df$compare_group, na.rm=T)*100  # 25.7% of 1620 (group comparisons)
-sum(df$type_group==1, na.rm=T)/sum(df$compare_group, na.rm=T)*100  # 74.3% of 1620 (group comparisons)
+# Comparison made on scale 
+temp <- filter(df, scale == 1)
+count_articles(temp)                              # 196 articles
+count_articles(temp) / count_articles(df) * 100   # 46% of articles contain scales
+count_studies(temp)                               # 402 studies
+count_studies(temp) / count_studies(df) * 100     # 48% of studies contain scales
+nrow(temp)                                        # 1295 rows
 
-# Comparison made on scale + (non-)reflective scale
-sum(df$scale, na.rm=T)                                     # 1295
-sum(df$scale, na.rm=T)/sum(df$compare_group, na.rm=T)*100  # 79.9% of 1620 (group comparisons)
-table(UsedScale=df$scale,Reflective=df$reflective)         # 0 = 374, 1 = 921
-sum(df$reflective==0, na.rm=T)/sum(df$scale, na.rm=T)*100  # 28.9% of 1295 (scales)
-sum(df$reflective==1, na.rm=T)/sum(df$scale, na.rm=T)*100  # 71.1% of 1295 (scales)
+# Comparison made on reflective scale 
+temp <- filter(df, reflective == 1)
+count_articles(temp)                              # 97 articles
+count_articles(temp) / count_articles(df) * 100   # 23% of articles contain reflective scales
+count_studies(temp)                               # 150 studies
+count_studies(temp) / count_studies(df) * 100     # 18% of studies contain reflective scales
+nrow(temp)                                        # 921 rows
 
 # Delete rows from dataframe that do not have a comparison on a reflective scale
+# This is our main unit of analysis
 df <- subset(df,reflective == 1)
-N <- nrow(df)
 
-# How many articles studied?
-length(unique(df$article_id_recoded)) # 97
+# Type of group comparison
+sum(df$type_group == 0)                     # 351 comparisons across existing groups
+sum(df$type_group == 0) / nrow(df) * 100    # 38% of comparisons are made across existing groups
+sum(df$type_group == 1)                     # 570 comparisons across new groups
+sum(df$type_group == 1) / nrow(df) * 100    # 62% of comparisons are made across new groups
 
 # Type of scale
-table(TypeScale=df$type_scale)        # 0 = 448, 1 = 473
-sum(df$type_scale==0, na.rm=T)/N*100  # 48.6% of 912 (total reflective comparisons)
-sum(df$type_scale==1, na.rm=T)/N*100  # 51.4% of 912 (total reflective comparisons)
+sum(df$type_scale == 0)                     # 448 ad hoc scales
+sum(df$type_scale == 0) / nrow(df) * 100    # 49% of comparisons have ad hoc scales
+sum(df$type_scale == 1)                     # 473 existing scales
+sum(df$type_scale == 1) / nrow(df) * 100    # 51% of comparisons have existing scales
 
 # Measure scale 
-table(df$measure_scale)
-sum(df$measure_scale=="0.0", na.rm=T)/N*100 # 3.0% of 912 - dichotomous (0 to 1)
-sum(df$measure_scale=="1.0", na.rm=T)/N*100 # 33.8% of 912 - ordinal (from 3 to 5 categories)
-sum(df$measure_scale=="2.0", na.rm=T)/N*100 # 29.1% of 912 - continuous (more than 5 categories)
-sum(df$measure_scale=="NA", na.rm=T)/N*100  # 34.1% of 912 
+table(df$measure_scale)                                # dichotomous = 28 / ordinal = 311 / continuous = 268
+sum(is.na(df$measure_scale))                           # no reporting on measure of scale = 314
+sum(df$measure_scale==0, na.rm=T) / nrow(df) * 100     # 3% of scales have dichotomous items (2 categories)
+sum(df$measure_scale==1, na.rm=T) / nrow(df) * 100     # 34% of scales have ordinal items (3 to 5 categories)
+sum(df$measure_scale==2, na.rm=T) / nrow(df) * 100     # 29% of scales have continuous items (more than 5 categories)
+sum(is.na(df$measure_scale)) / nrow(df) * 100          # 34% of scales did not indicate the measure of the scale
 
 # Width scale
-sum(df$width_scale == "NA")
-table(as.numeric(df$width_scale))
-summary(as.numeric(df$width_scale))
+table(df$width_scale_recoded)
+sum(is.na(df$width_scale_recoded))                     # 317 scales did not indicate the width of the scale
+sum(is.na(df$width_scale_recoded)) / nrow(df) * 100    # 34% of scales did not indicate the width of the scale
+summary(as.numeric(df$width_scale_recoded))            # NAs are 319 here because two scales had "mix" instead of a numeric value
+
+# CONTINUE HERE
 
 # Number of items
 table(df$no_items) 
-table(as.numeric(df$no_items))
-summary(as.numeric(df$no_items))
+sum(is.na(df$no_items))                                # 530 scales did not indicate the number of items
+sum(is.na(df$no_items)) / nrow(df) * 100               # 58% of scales did not indicate the number of items
+summary(df$no_items)
 
 # Power mentioned
 round((length(which(df$power == "NA"))) /N,3);(length(which(df$power == "NA")) + length(which(is.na(df$power)==T)))
 #628 (0.541) did not report power analysis
 
 # first check how to finish coding for this variable
+
+# No sample size reported at all
+sum(is.na(as.numeric(df$n_rep)) & is.na(as.numeric(df$n1_rep)) & is.na(as.numeric(df$n2_rep)) & is.na(as.numeric(df$n3_rep)) & is.na(as.numeric(df$n4_rep)) & is.na(as.numeric(df$n5_rep)))
+# 45 did not report any sample size at all
+
+sum(is.na(as.numeric(df$n_rep)) & is.na(as.numeric(df$n1_rep)) & is.na(as.numeric(df$n2_rep)) & is.na(as.numeric(df$n3_rep)) & is.na(as.numeric(df$n4_rep)) & is.na(as.numeric(df$n5_rep)))/N*100
+# 4.9% did not report any sample size at all
+
+# No reliability estimate reported at all
+sum(is.na(as.numeric(df$reltot)) & is.na(as.numeric(df$rel1)) & is.na(as.numeric(df$rel2)) & is.na(as.numeric(df$rel3)) & is.na(as.numeric(df$rel4)) & is.na(as.numeric(df$rel5)))
+# 538 did not report any reliability estimate at all
+
+sum(is.na(as.numeric(df$reltot)) & is.na(as.numeric(df$rel1)) & is.na(as.numeric(df$rel2)) & is.na(as.numeric(df$rel3)) & is.na(as.numeric(df$rel4)) & is.na(as.numeric(df$rel5)))/N*100
+# 58.9% did not report any reliability estimate at all
 
 # Sample size total
 sum(is.na(as.numeric(df$n_rep)))        # 81 (8.8%) did not report total sample size
@@ -95,10 +142,22 @@ temp <- subset(df,!is.na(as.numeric(df$reltot)))
 sum(is.na(as.numeric(temp$rel1)))        # 358 (38.8%) did not report total sample size
 sum(is.na(as.numeric(temp$rel1)))/N*100  # 358 (38.8%) did not report total sample size
 
+# Range of reliability
+df$reltot <- as.numeric(df$reltot)
+range(df$reltot, na.rm=T)
+summary(df$reltot)
+
 # MI tested
 sum(df$mitest_rep)        # 41 scales reported MI testing
 table(df$mitest_rep)      # 0 = 880, 1 = 41
 sum(df$mitest_rep) /N*100 # 41 (4.5%) did report on MI
+
+# Only select rows that report on MI
+dfmi <- subset(df,mitest_rep == 1)
+N <- nrow(dfmi)
+
+# How many articles studied?
+length(unique(dfmi$article_id_recoded)) # 7
 
 # MI method
 table(df$mimethod_rep, useNA="always")
@@ -117,7 +176,12 @@ sum(df.mi$milevel_rep=="2.0", na.rm=T)/nrow(df.mi)*100 # 16.7% of 30
 sum(df.mi$milevel_rep=="3.0", na.rm=T)/nrow(df.mi)*100 # 10% of 30 
 sum(df.mi$milevel_rep=="NA", na.rm=T)/nrow(df.mi)*100 # 16.7% of 30 
 
+# Only select rows that have scalar invariance
+dfmi.scalar <- subset(df,milevel_rep == "3.0")
+N <- nrow(dfmi.scalar)
 
+# How many articles studied?
+length(unique(dfmi.scalar$article_id_recoded)) # 2
 
 
 
