@@ -1967,3 +1967,1322 @@ colnames(article1031)
 # we also checked the other datasets for study 1 here, but all of them only have total scores: https://osf.io/h67mx/files/
 
 
+# Article 1081: Kim -------------------------------------------------------
+url <- 'https://osf.io/e25yk//?action=download'
+filename <- '../article1081.csv'
+GET(url, write_disk(filename, overwrite = TRUE))
+article1081 <- read.csv2(filename, header=T, na.strings="NA", sep=",")
+
+# Comparison 1
+# Grouping variable: Incremental theorists and entity theorists
+# Scale variable: Cost perception
+
+# There is a variable "PerceivedCostofHelpSeeking" in the dataset, which according to the values seems to be the combination of the 
+# seven perceived cost of receiving help measure as referenced here https://osf.io/knygt/. As such, we cannot construct a scale
+# because we do not have the item scores. No correlations reported in the article either so we can't do a MI test. 
+  
+# Comparison 2
+# Grouping variable: anthropomorphized vs nonanthropomorphized helper (Anthropomorphism)
+# Scale variable: Cost perception
+  
+# There is a variable "PerceivedCostofHelpSeeking" in the dataset, which according to the values seems to be the combination of the 
+# seven perceived cost of receiving help measure as referenced here https://osf.io/knygt/. As such, we cannot construct a scale
+# because we do not have the item scores. No correlations reported in the article either so we can't do a MI test. 
+
+
+# Article 1111: Ackerman --------------------------------------------------
+# Study 2b
+# Comparison 1-3
+url <- 'https://osf.io/ev5yq//?action=download'
+filename <- '../article1111.1.sav'
+GET(url, write_disk(filename, overwrite = TRUE))
+article1111.1 <- read_sav(filename)
+article1111.1$cond <- as.numeric(article1111.1$cond)
+
+# From the supplemental material (https://journals.sagepub.com/doi/suppl/10.1177/0956797617733829):
+# "We labeled the factors “appearance solutions” (plastic surgery, liposuction, diet pills, 
+# cosmetics/makeup, facial makeover; Cronbach’s α = .82), “fitness solutions” (gym, health food, 
+# fitness equipment, exercise, personal activity tracker; Cronbach’s α = .83), and “other solutions” 
+# (batteries, trash bags, light bulbs, plastic utensils; Cronbach’s α = .81)."
+
+# Comparison 1: 
+# Grouping variable: control and pathogen threat (cond)
+# Scale variable: Fitness solution (health1 + health2 + health3 + health4 + health5)
+model.1111.1 <- 'F =~ health1 + health2 + health3 + health4 + health5'
+conf.fit.1111.1 <- cfa(model.1111.1, data = article1111.1, group = "cond")
+load.fit.1111.1 <- cfa(model.1111.1, article1111.1, group = "cond", group.equal = "loadings")
+int.fit.1111.1 <- cfa(model.1111.1, article1111.1, group = "cond", group.equal = c("loadings", "intercepts"))
+all.results.1111.1 <- mi.results(conf.fit.1111.1,load.fit.1111.1,int.fit.1111.1)
+all.results.1111.1
+
+# Step 4
+# Chisquare significant, rmsea > .08, so we reject configural invariance
+# CFI is ok (0.953)
+
+# Comparison 2: 
+# Grouping variable: control and pathogen threat (cond)
+# Scale variable: Appearance solution (app1 + app2 + app3 + app4 + app5)
+model.1111.2 <- 'F =~ app1 + app2 + app3 + app4 + app5'
+conf.fit.1111.2 <- cfa(model.1111.2, data = article1111.1, group = "cond")
+load.fit.1111.2 <- cfa(model.1111.2, article1111.1, group = "cond", group.equal = "loadings")
+int.fit.1111.2 <- cfa(model.1111.2, article1111.1, group = "cond", group.equal = c("loadings", "intercepts"))
+all.results.1111.2 <- mi.results(conf.fit.1111.2,load.fit.1111.2,int.fit.1111.2)
+all.results.1111.2
+
+# Step 4
+# Chisquare significant, rmsea > .08, CFI < .95, so we reject configural invariance
+
+# Comparison 3: 
+# Grouping variable: control and pathogen threat (cond)
+# Scale variable: Other solution (control1 + control2 + control3 + control4)
+model.1111.3 <- 'F =~ control1 + control2 + control3 + control4'
+conf.fit.1111.3 <- cfa(model.1111.3, data = article1111.1, group = "cond")
+load.fit.1111.3 <- cfa(model.1111.3, article1111.1, group = "cond", group.equal = "loadings")
+int.fit.1111.3 <- cfa(model.1111.3, article1111.1, group = "cond", group.equal = c("loadings", "intercepts"))
+all.results.1111.3 <- mi.results(conf.fit.1111.3,load.fit.1111.3,int.fit.1111.3)
+all.results.1111.3
+
+# Step 4
+# Chisquare significant, rmsea < .08, CFI > .95, so configural invariance holds
+# RMSEA and CFI difference is 0, AIC and BIC are smaller; metric invariance holds
+# RMSEA and CFI difference is 0, AIC and BIC are smaller; scalar invariance holds
+
+# Study 3
+# Comparison 4-6
+url <- 'https://osf.io/5fubx//?action=download'
+filename <- '../article1111.2.sav'
+GET(url, write_disk(filename, overwrite = TRUE))
+article1111.2 <- read_sav(filename)
+article1111.2$condition <- as.numeric(article1111.2$condition)
+
+# From the manuscript
+# In the second task, participants rated their liking for (−5 = dislike, 5 = like) and likelihood of purchasing (0 = not at all, 10 = very) 
+# 17 consumer products (chosen based on a pretest reported in the Supplemental Material). These consisted of 
+# appearance products (liposuction, cosmetic plastic surgery, diet pills, cosmetics/makeup, blemish cream, facial makeover), 
+# hygiene products (soap, shampoo, toothpaste, toilet paper, dental floss, antiseptic hand wipes), and 
+# unrelated household products (batteries, light bulbs, aluminum foil, music files/CDs, plastic utensils). 
+
+# From the supplemental material (https://journals.sagepub.com/doi/suppl/10.1177/0956797617733829):
+# Scores on the liking and purchase likelihood ratings correlated highly within product items (rs > .55), and thus three 
+# overall composites were created for appearance (Cronbach’s α = .91), hygiene (Cronbach’s α = .88), and 
+# household (Cronbach’s α = .81) products.
+
+# Comparison 4: 
+# Grouping variable: control and pathogen threat (condition)
+# Scale variable: Appearance; the dataset has all 6 items and all items have a liking/purchasing answer, so 12 items in total
+# we decided not to combine them like the supplemental material does but to test them all separately
+# liposuct1 + liposuct2 + psurgery1 + psurgery2 + dietpills1 + dietpills2 + cosmetic1 + cosmetic2 + blemcream1 + blemcream2 + fmakeover1 + fmakeover2
+model.1111.4 <- 'F =~ liposuct1 + liposuct2 + psurgery1 + psurgery2 + dietpills1 + dietpills2 + cosmetic1 + cosmetic2 + blemcream1 + blemcream2 + fmakeover1 + fmakeover2'
+conf.fit.1111.4 <- cfa(model.1111.4, data = article1111.2, group = "condition")
+load.fit.1111.4 <- cfa(model.1111.4, article1111.2, group = "condition", group.equal = "loadings")
+int.fit.1111.4 <- cfa(model.1111.4, article1111.2, group = "condition", group.equal = c("loadings", "intercepts"))
+all.results.1111.4 <- mi.results(conf.fit.1111.4,load.fit.1111.4,int.fit.1111.4)
+all.results.1111.4
+
+# Step 4
+# Chisquare significant, rmsea > .08, CFI < .95, so we reject configural invariance
+
+# Comparison 5: 
+# Grouping variable: control and pathogen threat (condition)
+# Scale variable: Hygiene; here we also take the 6 items and leave them split for liking and purchase, so 12 in total
+# soap1 + soap2 + shampoo1 + shampoo2 + tooth1 + tooth2 + toilet1 + toilet2 + floss1 + floss2 + handwipe1 + handwipe2
+model.1111.5 <- 'F =~ soap1 + soap2 + shampoo1 + shampoo2 + tooth1 + tooth2 + toilet1 + toilet2 + floss1 + floss2 + handwipe1 + handwipe2'
+conf.fit.1111.5 <- cfa(model.1111.5, data = article1111.2, group = "condition")
+load.fit.1111.5 <- cfa(model.1111.5, article1111.2, group = "condition", group.equal = "loadings")
+int.fit.1111.5 <- cfa(model.1111.5, article1111.2, group = "condition", group.equal = c("loadings", "intercepts"))
+all.results.1111.5 <- mi.results(conf.fit.1111.5,load.fit.1111.5,int.fit.1111.5)
+all.results.1111.5
+
+# Step 4
+# Chisquare significant, rmsea > .08, CFI < .95, so we reject configural invariance
+
+# Comparison 6: 
+# Grouping variable: control and pathogen threat (condition)
+# Scale variable: Household (5 items, split in liking and purchase, so 10 in total)
+# batteries1 + batteries2 + lightbulb1 + lightbulb2 + alumfoil1 + alumfoil2 + music1 + music2 + utensils1 + utensils2
+model.1111.6 <- 'F =~ batteries1 + batteries2 + lightbulb1 + lightbulb2 + alumfoil1 + alumfoil2 + music1 + music2 + utensils1 + utensils2'
+conf.fit.1111.6 <- cfa(model.1111.6, data = article1111.2, group = "condition")
+load.fit.1111.6 <- cfa(model.1111.6, article1111.2, group = "condition", group.equal = "loadings")
+int.fit.1111.6 <- cfa(model.1111.6, article1111.2, group = "condition", group.equal = c("loadings", "intercepts"))
+all.results.1111.6 <- mi.results(conf.fit.1111.6,load.fit.1111.6,int.fit.1111.6)
+all.results.1111.6
+
+# Step 4
+# Chisquare significant, rmsea > .08, CFI < .95, so we reject configural invariance
+
+# Study 4
+# Comparisons 7-9
+url <- 'https://osf.io/k2tb6//?action=download'
+filename <- '../article1111.3.sav'
+GET(url, write_disk(filename, overwrite = TRUE))
+article1111.3 <- read_sav(filename)
+article1111.3$cond <- as.numeric(article1111.3$cond)
+
+# From the manuscript
+# In the second task, participants rated their liking for (−5 = dislike, 5 = like) and interest in purchasing, using, or engaging in 
+# (−5 = extremely disinterested, 5 = extremely interested) 28 consumer products or activities (chosen on the basis of a pretest reported in 
+# the Supplemental Material). These items related to appearance (liposuction, cosmetic plastic surgery, diet pills, cosmetics/makeup, 
+# blemish cream, facial makeover, hair dye), hygiene (shampoo, toothbrush, mouthwash, dental floss, hand sanitizer, deodorant, razors), 
+# physical fitness (fitness equipment, working out at a gym, cardio machine, exercise, lifting weights, treadmill, exercise mat), and 
+# the household (batteries, light bulbs, aluminum foil, plates, extension cord, lamp, clock). 
+
+# From the supplemental material
+# In the main study, liking and interest items correlated highly (all αs > .81), as they did in the pre-test, and so these were averaged 
+# for each product. We next repeated the principal axis factor analysis with promax rotation. Results mapped directly onto the pre-test 
+# findings. For the later analyses, we therefore created composites for appearance (Cronbach’s α = .83), hygiene (Cronbach’s α = .79), 
+# physical fitness (Cronbach’s α = .90) and household products (Cronbach’s α = .89) products. Additionally, two separate composites for
+#head appearance (Cronbach’s α = .82) and body appearance (Cronbach’s α = .78) were created.
+
+# Comparison 7
+# Grouping variable: control and pathogen threat (cond)
+# Scale variable: Appearance
+# liposuct1 + liposuct2 + psurgery1 + psurgery2 + dietpills1 + dietpills2 + cosmetic1 + cosmetic2 + blemcream1 + blemcream2 + 
+# fmakeover1 + fmakeover2 + hairdye1 + hairdye2
+model.1111.7 <- 'F =~ liposuct1 + liposuct2 + psurgery1 + psurgery2 + dietpills1 + dietpills2 + cosmetic1 + cosmetic2 + blemcream1 + blemcream2 + fmakeover1 + fmakeover2 + hairdye1 + hairdye2'
+conf.fit.1111.7 <- cfa(model.1111.7, data = article1111.3, group = "cond")
+load.fit.1111.7 <- cfa(model.1111.7, article1111.3, group = "cond", group.equal = "loadings")
+int.fit.1111.7 <- cfa(model.1111.7, article1111.3, group = "cond", group.equal = c("loadings", "intercepts"))
+all.results.1111.7 <- mi.results(conf.fit.1111.7,load.fit.1111.7,int.fit.1111.7)
+all.results.1111.7
+
+# Step 4
+# Chisquare significant, rmsea > .08, CFI < .95, so we reject configural invariance
+
+# Comparison 8
+# Grouping variable: control and pathogen threat
+# Scale variable: Hygiene
+# shampoo1 + shampoo2 + toothbrush1 + toothbrush2 + mouthwash1 + mouthwash2 + floss1 + floss2 + sanitize1 + sanitize2 + deodorant1 + 
+# deodorant2 + razors1 + razors2
+model.1111.8 <- 'F =~ shampoo1 + shampoo2 + toothbrush1 + toothbrush2 + mouthwash1 + mouthwash2 + floss1 + floss2 + sanitize1 + sanitize2 + deodorant1 + deodorant2 + razors1 + razors2'
+conf.fit.1111.8 <- cfa(model.1111.8, data = article1111.3, group = "cond")
+load.fit.1111.8 <- cfa(model.1111.8, article1111.3, group = "cond", group.equal = "loadings")
+int.fit.1111.8 <- cfa(model.1111.8, article1111.3, group = "cond", group.equal = c("loadings", "intercepts"))
+all.results.1111.8 <- mi.results(conf.fit.1111.8,load.fit.1111.8,int.fit.1111.8)
+all.results.1111.8
+
+# Step 4
+# Chisquare significant, rmsea > .08, CFI < .95, so we reject configural invariance
+
+# Comparison 9
+# Grouping variable: control and pathogen threat (cond)
+# Scale variable: Household products
+# batteries1 + batteries2 + light1 + light2 + foil1 + foil2 + plates1 + plates2 + cord1 + cord2 + lamp1 + lamp2 + clock1 + clock2
+model.1111.9 <- 'F =~ batteries1 + batteries2 + light1 + light2 + foil1 + foil2 + plates1 + plates2 + cord1 + cord2 + lamp1 + lamp2 + clock1 + clock2'
+conf.fit.1111.9 <- cfa(model.1111.9, data = article1111.3, group = "cond")
+load.fit.1111.9 <- cfa(model.1111.9, article1111.3, group = "cond", group.equal = "loadings")
+int.fit.1111.9 <- cfa(model.1111.9, article1111.3, group = "cond", group.equal = c("loadings", "intercepts"))
+all.results.1111.9 <- mi.results(conf.fit.1111.9,load.fit.1111.9,int.fit.1111.9)
+all.results.1111.9
+
+# Step 4
+# Chisquare significant, rmsea > .08, CFI < .95, so we reject configural invariance
+
+# Study 5a
+url <- 'https://osf.io/n6sua//?action=download'
+filename <- '../article1111.4.sav'
+GET(url, write_disk(filename, overwrite = TRUE))
+article1111.4 <- read_sav(filename)
+article1111.4$condition <- as.numeric(article1111.4$condition)
+
+# From the manuscript
+# A composite for the Body-Esteem–Appearance subscale was created by reverse-scoring 
+# positive items, producing a composite with higher values indicating insecurity about one’s appearance (Cronbach’s α = .93). 
+
+# Comparison 10
+# Grouping variable: pathogen-threat condition and property-crime condition (condition)
+# Scale variable: body esteem appearance composites be_1R + be_2R + BE_3 + BE_4 + BE_5 + BE_6 + be_7r + BE_8 + BE_9 + be_10R
+model.1111.10 <- 'F =~ be_1R + be_2R + BE_3 + BE_4 + BE_5 + BE_6 + be_7R + BE_8 + BE_9 + be_10R'
+conf.fit.1111.10 <- cfa(model.1111.10, data = article1111.4, group = "condition")
+load.fit.1111.10 <- cfa(model.1111.10, article1111.4, group = "condition", group.equal = "loadings")
+int.fit.1111.10 <- cfa(model.1111.10, article1111.4, group = "condition", group.equal = c("loadings", "intercepts"))
+all.results.1111.10 <- mi.results(conf.fit.1111.10,load.fit.1111.10,int.fit.1111.10)
+all.results.1111.10
+
+# Step 4
+# Chisquare significant, rmsea > .08, CFI < .95, so we reject configural invariance
+
+# Study 5b
+url <- 'https://osf.io/e6cyf//?action=download'
+filename <- '../article1111.5.sav'
+GET(url, write_disk(filename, overwrite = TRUE))
+article1111.5 <- read_sav(filename)
+article1111.5$condition <- as.numeric(article1111.5$condition)
+
+# Comparison 11
+# Grouping variable: pathogen-threat condition and property-crime condition (condition)
+# Scale variable: body esteem appearance composites be_1R + be_2R + BE_3 + BE_4 + BE_5 + BE_6 + be_7r + BE_8 + BE_9 + be_10R
+model.1111.11 <- 'F =~ be_1R + be_2R + BE_3 + BE_4 + BE_5 + BE_6 + be_7R + BE_8 + BE_9 + be_10R'
+conf.fit.1111.11 <- cfa(model.1111.11, data = article1111.5, group = "condition")
+load.fit.1111.11 <- cfa(model.1111.11, article1111.5, group = "condition", group.equal = "loadings")
+int.fit.1111.11 <- cfa(model.1111.11, article1111.5, group = "condition", group.equal = c("loadings", "intercepts"))
+all.results.1111.11 <- mi.results(conf.fit.1111.11,load.fit.1111.11,int.fit.1111.11)
+all.results.1111.11
+
+# Step 4
+# Chisquare significant, rmsea > .08, CFI < .95, so we reject configural invariance
+
+
+# Article 1151: Russell ---------------------------------------------------
+url <- 'https://osf.io/7ngqz//?action=download'
+filename <- '../article1151.sav'
+GET(url, write_disk(filename, overwrite = TRUE))
+article1151 <- read_sav(filename)
+article1151$Condition <- as.numeric(article1151$Condition)
+
+# Grouping variable: imagined interacting either with a straight male stranger or with a gay male stranger (Condition)
+# Scale variable: worry about having things in common with man CommonWor_1 + CommonWor_2 + CommonWor_3)
+model.1151 <- 'F =~ CommonWor_1 + CommonWor_2 + CommonWor_3'
+conf.fit.1151 <- cfa(model.1151, data = article1151, group = "Condition")
+load.fit.1151 <- cfa(model.1151, article1151, group = "Condition", group.equal = "loadings")
+int.fit.1151 <- cfa(model.1151, article1151, group = "Condition", group.equal = c("loadings", "intercepts"))
+all.results.1151 <- mi.results(conf.fit.1151,load.fit.1151,int.fit.1151)
+all.results.1151
+
+# Step 4
+# Three items, so we should check
+
+
+# Article 1251: Gaertig ---------------------------------------------------
+# Study 1-6
+url <- 'https://osf.io/zrbq6//?action=download'
+filename <- '../data/data-main/article1251.xlsx'
+GET(url, write_disk(filename, overwrite = TRUE))
+article1251 <- read_excel(filename)
+
+# Comparison 1
+# Grouping variable: advice type: approximate-chance advice vs. certain advice (Advice)
+# Scale variable: Advice evaluation (Knowledgeable + Competent + Credible + Trust + SeekAdvice + Persuasive + Accurate)
+# the authors seem to ignore the nesting of the data, that each individual contributes more rows of data to the study.
+model.1251 <- 'F =~ Knowledgeable + Competent + Credible + Trust + SeekAdvice + Persuasive + Accurate'
+conf.fit.1251 <- cfa(model.1251, data = article1251, group = "Advice")
+load.fit.1251 <- cfa(model.1251, article1251, group = "Advice", group.equal = "loadings")
+int.fit.1251 <- cfa(model.1251, article1251, group = "Advice", group.equal = c("loadings", "intercepts"))
+all.results.1251 <- mi.results(conf.fit.1251,load.fit.1251,int.fit.1251)
+all.results.1251
+
+# Step 4
+# Chisquare is significant, RMSEA > .08, so we reject configural invariance
+# CFI is ok (0.984)
+
+# Study 7
+# Comparison 2
+# Grouping variable: advice type: approximate-chance advice vs. certain advice
+# Scale variable: Advice evaluation (Knowledgeable + Competent + Credible + Trust + SeekAdvice + Persuasive + Accurate)
+
+# The OSF (https://osf.io/ew34q/) only contains data for study1-6, we can't find those for study 7.
+
+
+# Article 1261: Kardas ----------------------------------------------------
+# Study 5
+url <- 'https://osf.io/bfj8n//?action=download'
+filename <- '../data/data-main/article1261.xlsx'
+GET(url, write_disk(filename, overwrite = TRUE))
+article1261.1 <- read_excel(filename, sheet = 7)
+
+# Comparison 1
+# Grouping variable: performer: present; absent (condition)
+# Scale variable: perceived-skill-acquisition scale (scale1_improve + scale2_prepare + scale3_learn)
+model.1261.1 <- 'F =~ scale1_improve + scale2_prepare + scale3_learn'
+conf.fit.1261.1 <- cfa(model.1261.1, data = article1261.1, group = "condition")
+load.fit.1261.1 <- cfa(model.1261.1, article1261.1, group = "condition", group.equal = "loadings")
+int.fit.1261.1 <- cfa(model.1261.1, article1261.1, group = "condition", group.equal = c("loadings", "intercepts"))
+all.results.1261.1 <- mi.results(conf.fit.1261.1,load.fit.1261.1,int.fit.1261.1)
+all.results.1261.1
+
+# Step 4
+# 3 items so we should check
+
+# Comparison 2
+# Grouping variable: exposure: low; high (exposures)
+# Scale variable: perceived-skill-acquisition scale (scale1_improve + scale2_prepare + scale3_learn)
+model.1261.2 <- 'F =~ scale1_improve + scale2_prepare + scale3_learn'
+conf.fit.1261.2 <- cfa(model.1261.2, data = article1261.1, group = "condition")
+load.fit.1261.2 <- cfa(model.1261.2, article1261.1, group = "condition", group.equal = "loadings")
+int.fit.1261.2 <- cfa(model.1261.2, article1261.1, group = "condition", group.equal = c("loadings", "intercepts"))
+all.results.1261.2 <- mi.results(conf.fit.1261.2,load.fit.1261.2,int.fit.1261.2)
+all.results.1261.2
+
+# Step 4
+# 3 items so we should check
+
+# Study 6
+article1261.2 <- read_excel(filename, sheet = 8, col_names = T)
+colnames(article1261.2) <- article1261.2[1,] # use first row as colnames
+article1261.2 <- article1261.2[-1,] # remove first row
+article1261.2$condition <- as.numeric(article1261.2$condition)
+
+# From the manuscript
+
+# Comparison 1
+# Grouping variable: one of three kinds of debiasing task (condition)
+# Scale variable: perceived-skill-acquisition scale (scale1_improve_t1 + scale2_prepare_t1 + scale3_learn_t1)
+
+# The authors are interested in the main effect of condition, which means that they are interested
+# in the difference in Y scores for condition=1-2-3 averaged across time. We will therefore also average across time for the three items
+article1261.2$improve <- (as.numeric(article1261.2$scale1_improve_t1) + as.numeric(article1261.2$scale1_improve_t2))/2
+article1261.2$prepare <- (as.numeric(article1261.2$scale2_prepare_t1) + as.numeric(article1261.2$scale2_prepare_t2))/2
+article1261.2$learn <- (as.numeric(article1261.2$scale3_learn_t1) + as.numeric(article1261.2$scale3_learn_t2))/2
+
+model.1261.3 <- 'F =~ improve + prepare + learn'
+conf.fit.1261.3 <- cfa(model.1261.3, data = article1261.2, group = "condition")
+load.fit.1261.3 <- cfa(model.1261.3, article1261.2, group = "condition", group.equal = "loadings")
+int.fit.1261.3 <- cfa(model.1261.3, article1261.2, group = "condition", group.equal = c("loadings", "intercepts"))
+all.results.1261.3 <- mi.results(conf.fit.1261.3,load.fit.1261.3,int.fit.1261.3)
+all.results.1261.3
+
+# Step 4
+# 3 items so we should check
+
+# Comparison 2
+# Grouping variable: time: perceived learning at Time 1; before the debiasing task; and perceived learning at Time 2; after the debiasing task
+# Scale variable: perceived-skill-acquisition scale 
+
+# make dataset for t1
+article1261.2.t1 <- cbind(article1261.2$scale1_improve_t1,article1261.2$scale2_prepare_t1,article1261.2$scale3_learn_t1)
+grouping <- rep(0,nrow(article1261.2.t1))
+article1261.2.t1 <- cbind(article1261.2.t1,grouping)
+
+# make dataset for t2
+article1261.2.t2 <- cbind(article1261.2$scale1_improve_t2,article1261.2$scale2_prepare_t2,article1261.2$scale3_learn_t2)
+grouping <- rep(1,nrow(article1261.2.t2))
+article1261.2.t2 <- cbind(article1261.2.t2,grouping)
+
+# combine datasets
+article1261.2.tot <- rbind(article1261.2.t1,article1261.2.t2)
+colnames(article1261.2.tot) <- c("improve","prepare","learn","condition")
+
+model.1261.4 <- 'F =~ improve + prepare + learn'
+conf.fit.1261.4 <- cfa(model.1261.4, data = article1261.2.tot, group = "condition")
+load.fit.1261.4 <- cfa(model.1261.4, article1261.2.tot, group = "condition", group.equal = "loadings")
+int.fit.1261.4 <- cfa(model.1261.4, article1261.2.tot, group = "condition", group.equal = c("loadings", "intercepts"))
+all.results.1261.4 <- mi.results(conf.fit.1261.4,load.fit.1261.4,int.fit.1261.4)
+all.results.1261.4
+
+# Step 4
+# 3 items so we should check
+
+
+# Article 1361: Critcher --------------------------------------------------
+# Study 2
+url <- 'https://osf.io/xk3ny//?action=download'
+filename <- '../article1361.1.csv'
+GET(url, write_disk(filename, overwrite = TRUE))
+article1361.1 <- read.csv2(filename, header=T, na.strings="NA", sep=",")
+
+# Comparison 1
+# Grouping variable: inspired-by; inspired-to; or a neutral control condition (condinsp)
+# Scale variable: Dawkins' belief in god scale DBIG_1 + DBIG_2 + DBIG_3 + DBIG_4 + DBIG_5 + DBIG_6 + DBIG_7
+model.1361.1 <- 'F =~ DBIG_1 + DBIG_2 + DBIG_3 + DBIG_4 + DBIG_5 + DBIG_6 + DBIG_7'
+
+# Fit the configural invariance model
+conf.mod.1361.1 <- measEq.syntax(model.1361.1,
+                                ID.fac = "std.lv",
+                                ID.cat = "Wu",
+                                ordered = c("DBIG_1","DBIG_2","DBIG_3","DBIG_4","DBIG_5","DBIG_6","DBIG_7"),
+                                group = "condinsp", 
+                                parameterization = "delta", 
+                                data = article1361.1,
+                                group.equal = "configural") 
+
+conf.fit.1361.1 <- cfa(as.character(conf.mod.1361.1), article1361.1, group = "condinsp", estimator = "WLSMV")
+
+# Fit the thresholds invariance model
+thres.mod.1361.1 <- measEq.syntax(model.1361.1,
+                                 ID.fac = "std.lv",
+                                 ID.cat = "Wu",
+                                 ordered = c("DBIG_1","DBIG_2","DBIG_3","DBIG_4","DBIG_5","DBIG_6","DBIG_7"),
+                                 group = "condinsp", 
+                                 parameterization = "delta", 
+                                 data = article1361.1,
+                                 group.equal = c("thresholds")) 
+
+
+thres.fit.1361.1 <- cfa(as.character(thres.mod.1361.1), article1361.1, group = "condinsp", estimator = "WLSMV")
+
+
+# Fit the loadingsinvariance model
+load.mod.1361.1 <- measEq.syntax(model.1361.1,
+                                ID.fac = "std.lv",
+                                ID.cat = "Wu",
+                                ordered = c("DBIG_1","DBIG_2","DBIG_3","DBIG_4","DBIG_5","DBIG_6","DBIG_7"),
+                                group = "condinsp", 
+                                parameterization = "delta", 
+                                data = article1361.1,
+                                group.equal = c("thresholds", "loadings")) 
+
+
+load.fit.1361.1 <- cfa(as.character(load.mod.1361.1), article1361.1, group = "condinsp", estimator = "WLSMV")
+
+all.results.1361 <- mi.results.sc(conf.fit.1361.1,thres.fit.1361.1,load.fit.1361.1)
+all.results.1361
+
+# Step 4
+# chisquare significant, RMSEA > .08, CFI < .95, so we reject configural invariance
+
+# Study 3
+# Comparisons 2-4
+url <- 'https://osf.io/2n93e//?action=download'
+filename <- '../article1361.2.csv'
+GET(url, write_disk(filename, overwrite = TRUE))
+article1361.2 <- read.csv2(filename, header=T, na.strings="NA", sep=",")
+
+# Comparison 2
+# Grouping variable: inspired-by; awe; or neutral control condition (condition)
+# Scale variable: intolerance to uncertainty (AmbigIntol_1 + AmbigIntol_2 + AmbigIntol_3 + AmbigIntol_4 + AmbigIntol_5 + AmbigIntol_6 + AmbigIntol_7 + AmbigIntol_8 + AmbigIntol_9)
+model.1361.2 <- 'F =~ AmbigIntol_1 + AmbigIntol_2 + AmbigIntol_3 + AmbigIntol_4 + AmbigIntol_5 + AmbigIntol_6 + AmbigIntol_7 + AmbigIntol_8 + AmbigIntol_9'
+conf.fit.1361.2 <- cfa(model.1361.2, data = article1361.2, group = "condition")
+load.fit.1361.2 <- cfa(model.1361.2, article1361.2, group = "condition", group.equal = "loadings")
+int.fit.1361.2 <- cfa(model.1361.2, article1361.2, group = "condition", group.equal = c("loadings", "intercepts"))
+all.results.1361.2 <- mi.results(conf.fit.1361.2,load.fit.1361.2,int.fit.1361.2)
+all.results.1361.2
+
+# Step 4
+# chisquare significant, CFI < .95, so we reject configural invariance
+# RMSEA ok (0.065)
+
+# Comparison 3
+# Grouping variable: inspired-by; awe; or neutral control condition (condition)
+# Scale variable: transcendence (Pekala1r + Pekala2 + Pekala3 + Pekala4r for cond1 and cond3, Q332 + Q333 + Q334 + Q335 for cond2)
+# make dataset for cond1 and cond3
+keep1 <- c("Pekala1r","Pekala2","Pekala3","Pekala4r","condition")
+cond1 <- subset(article1361.2,condition==1,select=keep1)
+cond3 <- subset(article1361.2,condition==3,select=keep1)
+
+# make dataset for cond2
+keep2 <- c("Q332","Q333","Q334","Q335","condition")
+cond2 <- subset(article1361.2,condition==2,select=keep2)
+colnames(cond2) <- c("Pekala1r","Pekala2","Pekala3","Pekala4r","condition")
+
+# combine datasets
+article1361.2.2 <- rbind(cond1,cond2,cond3)
+
+model.1361.3 <- 'F =~ Pekala1r + Pekala2 + Pekala3 + Pekala4r'
+conf.fit.1361.3 <- cfa(model.1361.3, data = article1361.2.2, group = "condition")
+load.fit.1361.3 <- cfa(model.1361.3, article1361.2.2, group = "condition", group.equal = "loadings")
+int.fit.1361.3 <- cfa(model.1361.3, article1361.2.2, group = "condition", group.equal = c("loadings", "intercepts"))
+all.results.1361.3 <- mi.results(conf.fit.1361.3,load.fit.1361.3,int.fit.1361.3)
+all.results.1361.3
+
+# Step 4
+# chisquare significant, RMSEA > 0.08, CFI < .95, so we reject configural invariance
+
+# Comparison 4
+# Grouping variable: inspired-by; awe; or neutral control condition (condition)
+# Scale variable: Connectedness (condition 1 and 3 answered "soco1W","soco2W","soco3W","soco4W" / condition 2 answered "soco1A","soco2A","soco3A","soco4A")
+
+# make dataset for cond1 and cond3
+keep1 <- c("soco1W","soco2W","soco3W","soco4W","condition")
+cond1 <- subset(article1361.2,condition==1,select=keep1)
+cond3 <- subset(article1361.2,condition==3,select=keep1)
+
+# make dataset for cond2
+keep2 <- c("soco1A","soco2A","soco3A","soco4A","condition")
+cond2 <- subset(article1361.2,condition==2,select=keep2)
+colnames(cond2) <- c("soco1W","soco2W","soco3W","soco4W","condition")
+
+# combine datasets
+article1361.2.1 <- rbind(cond1,cond2,cond3)
+colnames(article1361.2.1) <- c("soc1","soc2","soc3","soc4","condition")
+
+model.1361.4 <- 'F =~ soc1 + soc2 + soc3 + soc4'
+conf.fit.1361.4 <- cfa(model.1361.4, data = article1361.2.1, group = "condition")
+load.fit.1361.4 <- cfa(model.1361.4, article1361.2.1, group = "condition", group.equal = "loadings")
+int.fit.1361.4 <- cfa(model.1361.4, article1361.2.1, group = "condition", group.equal = c("loadings", "intercepts"))
+all.results.1361.4 <- mi.results(conf.fit.1361.4,load.fit.1361.4,int.fit.1361.4)
+all.results.1361.4
+
+# Step 4
+# chisquare significant, RMSEA > 0.08, CFI < .95, so we reject configural invariance
+
+# Study 4
+url <- 'https://osf.io/uwg4k//?action=download'
+filename <- '../article1361.3.csv'
+GET(url, write_disk(filename, overwrite = TRUE))
+article1361.3 <- read.csv2(filename, header=T, na.strings="NA", sep=",")
+
+# Comparison 5
+# Grouping variable: inspiration or control (IV_video)
+# Scale variable: Enjoyment; enjoyable + good + feelgood + moving + inspired + skeptical_reversed
+model.1361.5 <- 'F =~ enjoyable + good + feelgood + moving + inspired + skeptical_reversed'
+conf.fit.1361.5 <- cfa(model.1361.5, data = article1361.3, group = "IV_video")
+load.fit.1361.5 <- cfa(model.1361.5, article1361.3, group = "IV_video", group.equal = "loadings")
+int.fit.1361.5 <- cfa(model.1361.5, article1361.3, group = "IV_video", group.equal = c("loadings", "intercepts"))
+all.results.1361.5 <- mi.results(conf.fit.1361.5,load.fit.1361.5,int.fit.1361.5)
+all.results.1361.5
+
+# Step 4
+# chisquare significant, RMSEA > 0.08, CFI < .95, so we reject configural invariance
+
+
+# Article 1391: Oconnor ---------------------------------------------------
+# Study 4
+url <- 'https://osf.io/tucvj///?action=download'
+filename <- '../data/data-main/article1391.xlsx'
+GET(url, write_disk(filename, overwrite = TRUE))
+article1391 <- read_excel(filename)
+
+# Comparison 1
+# Grouping variable: simple elaborate and complex elaborate (condition)
+# Scale variable: Fluency (fluent_easy + fluent_quick + fluent_enjoy)
+model.1391.1 <- 'F =~ fluent_easy + fluent_quick + fluent_enjoy'
+conf.fit.1391.1 <- cfa(model.1391.1, data = article1391, group = "condition")
+load.fit.1391.1 <- cfa(model.1391.1, article1391, group = "condition", group.equal = "loadings")
+int.fit.1391.1 <- cfa(model.1391.1, article1391, group = "condition", group.equal = c("loadings", "intercepts"))
+all.results.1391.1 <- mi.results(conf.fit.1391.1,load.fit.1391.1,int.fit.1391.1)
+all.results.1391.1
+
+# Step 4
+# 3 items so we should check
+
+# Comparison 2
+# Grouping variable: within-group 10 times (day)
+# Scale variable: Fluency (fluent_easy + fluent_quick + fluent_enjoy)
+model.1391.2 <- 'F =~ fluent_easy + fluent_quick + fluent_enjoy'
+conf.fit.1391.2 <- cfa(model.1391.2, data = article1391, group = "day")
+load.fit.1391.2 <- cfa(model.1391.2, article1391, group = "day", group.equal = "loadings")
+int.fit.1391.2 <- cfa(model.1391.2, article1391, group = "day", group.equal = c("loadings", "intercepts"))
+all.results.1391.2 <- mi.results(conf.fit.1391.2,load.fit.1391.2,int.fit.1391.2)
+all.results.1391.2
+
+# Step 4
+# 3 items so we should check
+
+# Comparison 3
+# Grouping variable: simple elaborate and complex elaborate (condition)
+# Scale variable: Flow (flow1 + flow2 + flow3 + flow4 + flow5 + flow6 + flow7 + flow8 + flow9 + flow10)
+model.1391.3 <- 'F =~ flow1 + flow2 + flow3 + flow4 + flow5 + flow6 + flow7 + flow8 + flow9 + flow10'
+conf.fit.1391.3 <- cfa(model.1391.3, data = article1391, group = "condition")
+load.fit.1391.3 <- cfa(model.1391.3, article1391, group = "condition", group.equal = "loadings")
+int.fit.1391.3 <- cfa(model.1391.3, article1391, group = "condition", group.equal = c("loadings", "intercepts"))
+all.results.1391.3 <- mi.results(conf.fit.1391.3,load.fit.1391.3,int.fit.1391.3)
+all.results.1391.3
+
+# Step 4
+# chisquare significant, rmsea > .08, CFI <.95 so we reject configural invariance
+
+# Comparison 4
+# Grouping variable: within-group 10 times (day)
+# Scale variable: Flow (flow1 + flow2 + flow3 + flow4 + flow5 + flow6 + flow7 + flow8 + flow9 + flow10)
+model.1391.4 <- 'F =~ flow1 + flow2 + flow3 + flow4 + flow5 + flow6 + flow7 + flow8 + flow9 + flow10'
+conf.fit.1391.4 <- cfa(model.1391.4, data = article1391, group = "day")
+load.fit.1391.4 <- cfa(model.1391.4, article1391, group = "day", group.equal = "loadings")
+int.fit.1391.4 <- cfa(model.1391.4, article1391, group = "day", group.equal = c("loadings", "intercepts"))
+all.results.1391.4 <- mi.results(conf.fit.1391.4,load.fit.1391.4,int.fit.1391.4)
+all.results.1391.4
+
+# Step 4
+# chisquare significant, rmsea > .08, CFI <.95 so we reject configural invariance
+
+
+# Article 1421: Berman ----------------------------------------------------
+# Study 3
+url <- 'https://osf.io/bw72f//?action=download'
+filename <- '../data/data-main/article1421.1.xlsx'
+GET(url, write_disk(filename, overwrite = TRUE))
+article1421.1 <- read_excel(filename)
+
+# Comparison 1
+# Grouping variable: charity condition or investment condition (Type)
+# Scaling variable: Subjective Preference (PersonallyCare + ReflectViews + ObjectiveMoreImportant)
+model.1421.1 <- 'F =~ PersonallyCare + ReflectViews + ObjectiveMoreImportant'
+conf.fit.1421.1 <- cfa(model.1421.1, data = article1421.1, group = "Type")
+load.fit.1421.1 <- cfa(model.1421.1, article1421.1, group = "Type", group.equal = "loadings")
+int.fit.1421.1 <- cfa(model.1421.1, article1421.1, group = "Type", group.equal = c("loadings", "intercepts"))
+all.results.1421.1 <- mi.results(conf.fit.1421.1,load.fit.1421.1,int.fit.1421.1)
+all.results.1421.1
+
+# Step 4
+# 3 items so we should check
+
+# Study 5
+url <- 'https://osf.io/fmbng//?action=download'
+filename <- '../data/data-main/article1421.2.xlsx'
+GET(url, write_disk(filename, overwrite = TRUE))
+article1421.2 <- read_excel(filename, col_names=T)
+
+# Comparison 2
+# Grouping variable: choice: most effective option vs. least effective option (Choice)
+# Scaling variable: perceived decision quality (Appropriat + Responsibl + Thoughtful)
+model.1421.2 <- 'F =~ Appropriat + Responsibl + Thoughtful'
+conf.fit.1421.2 <- cfa(model.1421.2, data = article1421.2, group = "Choice")
+load.fit.1421.2 <- cfa(model.1421.2, article1421.2, group = "Choice", group.equal = "loadings")
+int.fit.1421.2 <- cfa(model.1421.2, article1421.2, group = "Choice", group.equal = c("loadings", "intercepts"))
+all.results.1421.2 <- mi.results(conf.fit.1421.2,load.fit.1421.2,int.fit.1421.2)
+all.results.1421.2
+
+# Step 4
+# 3 items so we should check
+
+# Comparison 3
+# Grouping variable: choice: most effective option vs. least effective choice (Choice)
+# Scaling variable: perceived altruism (Selfish + Ethical + Good)
+model.1421.3 <- 'F =~ Selfish + Ethical + Good'
+conf.fit.1421.3 <- cfa(model.1421.3, data = article1421.2, group = "Choice")
+load.fit.1421.3 <- cfa(model.1421.3, article1421.2, group = "Choice", group.equal = "loadings")
+int.fit.1421.3 <- cfa(model.1421.3, article1421.2, group = "Choice", group.equal = c("loadings", "intercepts"))
+all.results.1421.3 <- mi.results(conf.fit.1421.3,load.fit.1421.3,int.fit.1421.3)
+all.results.1421.3
+
+# Step 4
+# 3 items so we should check
+
+# Article 1501: Moon ------------------------------------------------------
+# Study 1
+# Comparisons 1-3
+url <- 'https://osf.io/t3rhv//?action=download'
+filename <- '../article1501.1.sav'
+GET(url, write_disk(filename, overwrite = TRUE))
+article1501.1 <- read_sav(filename)
+article1501.1$targrel <- as.numeric(article1501.1$targrel)
+
+# Comparison 1
+# Grouping variable: religious target and nonreligious target (targrel)
+# Scale variable: Reproductive strategy (Faithful + Family + multsex + LongTerm + promisc + InvCh + DedParent)
+# got the correct variables from the syntax: https://osf.io/wt8jc/
+model.1501.1 <- 'F =~ Faithful + Family + multsex + LongTerm + promisc + InvCh + DedParent'
+conf.fit.1501.1 <- cfa(model.1501.1, data = article1501.1, group = "targrel")
+load.fit.1501.1 <- cfa(model.1501.1, article1501.1, group = "targrel", group.equal = "loadings")
+int.fit.1501.1 <- cfa(model.1501.1, article1501.1, group = "targrel", group.equal = c("loadings", "intercepts"))
+all.results.1501.1 <- mi.results(conf.fit.1501.1,load.fit.1501.1,int.fit.1501.1)
+all.results.1501.1
+
+# Step 4
+# Chisquare is significant, RMSEA > .08, CFI < .95, so we reject configural invariance
+
+# Comparison 2
+# Grouping variable: religious target and nonreligious target (targrel)
+# Scale variable: Non-aggression (aggressive + violent + temper)
+model.1501.2 <- 'F =~ aggressive + violent + temper'
+conf.fit.1501.2 <- cfa(model.1501.2, data = article1501.1, group = "targrel")
+load.fit.1501.2 <- cfa(model.1501.2, article1501.1, group = "targrel", group.equal = "loadings")
+int.fit.1501.2 <- cfa(model.1501.2, article1501.1, group = "targrel", group.equal = c("loadings", "intercepts"))
+all.results.1501.2 <- mi.results(conf.fit.1501.2,load.fit.1501.2,int.fit.1501.2)
+all.results.1501.2
+
+# Step 4
+# 3 items so we should check
+
+# Comparison 3
+# Grouping variable: religious target and nonreligious target
+# Scale variable: Mate value (MV1_1 + MV1_2 + MV1_3 + MV1_6 + MV1_7)
+model.1501.3 <- 'F =~ MV1_1 + MV1_2 + MV1_3 + MV1_6 + MV1_7'
+conf.fit.1501.3 <- cfa(model.1501.3, data = article1501.1, group = "targrel")
+load.fit.1501.3 <- cfa(model.1501.3, article1501.1, group = "targrel", group.equal = "loadings")
+int.fit.1501.3 <- cfa(model.1501.3, article1501.1, group = "targrel", group.equal = c("loadings", "intercepts"))
+all.results.1501.3 <- mi.results(conf.fit.1501.3,load.fit.1501.3,int.fit.1501.3)
+all.results.1501.3
+
+# Step 4
+# Chisquare is significant, RMSEA > .08, so we reject configural invariance
+# CFI is ok (0.981)
+
+
+# Study 2
+# Comparisons 4-12
+url <- 'https://osf.io/8f7wa//?action=download'
+filename <- '../article1501.2.sav'
+GET(url, write_disk(filename, overwrite = TRUE))
+article1501.2 <- read_sav(filename)
+article1501.2$targrel <- as.numeric(article1501.2$targrel)
+article1501.2$targstrat <- as.numeric(article1501.2$targstrat)
+# Syntax here: https://osf.io/b9pnm/
+
+# Comparison 4
+# Grouping variable: religious target and nonreligious target (targrel)
+# Scale variable: reproductive strategy (CS1 + CS2 + CS3 + CS4 + CS5 + CS6 + CS7)
+model.1501.4 <- 'F =~ CS1 + CS2 + CS3 + CS4 + CS5 + CS6 + CS7'
+conf.fit.1501.4 <- cfa(model.1501.4, data = article1501.2, group = "targrel")
+load.fit.1501.4 <- cfa(model.1501.4, article1501.2, group = "targrel", group.equal = "loadings")
+int.fit.1501.4 <- cfa(model.1501.4, article1501.2, group = "targrel", group.equal = c("loadings", "intercepts"))
+all.results.1501.4 <- mi.results(conf.fit.1501.4,load.fit.1501.4,int.fit.1501.4)
+all.results.1501.4
+
+# Step 4
+# Chisquare is significant, rmsea > .08 CFI < .95, so we reject configural invariance
+
+# Comparison 5
+# Grouping variable: committed strategies vs noncommitted strategies (targstrat)
+# Scale variable: reproductive strategy (CS1 + CS2 + CS3 + CS4 + CS5 + CS6 + CS7)
+model.1501.5 <- 'F =~ CS1 + CS2 + CS3 + CS4 + CS5 + CS6 + CS7'
+conf.fit.1501.5 <- cfa(model.1501.5, data = article1501.2, group = "targstrat")
+load.fit.1501.5 <- cfa(model.1501.5, article1501.2, group = "targstrat", group.equal = "loadings")
+int.fit.1501.5 <- cfa(model.1501.5, article1501.2, group = "targstrat", group.equal = c("loadings", "intercepts"))
+all.results.1501.5 <- mi.results(conf.fit.1501.5,load.fit.1501.5,int.fit.1501.5)
+all.results.1501.5
+
+# Step 4
+# Chisquare is significant, rmsea > .08 CFI < .95, so we reject configural invariance
+
+# Comparison 6
+# Grouping variable: committed strategies vs noncommitted strategies (targstrat)
+# Scale variable: nonimpulsivity (IMP1 + IMP2 + IMP3 + IMP4 + IMP5 + IMP6 + IMP7)
+model.1501.6 <- 'F =~ IMP1 + IMP2 + IMP3 + IMP4 + IMP5 + IMP6 + IMP7'
+conf.fit.1501.6 <- cfa(model.1501.6, data = article1501.2, group = "targstrat")
+load.fit.1501.6 <- cfa(model.1501.6, article1501.2, group = "targstrat", group.equal = "loadings")
+int.fit.1501.6 <- cfa(model.1501.6, article1501.2, group = "targstrat", group.equal = c("loadings", "intercepts"))
+all.results.1501.6 <- mi.results(conf.fit.1501.6,load.fit.1501.6,int.fit.1501.6)
+all.results.1501.6
+
+# Step 4
+# Chisquare is significant, rmsea > .08 CFI < .95, so we reject configural invariance
+
+# Comparison 7
+# Grouping variable: religious target and nonreligious target (targrel)
+# Scale variable: nonopportunistic behavior (OB1 + OB2 + OB3)
+model.1501.7 <- 'F =~ OB1 + OB2 + OB3'
+conf.fit.1501.7 <- cfa(model.1501.7, data = article1501.2, group = "targrel")
+load.fit.1501.7 <- cfa(model.1501.7, article1501.2, group = "targrel", group.equal = "loadings")
+int.fit.1501.7 <- cfa(model.1501.7, article1501.2, group = "targrel", group.equal = c("loadings", "intercepts"))
+all.results.1501.7 <- mi.results(conf.fit.1501.7,load.fit.1501.7,int.fit.1501.7)
+all.results.1501.7
+
+# Step 4
+# 3 items so we should check
+
+# Comparison 8
+# Grouping variable: committed strategies vs noncommitted strategies (targstrat)
+# Scale variable: nonopportunistic behavior (OB1 + OB2 + OB3)
+model.1501.8 <- 'F =~ OB1 + OB2 + OB3'
+conf.fit.1501.8 <- cfa(model.1501.8, data = article1501.2, group = "targstrat")
+load.fit.1501.8 <- cfa(model.1501.8, article1501.2, group = "targstrat", group.equal = "loadings")
+int.fit.1501.8 <- cfa(model.1501.8, article1501.2, group = "targstrat", group.equal = c("loadings", "intercepts"))
+all.results.1501.8 <- mi.results(conf.fit.1501.8,load.fit.1501.8,int.fit.1501.8)
+all.results.1501.8
+
+# Step 4
+# 3 items so we should check
+
+# Comparison 9
+# Grouping variable: religious target and nonreligious target (targrel)
+# Scale variable: hopeful ecology (ECOL1 + ECOL2 + ECOL3)
+model.1501.9 <- 'F =~ ECOL1 + ECOL2 + ECOL3'
+conf.fit.1501.9 <- cfa(model.1501.9, data = article1501.2, group = "targrel")
+load.fit.1501.9 <- cfa(model.1501.9, article1501.2, group = "targrel", group.equal = "loadings")
+int.fit.1501.9 <- cfa(model.1501.9, article1501.2, group = "targrel", group.equal = c("loadings", "intercepts"))
+all.results.1501.9 <- mi.results(conf.fit.1501.9,load.fit.1501.9,int.fit.1501.9)
+all.results.1501.9
+
+# Step 4
+# 3 items so we should check
+
+# Comparison 10
+# Grouping variable: committed strategies vs noncommitted strategies (targstrat)
+# Scale variable: hopeful ecology (ECOL1 + ECOL2 + ECOL3)
+model.1501.10 <- 'F =~ ECOL1 + ECOL2 + ECOL3'
+conf.fit.1501.10 <- cfa(model.1501.10, data = article1501.2, group = "targstrat")
+load.fit.1501.10 <- cfa(model.1501.10, article1501.2, group = "targstrat", group.equal = "loadings")
+int.fit.1501.10 <- cfa(model.1501.10, article1501.2, group = "targstrat", group.equal = c("loadings", "intercepts"))
+all.results.1501.10 <- mi.results(conf.fit.1501.10,load.fit.1501.10,int.fit.1501.10)
+all.results.1501.10
+
+# Step 4
+# 3 items so we should check
+
+# Comparison 11
+# Grouping variable: religious target and nonreligious target (targrel)
+# Scale variable: trust (TR1 + TR2 + TR3 + TR4 + TR5 + TR6)
+model.1501.11 <- 'F =~ TR1 + TR2 + TR3 + TR4 + TR5 + TR6'
+conf.fit.1501.11 <- cfa(model.1501.11, data = article1501.2, group = "targrel")
+load.fit.1501.11 <- cfa(model.1501.11, article1501.2, group = "targrel", group.equal = "loadings")
+int.fit.1501.11 <- cfa(model.1501.11, article1501.2, group = "targrel", group.equal = c("loadings", "intercepts"))
+all.results.1501.11 <- mi.results(conf.fit.1501.11,load.fit.1501.11,int.fit.1501.11)
+all.results.1501.11
+
+# Step 4
+# chisquare non-significant, RMSEA < .08, CFI > .95 so we do not reject configural invariance
+# metric: change in RMSEA < .01, change in CFI < .01, AIC and BIC are lower, we do not reject metric invariance
+# scalar change in RMSEA < .01, change in CFI < .01, AIC and BIC are lower, we do not reject scalar invariance
+
+# Comparison 12
+# Grouping variable: committed strategies vs noncommitted strategies (targstrat)
+# Scale variable: trust (TR1 + TR2 + TR3 + TR4 + TR5 + TR6)
+model.1501.12 <- 'F =~ TR1 + TR2 + TR3 + TR4 + TR5 + TR6'
+conf.fit.1501.12 <- cfa(model.1501.12, data = article1501.2, group = "targstrat")
+load.fit.1501.12 <- cfa(model.1501.12, article1501.2, group = "targstrat", group.equal = "loadings")
+int.fit.1501.12 <- cfa(model.1501.12, article1501.2, group = "targstrat", group.equal = c("loadings", "intercepts"))
+all.results.1501.12 <- mi.results(conf.fit.1501.12,load.fit.1501.12,int.fit.1501.12)
+all.results.1501.12
+
+# Step 4
+# chisquare non-significant, RMSEA < .08, CFI > .95 so we do not reject configural invariance
+# metric: change in RMSEA < .01, change in CFI < .01, AIC and BIC are lower, we do not reject metric invariance
+# scalar change in RMSEA < .01, change in CFI < .01, AIC and BIC are lower, we do not reject scalar invariance
+
+
+# Study 3
+# Comparisons 13-18
+url <- 'https://osf.io/uh2ce//?action=download'
+filename <- '../article1501.3.sav'
+GET(url, write_disk(filename, overwrite = TRUE))
+article1501.3 <- read_sav(filename)
+article1501.3$targrel <- as.numeric(article1501.3$Targrel)
+
+# Comparison 13
+# Grouping variable: religious target and nonreligious target (targrel)
+# Scale variable: Reproductive strategy (CommStr_1 + CommStr_2 + CommStr_3 + CommStr_4 + CommStr_5 + CommStr_6 + CommStr_7)
+model.1501.13 <- 'F =~ CommStr_1 + CommStr_2 + CommStr_3 + CommStr_4 + CommStr_5 + CommStr_6 + CommStr_7'
+conf.fit.1501.13 <- cfa(model.1501.13, data = article1501.3, group = "targrel")
+load.fit.1501.13 <- cfa(model.1501.13, article1501.3, group = "targrel", group.equal = "loadings")
+int.fit.1501.13 <- cfa(model.1501.13, article1501.3, group = "targrel", group.equal = c("loadings", "intercepts"))
+all.results.1501.13 <- mi.results(conf.fit.1501.13,load.fit.1501.13,int.fit.1501.13)
+all.results.1501.13
+
+# Step 4
+# Chisquare significant, RMSEA > .08, CFI < .95, so we reject configural invariance
+
+# Comparison 14
+# Grouping variable: religious target and nonreligious target (targrel)
+# Scale variable: Nonimpulsivity (Impulsive_1 + Impulsive_2 + Impulsive_3 + Impulsive_4 + Impulsive_5 + Impulsive_6 + Impulsive_7 + Impulsive_8)
+# the syntax includes Impulsive_5 for this scale, but every participant answered 6 on that question because it was an attention check
+# as such, we have no variance on Impulsive_5 and cannot include it. As it is not an item that actually adds information to the scale,
+# we decided to estimate the model without that variable. 
+model.1501.14 <- 'F =~ Impulsive_1 + Impulsive_2 + Impulsive_3 + Impulsive_4 + Impulsive_6 + Impulsive_7 + Impulsive_8'
+conf.fit.1501.14 <- cfa(model.1501.14, data = article1501.3, group = "targrel")
+load.fit.1501.14 <- cfa(model.1501.14, article1501.3, group = "targrel", group.equal = "loadings")
+int.fit.1501.14 <- cfa(model.1501.14, article1501.3, group = "targrel", group.equal = c("loadings", "intercepts"))
+all.results.1501.14 <- mi.results(conf.fit.1501.14,load.fit.1501.14,int.fit.1501.14)
+all.results.1501.14
+
+# Step 4
+# Chisquare significant, RMSEA > .08, CFI < .95, so we reject configural invariance
+
+# Comparison 15
+# Grouping variable: religious target and nonreligious target (targrel)
+# Scale variable: Nonopportunistic behaviour (Opportunistic_1 + Opportunistic_2 + Opportunistic_3)
+model.1501.15 <- 'F =~ Opportunistic_1 + Opportunistic_2 + Opportunistic_3'
+conf.fit.1501.15 <- cfa(model.1501.15, data = article1501.3, group = "targrel")
+load.fit.1501.15 <- cfa(model.1501.15, article1501.3, group = "targrel", group.equal = "loadings")
+int.fit.1501.15 <- cfa(model.1501.15, article1501.3, group = "targrel", group.equal = c("loadings", "intercepts"))
+all.results.1501.15 <- mi.results(conf.fit.1501.15,load.fit.1501.15,int.fit.1501.15)
+all.results.1501.15
+
+# Step 4
+# 3 variables so we should check
+
+# Comparison 16
+# Grouping variable: religious target and nonreligious target (targrel)
+# Scale variable: Hopeful ecology (Ecology_1 + Ecology_2 + Ecology_3)
+model.1501.16 <- 'F =~ Ecology_1 + Ecology_2 + Ecology_3'
+conf.fit.1501.16 <- cfa(model.1501.16, data = article1501.3, group = "targrel")
+load.fit.1501.16 <- cfa(model.1501.16, article1501.3, group = "targrel", group.equal = "loadings")
+int.fit.1501.16 <- cfa(model.1501.16, article1501.3, group = "targrel", group.equal = c("loadings", "intercepts"))
+all.results.1501.16 <- mi.results(conf.fit.1501.16,load.fit.1501.16,int.fit.1501.16)
+all.results.1501.16
+
+# Step 4
+# 3 variables so we should check
+
+# Comparison 17
+# Grouping variable: religious target and nonreligious target (targrel)
+# Scale variable: General Trust (Trust_1 + Trust_2 + Trust_3 + Trust_4 + Trust_5 + Trust_6 + Trust_7 + Trust_8 + Trust_9 + Trust_10)
+model.1501.17 <- 'F =~ Trust_1 + Trust_2 + Trust_3 + Trust_4 + Trust_5 + Trust_6 + Trust_7 + Trust_8 + Trust_9 + Trust_10'
+conf.fit.1501.17 <- cfa(model.1501.17, data = article1501.3, group = "targrel")
+load.fit.1501.17 <- cfa(model.1501.17, article1501.3, group = "targrel", group.equal = "loadings")
+int.fit.1501.17 <- cfa(model.1501.17, article1501.3, group = "targrel", group.equal = c("loadings", "intercepts"))
+all.results.1501.17 <- mi.results(conf.fit.1501.17,load.fit.1501.17,int.fit.1501.17)
+all.results.1501.17
+
+# Step 4
+# Chisquare significant, RMSEA > .08 so we reject configural invariance
+# CFI ok (0.951)
+
+# Comparison 18
+# Grouping variable: religious target and nonreligious target (targrel)
+# Scale variable: Accountancy Trust (AccTrust_11 + AccTrust_12 + AccTrust_13 + AccTrust_14 + AccTrust_15)
+model.1501.18 <- 'F =~ AccTrust_11 + AccTrust_12 + AccTrust_13 + AccTrust_14 + AccTrust_15'
+conf.fit.1501.18 <- cfa(model.1501.18, data = article1501.3, group = "targrel")
+load.fit.1501.18 <- cfa(model.1501.18, article1501.3, group = "targrel", group.equal = "loadings")
+int.fit.1501.18 <- cfa(model.1501.18, article1501.3, group = "targrel", group.equal = c("loadings", "intercepts"))
+all.results.1501.18 <- mi.results(conf.fit.1501.18,load.fit.1501.18,int.fit.1501.18)
+all.results.1501.18
+
+# Step 4
+# Chisquare significant, RMSEA > .08, CFI < .95, so we reject configural invariance
+
+
+# Article 1681: Kouchaki --------------------------------------------------
+# Study 1a
+url <- 'https://osf.io/k948v//?action=download'
+filename <- '../article1681.1.sav'
+GET(url, write_disk(filename, overwrite = TRUE))
+article1681.1 <- read_sav(filename)
+article1681.1$Condition <- as.numeric(article1681.1$Condition)
+
+# Comparison 1
+# Grouping variable: unethical (vs. ethical or neutral) behavior (Condition)
+# Scale variable: Mind-Attribution scale - Self-dehumanization (DV_1 + DV_2 + DV_3 + DV_4 + DV_5 + DV_6 + DV_7 + DV_8 + DV_9 + DV_10)
+model.1681.1 <- 'F =~ DV_1 + DV_2 + DV_3 + DV_4 + DV_5 + DV_6 + DV_7 + DV_8 + DV_9 + DV_10'
+conf.fit.1681.1 <- cfa(model.1681.1, data = article1681.1, group = "Condition")
+load.fit.1681.1 <- cfa(model.1681.1, article1681.1, group = "Condition", group.equal = "loadings")
+int.fit.1681.1 <- cfa(model.1681.1, article1681.1, group = "Condition", group.equal = c("loadings", "intercepts"))
+all.results.1681.1 <- mi.results(conf.fit.1681.1,load.fit.1681.1,int.fit.1681.1)
+all.results.1681.1
+
+# Step 4
+# Chisquare significant, RMSEA > .08, CFI < .95, so we reject configural invariance
+
+# Study 1b
+url <- 'https://osf.io/9ejm6//?action=download'
+filename <- '../article1681.2.sav'
+GET(url, write_disk(filename, overwrite = TRUE))
+article1681.2 <- read_sav(filename)
+article1681.2$Condition <- as.numeric(article1681.2$Condition)
+
+# Comparison 2
+# Grouping variable: unethical (vs. ethical or neutral) behavior (Condition)
+# Scale variable: Mind-Attribution scale - Self-dehumanization (DV_1 + DV_2 + DV_3 + DV_4 + DV_5 + DV_6 + DV_7 + DV_8 + DV_9 + DV_10)
+model.1681.2 <- 'F =~ DV_1 + DV_2 + DV_3 + DV_4 + DV_5 + DV_6 + DV_7 + DV_8 + DV_9 + DV_10'
+conf.fit.1681.2 <- cfa(model.1681.2, data = article1681.2, group = "Condition")
+load.fit.1681.2 <- cfa(model.1681.2, article1681.2, group = "Condition", group.equal = "loadings")
+int.fit.1681.2 <- cfa(model.1681.2, article1681.2, group = "Condition", group.equal = c("loadings", "intercepts"))
+all.results.1681.2 <- mi.results(conf.fit.1681.2,load.fit.1681.2,int.fit.1681.2)
+all.results.1681.2
+
+# Step 4
+# Chisquare significant, RMSEA > .08, CFI < .95, so we reject configural invariance
+
+# Study 1c
+url <- 'https://osf.io/ys6h8//?action=download'
+filename <- '../article1681.3.sav'
+GET(url, write_disk(filename, overwrite = TRUE))
+article1681.3 <- read_sav(filename)
+article1681.3$Cond <- as.numeric(article1681.3$Cond)
+
+# Comparison 3
+# Grouping variable: unethical (vs. ethical or neutral) behavior (Cond)
+# Scale variable: Mind-Attribution scale - Self-dehumanization (DV_1 + DV_2 + DV_3 + DV_4 + DV_5 + DV_6 + DV_7 + DV_8 + DV_9 + DV_10)
+model.1681.3 <- 'F =~ DV_1 + DV_2 + DV_3 + DV_4 + DV_5 + DV_6 + DV_7 + DV_8 + DV_9 + DV_10'
+conf.fit.1681.3 <- cfa(model.1681.3, data = article1681.3, group = "Cond")
+load.fit.1681.3 <- cfa(model.1681.3, article1681.3, group = "Cond", group.equal = "loadings")
+int.fit.1681.3 <- cfa(model.1681.3, article1681.3, group = "Cond", group.equal = c("loadings", "intercepts"))
+all.results.1681.3 <- mi.results(conf.fit.1681.3,load.fit.1681.3,int.fit.1681.3)
+all.results.1681.3
+
+# Step 4
+# Chisquare significant, RMSEA > .08, CFI < .95, so we reject configural invariance
+
+# Study 1d
+url <- 'https://osf.io/tnjz8//?action=download'
+filename <- '../article1681.4.sav'
+GET(url, write_disk(filename, overwrite = TRUE))
+article1681.4 <- read_sav(filename)
+article1681.4$Condition <- as.numeric(article1681.4$Condition)
+
+# Comparison 4
+# Grouping variable: unethical behavior (i.e.; cheating on an exam) vs a negative experience (i.e.; failing an exam) (Condition)
+# Scale variable: Mind-Attribution scale - Self-dehumanization (DV_1 + DV_2 + DV_3 + DV_4 + DV_5 + DV_6 + DV_7 + DV_8 + DV_9 + DV_10)
+model.1681.4 <- 'F =~ DV_1 + DV_2 + DV_3 + DV_4 + DV_5 + DV_6 + DV_7 + DV_8 + DV_9 + DV_10'
+conf.fit.1681.4 <- cfa(model.1681.4, data = article1681.4, group = "Condition")
+load.fit.1681.4 <- cfa(model.1681.4, article1681.4, group = "Condition", group.equal = "loadings")
+int.fit.1681.4 <- cfa(model.1681.4, article1681.4, group = "Condition", group.equal = c("loadings", "intercepts"))
+all.results.1681.4 <- mi.results(conf.fit.1681.4,load.fit.1681.4,int.fit.1681.4)
+all.results.1681.4
+
+# Step 4
+# Chisquare significant, RMSEA > .08, CFI < .95, so we reject configural invariance
+
+# Study 2b
+url <- 'https://osf.io/j2uwq//?action=download'
+filename <- '../article1681.5.sav'
+GET(url, write_disk(filename, overwrite = TRUE))
+article1681.5 <- read_sav(filename)
+article1681.5$cond <- as.numeric(article1681.5$cond)
+
+# Comparison 5
+# Grouping variable: neutral condition and self-dehumanized condition (cond)
+# Scale variable: Mind-Attribution scale - Self-dehumanization (MC_1 + MC_2 + MC_3 + MC_4 + MC_5 + MC_6 + MC_7 + MC_8 + MC_9 + MC_10)
+model.1681.5 <- 'F =~ MC_1 + MC_2 + MC_3 + MC_4 + MC_5 + MC_6 + MC_7 + MC_8 + MC_9 + MC_10'
+conf.fit.1681.5 <- cfa(model.1681.5, data = article1681.5, group = "cond")
+load.fit.1681.5 <- cfa(model.1681.5, article1681.5, group = "cond", group.equal = "loadings")
+int.fit.1681.5 <- cfa(model.1681.5, article1681.5, group = "cond", group.equal = c("loadings", "intercepts"))
+all.results.1681.5 <- mi.results(conf.fit.1681.5,load.fit.1681.5,int.fit.1681.5)
+all.results.1681.5
+
+# Step 4
+# Chisquare significant, RMSEA > .08, CFI < .95, so we reject configural invariance
+
+
+# Article 1721: Gebauer ---------------------------------------------------
+# Study 1
+# Comparison 1-3
+# Supplemental material includes code and a csv file that is uploaded (https://journals.sagepub.com/doi/suppl/10.1177/0956797618764621)
+article1721.1 <- read.csv(url("https://madata.bib.uni-mannheim.de/266/1/yoga.csv"), header = T, sep = ",")
+
+# Comparison 1
+# Grouping variable: yoga condition and control condition (cond)
+# Scale variable: self-centrality (imp01 + imp02 + imp03 + imp04)
+model.1721.1 <- 'F =~ imp01 + imp02 + imp03 + imp04'
+conf.fit.1721.1 <- cfa(model.1721.1, data = article1721.1, group = "cond")
+load.fit.1721.1 <- cfa(model.1721.1, article1721.1, group = "cond", group.equal = "loadings")
+int.fit.1721.1 <- cfa(model.1721.1, article1721.1, group = "cond", group.equal = c("loadings", "intercepts"))
+all.results.1721.1 <- mi.results(conf.fit.1721.1,load.fit.1721.1,int.fit.1721.1)
+all.results.1721.1
+
+# Step 4
+# Chisquare significant, RMSEA> .08, so we reject configural invariance
+# CFI ok (0.980)
+
+# Comparison 2
+# Grouping variable: yoga condition and control condition (cond)
+# Scale variable: self-enhancement: better than average (bta01 + bta02 + bta03 + bta04)
+model.1721.2 <- 'F =~ bta01 + bta02 + bta03 + bta04'
+conf.fit.1721.2 <- cfa(model.1721.2, data = article1721.1, group = "cond")
+load.fit.1721.2 <- cfa(model.1721.2, article1721.1, group = "cond", group.equal = "loadings")
+int.fit.1721.2 <- cfa(model.1721.2, article1721.1, group = "cond", group.equal = c("loadings", "intercepts"))
+all.results.1721.2 <- mi.results(conf.fit.1721.2,load.fit.1721.2,int.fit.1721.2)
+all.results.1721.2
+
+# Step 4
+# Chisquare significant, RMSEA> .08, so we reject configural invariance
+# CFI ok (0.988)
+
+# Comparison 3
+# Grouping variable: yoga condition and control condition (cond)
+# Scale variable: self-enhancement: communal narcissism (cni01 + cni02 + cni03 + cni04)
+model.1721.3 <- 'F =~ cni01 + cni02 + cni03 + cni04'
+conf.fit.1721.3 <- cfa(model.1721.3, data = article1721.1, group = "cond")
+load.fit.1721.3 <- cfa(model.1721.3, article1721.1, group = "cond", group.equal = "loadings")
+int.fit.1721.3 <- cfa(model.1721.3, article1721.1, group = "cond", group.equal = c("loadings", "intercepts"))
+all.results.1721.3 <- mi.results(conf.fit.1721.3,load.fit.1721.3,int.fit.1721.3)
+all.results.1721.3
+
+# Step 4
+# Chisquare significant, RMSEA> .08, so we reject configural invariance
+# CFI ok (0.959)
+
+# Study 2
+# Comparison 4-9
+# Supplemental material includes code and a csv file that is uploaded (https://journals.sagepub.com/doi/suppl/10.1177/0956797618764621)
+article1721.2 <- read.csv(url("https://madata.bib.uni-mannheim.de/266/2/meditation.csv"), header = T, sep = ",")
+
+# Comparison 4
+# Grouping variable: control condition and meditation condition (cond)
+# Scale variable: self-centrality (imp01 + imp02 +imp03 +imp04 +imp05 +imp06 +imp07 +imp08 +imp09 +imp10)
+model.1721.4 <- 'F =~ imp01 + imp02 +imp03 +imp04 +imp05 +imp06 +imp07 +imp08 +imp09 +imp10'
+conf.fit.1721.4 <- cfa(model.1721.4, data = article1721.2, group = "cond")
+load.fit.1721.4 <- cfa(model.1721.4, article1721.2, group = "cond", group.equal = "loadings")
+int.fit.1721.4 <- cfa(model.1721.4, article1721.2, group = "cond", group.equal = c("loadings", "intercepts"))
+all.results.1721.4 <- mi.results(conf.fit.1721.4,load.fit.1721.4,int.fit.1721.4)
+all.results.1721.4
+
+# Step 4
+# Chisquare significant, RMSEA> .08, CFI < .95 so we reject configural invariance
+
+# Comparison 5
+# Grouping variable: control condition and meditation condition (cond)
+# Scale variable: self-enhancement: better than average (bta01 + bta02 + bta03 + bta04 + bta05 + bta06 + bta07 + bta08 + bta09 + bta10)
+model.1721.5 <- 'F =~ bta01 + bta02 + bta03 + bta04 + bta05 + bta06 + bta07 + bta08 + bta09 + bta10'
+conf.fit.1721.5 <- cfa(model.1721.5, data = article1721.2, group = "cond")
+load.fit.1721.5 <- cfa(model.1721.5, article1721.2, group = "cond", group.equal = "loadings")
+int.fit.1721.5 <- cfa(model.1721.5, article1721.2, group = "cond", group.equal = c("loadings", "intercepts"))
+all.results.1721.5 <- mi.results(conf.fit.1721.5,load.fit.1721.5,int.fit.1721.5)
+all.results.1721.5
+
+# Step 4
+# Chisquare significant, RMSEA> .08, CFI < .95 so we reject configural invariance
+
+# Comparison 6
+# Grouping variable: control condition and meditation condition (cond)
+# Scale variable: self-enhancement: communal narcissism (cni01 + cni02 + cni03 + cni04 + cni05 + cni06 + cni07 + cni08 + cni09 + cni10 + cni11 + cni12 + cni13 + cni14 + cni15 + cni16)
+model.1721.6 <- 'F =~ cni01 + cni02 + cni03 + cni04 + cni05 + cni06 + cni07 + cni08 + cni09 + cni10 + cni11 + cni12 + cni13 + cni14 + cni15 + cni16'
+conf.fit.1721.6 <- cfa(model.1721.6, data = article1721.2, group = "cond")
+load.fit.1721.6 <- cfa(model.1721.6, article1721.2, group = "cond", group.equal = "loadings")
+int.fit.1721.6 <- cfa(model.1721.6, article1721.2, group = "cond", group.equal = c("loadings", "intercepts"))
+all.results.1721.6 <- mi.results(conf.fit.1721.6,load.fit.1721.6,int.fit.1721.6)
+all.results.1721.6
+
+# Step 4
+# Chisquare significant, RMSEA> .08, CFI < .95 so we reject configural invariance
+
+# Comparison 7
+# Grouping variable: control condition and meditation condition (cond)
+# Scale variable: self-esteem (rse01 + rse02r + rse03 + rse04 + rse05r + rse06r + rse07 + rse08r + rse09r + rse10)
+model.1721.7 <- 'F =~ rse01 + rse02r + rse03 + rse04 + rse05r + rse06r + rse07 + rse08r + rse09r + rse10'
+conf.fit.1721.7 <- cfa(model.1721.7, data = article1721.2, group = "cond")
+load.fit.1721.7 <- cfa(model.1721.7, article1721.2, group = "cond", group.equal = "loadings")
+int.fit.1721.7 <- cfa(model.1721.7, article1721.2, group = "cond", group.equal = c("loadings", "intercepts"))
+all.results.1721.7 <- mi.results(conf.fit.1721.7,load.fit.1721.7,int.fit.1721.7)
+all.results.1721.7
+
+# Step 4
+# Chisquare significant, RMSEA> .08, CFI < .95 so we reject configural invariance
+
+# Comparison 8
+# Grouping variable: control condition and meditation condition (cond)
+# Scale variable: well-being: hedonic (aff01 + aff02 + aff03 + aff04 + aff05r + aff06r + aff07r + aff08r + aff09r)
+model.1721.8 <- 'F =~ aff01 + aff02 + aff03 + aff04 + aff05r + aff06r + aff07r + aff08r + aff09r'
+conf.fit.1721.8 <- cfa(model.1721.8, data = article1721.2, group = "cond")
+load.fit.1721.8 <- cfa(model.1721.8, article1721.2, group = "cond", group.equal = "loadings")
+int.fit.1721.8 <- cfa(model.1721.8, article1721.2, group = "cond", group.equal = c("loadings", "intercepts"))
+all.results.1721.8 <- mi.results(conf.fit.1721.8,load.fit.1721.8,int.fit.1721.8)
+all.results.1721.8
+
+# Step 4
+# Chisquare significant, RMSEA> .08, CFI < .95 so we reject configural invariance
+
+# Comparison 9
+# Grouping variable: control condition and meditation condition (cond)
+# Scale variable: well-being: eudemonic (eud01 + eud02r + eud03r + eud04 + eud05 + eud06r + eud07r + eud08 + eud09 + eud10r + eud011 + eud12r)
+model.1721.9 <- 'F =~ eud01 + eud02r + eud03r + eud04 + eud05 + eud06r + eud07r + eud08 + eud09 + eud10r + eud011 + eud12r'
+conf.fit.1721.9 <- cfa(model.1721.9, data = article1721.2, group = "cond")
+load.fit.1721.9 <- cfa(model.1721.9, article1721.2, group = "cond", group.equal = "loadings")
+int.fit.1721.9 <- cfa(model.1721.9, article1721.2, group = "cond", group.equal = c("loadings", "intercepts"))
+all.results.1721.9 <- mi.results(conf.fit.1721.9,load.fit.1721.9,int.fit.1721.9)
+all.results.1721.9
+
+# Step 4
+# Chisquare significant, RMSEA> .08, CFI < .95 so we reject configural invariance
+
+
+# Article 1861: Block -----------------------------------------------------
+# Study 1
+url <- 'https://osf.io/tc7ys//?action=download'
+filename <- '../article1861.sav'
+GET(url, write_disk(filename, overwrite = TRUE))
+article1861 <- read_sav(filename)
+# Syntax here: https://osf.io/khbvp/
+
+# Comparison 1
+# Grouping variable: gender (boy and girl): cgender
+# Scale variable: communal orientation (comm1 + comm2 + comm3 + comm4)
+
+# ALL OF THEM TRESHOLDS
+
+# Comparison 2
+# Grouping variable: gender (boy and girl): cgender
+# Scale variable: agentic value (agen1 + agen3 + agen4)
+# the authors mention that they exclude agen2 from analyses
+
+# ALL OF THEM TRESHOLDS
+
+# Comparison 3
+# Grouping variable: gender (boy and girl): cgender
+# Scale variable: Explicit gender identification (ident1_bl + ident3_b + ident2_REV + Idnet4_REV)
+
+# ALL OF THEM TRESHOLDS
+
+# Article 1931: Sawaoka ---------------------------------------------------
+# Study 1
+# Comparisons 1-2
+
+
+
+# Comparison 1
+# Grouping variable: viral vs non-viral outrage
+# Scale variable: 
+
+
+
+# Comparison 2
+# Grouping variable: target commenter: first or last
+# Scale variable: Evaluation of target / Impression of commenter
+
+
+# Study 2
+# Comparisons 3-4
+
+# Comparison 3
+# Grouping variable: viral vs non-viral outrage
+# Scale variable: Evaluation of target / Impression of commenter
+
+
+
+# Comparison 4
+# Grouping variable: response type: control; anonymous; or upvoting
+# Scale variable: Evaluation of target / Impression of commenter
+
+
+
+# Study 3
+# Comparisons 5-6
+
+
+# Comparison 5
+# Grouping variable: viral vs non-viral outrage
+# Scale variable: Evaluation of target / Impression of commenter
+
+
+
+# Comparison 6
+# Grouping variable: surprise: control; no surprise; or surprise
+# Scale variable: Evaluation of target / Impression of commenter
+
+
+
+# Study 4a
+# Comparisons 7-12
+
+
+
+# Comparison 7
+# Grouping variable: viral vs non-viral outrage
+# Scale variable: Evaluation of target / Impression of commenter
+
+
+
+# Comparison 8
+# Grouping variable: high-status-offender condition
+# Scale variable: Evaluation of target / Impression of commenter
+
+
+
+# Comparison 9
+# Grouping variable: viral vs non-viral outrage
+# Scale variable: Perceived as harmful
+
+
+
+# Comparison 10
+# Grouping variable: high-status-offender condition
+# Scale variable: Perceived as harmful
+
+
+
+# Comparison 11
+# Grouping variable: viral vs non-viral outrage
+# Scale variable: Perceived to be vulnerable to criticism
+
+
+
+# Comparison 12
+# Grouping variable: high-status-offender condition
+# Scale variable: Perceived to be vulnerable to criticism
+
+
+
+# Study 4b
+# Comparisons 13-16
+
+
+# Comparison 13
+# Grouping variable: viral vs non-viral outrage
+# Scale variable: Evaluation of target / Impression of commenter
+
+
+
+# Comparison 14
+# Grouping variable: viral vs non-viral outrage
+# Scale variable: Perceived as harmful
+
+
+
+# Comparison 15
+# Grouping variable: offender: unsympathetic or control
+# Scale variable: Evaluation of target / Impression of commenter
+
+
+
+# Comparison 16
+# Grouping variable: offender: unsympathetic or control
+# Scale variable: Perceived as harmful
+
+
+
+# Article 2091: Sma -------------------------------------------------------
+# Study 1b
+
+
+# Comparison 1
+# Grouping variable: multi-tasking or single-tasking
+# Scale variable: quality
+
