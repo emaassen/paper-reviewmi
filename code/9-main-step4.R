@@ -74,7 +74,7 @@ mi.results.sc <- function(x,y,z) {
 # Data shared is raw data in .sav file, including .sps code file: https://osf.io/yxvuk/files/
 # study 1; 3 comparisons
 url <- 'https://osf.io/mzyh5//?action=download'
-filename <- '../article9.1.sav'
+filename <- '../data/data-main/article9.1.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article9.1 <- read_sav(filename)
 
@@ -135,7 +135,7 @@ all.results.9.1.3
 # POMS_prefdbk_hopeless,POMS_prefdbk_discouraged, POMS_prefdbk_angry, POMS_prefdbk_resent, POMS_prefdbk_annyd, POMS_prefdbk_fatigued, POMS_prefdbk_wornout, POMS_prefdbk_exhauste
 # grouping: confederate C_CnCI (low and high self-disclosure)
 url <- 'https://osf.io/g85jp//?action=download'
-filename <- '../article7.2.sav'
+filename <- '../data/data-main/article7.2.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article7.2 <- read_sav(filename)
 
@@ -204,7 +204,7 @@ article20 <- read_excel(filename)
 
 # Article 56: AlMahmoud -----------------------------------------------------------------------
 url <- 'https://doi.org/10.1371/journal.pone.0202466.s002'
-filename <- '../article56.xlxs'
+filename <- '../data/data-main/article56.xlxs'
 GET(url, write_disk(filename, overwrite = TRUE))
 article56 <- read_excel(filename)
 
@@ -302,7 +302,7 @@ all.results.56.3
 
 # Article 74: Cardoso -------------------------------------------------------------------------
 url <- 'https://doi.org/10.1371/journal.pone.0205352.s002'
-filename <- '../article74.csv'
+filename <- '../data/data-main/article74.csv'
 GET(url, write_disk(filename, overwrite = TRUE))
 article74 <- read.csv2(filename, header=F, na.strings="NA", sep=",")
 
@@ -320,7 +320,7 @@ article74 <- read.csv2(filename, header=F, na.strings="NA", sep=",")
 
 # Article 131: Senanayake ---------------------------------------------------------------------
 url <- 'https://doi.org/10.1371/journal.pone.0211604.s001'
-filename <- '../article131.xlsx'
+filename <- '../data/data-main/article131.xlsx'
 GET(url, write_disk(filename, overwrite = TRUE))
 article131 <- read_excel(filename)
 
@@ -660,7 +660,7 @@ all.results.251.4
 
 # Article 261: Sellier ----------------------------------------------------
 url <- 'https://osf.io/ztsq4//?action=download'
-filename <- '../article261.sav'
+filename <- '../data/data-main/article261.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article261 <- read_sav(filename)
 
@@ -729,7 +729,7 @@ all.results.261.2
 # Article 301: Luttrell ---------------------------------------------------
 # Study 1
 url <- 'https://osf.io/h8cs2//?action=download'
-filename <- '../article301.1.csv'
+filename <- '../data/data-main/article301.1.csv'
 GET(url, write_disk(filename, overwrite = TRUE))
 article301.1 <- read.csv2(filename, header=T, na.strings="NA", sep=",")
 
@@ -785,7 +785,7 @@ all.results.301.2
 
 # Study 2
 url <- 'https://osf.io/cbue5//?action=download'
-filename <- '../article301.2.csv'
+filename <- '../data/data-main/article301.2.csv'
 GET(url, write_disk(filename, overwrite = TRUE))
 article301.2 <- read.csv2(filename, header=T, na.strings="NA", sep=",")
 
@@ -816,7 +816,7 @@ all.results.301.3
 
 # Article 481: Zlatev -----------------------------------------------------
 url <- 'https://osf.io/jcx9r//?action=download'
-filename <- '../article481.1.csv'
+filename <- '../data/data-main/article481.1.csv'
 GET(url, write_disk(filename, overwrite = TRUE))
 article481.1 <- read.csv2(filename, header=T, na.strings="NA", sep=",")
 
@@ -1169,7 +1169,7 @@ all.results.481.24
 # grouping variables: agreement (match) and caring (care)
 # scale variables: integrity based trust and benevolence based trust (benev123, integ123)
 url <- 'https://osf.io/fq82m//?action=download'
-filename <- '../article481.2.csv'
+filename <- '../data/data-main/article481.2.csv'
 GET(url, write_disk(filename, overwrite = TRUE))
 article481.2 <- read.csv2(filename, header=T, na.strings="NA", sep=",")
 
@@ -1229,7 +1229,7 @@ all.results.481.28
 # Article 521: Kristal ----------------------------------------------------
 # comparison 1 (study 2a)
 url <- 'https://osf.io/7gjmk//?action=download'
-filename <- '../article521.1.sav'
+filename <- '../data/data-main/article521.1.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article521.1 <- read_sav(filename)
 
@@ -1247,7 +1247,7 @@ all.results.521.1
 
 # comparison 2 (study 2b)
 url <- 'https://osf.io/u692w//?action=download'
-filename <- '../article521.2.sav'
+filename <- '../data/data-main/article521.2.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article521.2 <- read_sav(filename)
 
@@ -1306,7 +1306,7 @@ all.results.521.2
 
 # comparison 3 & 4 (study 3a)
 url <- 'https://osf.io/4fpxu//?action=download'
-filename <- '../article521.3.sav'
+filename <- '../data/data-main/article521.3.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article521.3 <- read_sav(filename)
 
@@ -1340,7 +1340,7 @@ all.results.521.4
 # Study 4
 # comparison 5-10
 url <- 'https://osf.io/6ujnw//?action=download'
-filename <- '../article521.4.sav'
+filename <- '../data/data-main/article521.4.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article521.4 <- read_sav(filename)
 
@@ -1580,7 +1580,7 @@ all.results.521.9
 
 # Article 661: Woolley ----------------------------------------------------
 url <- 'https://osf.io/u82mp//?action=download'
-filename <- '../article661.csv'
+filename <- '../data/data-main/article661.csv'
 GET(url, write_disk(filename, overwrite = TRUE))
 article661 <- read.csv2(filename, header=T, na.strings="NA", sep=",")
 
@@ -1604,7 +1604,7 @@ all.results.661
 # it seems to be an ESM study
 
 url <- 'https://osf.io/v25y7//?action=download'
-filename <- '../article791.csv'
+filename <- '../data/data-main/article791.csv'
 GET(url, write_disk(filename, overwrite = TRUE))
 article791 <- read.csv2(filename, header=T, na.strings="NA", sep=",")
 
@@ -1677,7 +1677,7 @@ all.results.791
 # Article 811: Catapano -----------------------------------------------------
 # Study 1
 url <- 'https://osf.io/9sg3u//?action=download'
-filename <- '../article811.1.csv'
+filename <- '../data/data-main/article811.1.csv'
 GET(url, write_disk(filename, overwrite = TRUE))
 article811.1 <- read.csv2(filename, header=T, na.strings="NA", sep=",")
 
@@ -1711,7 +1711,7 @@ all.results.811.1.2
 
 # Study 2
 url <- 'https://osf.io/ymc3h//?action=download'
-filename <- '../article811.2.csv'
+filename <- '../data/data-main/article811.2.csv'
 GET(url, write_disk(filename, overwrite = TRUE))
 article811.2 <- read.csv2(filename, header=T, na.strings="NA", sep=",")
 
@@ -1748,7 +1748,7 @@ all.results.811.2.2
 # Article 861: Obrien -----------------------------------------------------
 # Study 1
 url <- 'https://osf.io/bdq3m//?action=download'
-filename <- '../article861.1.sav'
+filename <- '../data/data-main/article861.1.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article861.1 <- read_sav(filename)
 
@@ -1929,7 +1929,7 @@ all.results.861.8
 
 # Study 2
 url <- 'https://osf.io/kz8q2//?action=download'
-filename <- '../article861.2.sav'
+filename <- '../data/data-main/article861.2.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article861.2 <- read_sav(filename)
 
@@ -1995,7 +1995,7 @@ all.results.861.10
 # Article 891: Madan ------------------------------------------------------
 # Study 3
 url <- 'https://osf.io/yk75c//?action=download'
-filename <- '../article891.1.xlsx'
+filename <- '../data/data-main/article891.1.xlsx'
 GET(url, write_disk(filename, overwrite = TRUE))
 article891.1 <- read_excel(filename, sheet = 5)
 
@@ -2033,7 +2033,7 @@ all.results.891.2
 
 # Study 4
 url <- 'https://osf.io/yk75c//?action=download'
-filename <- '../article891.2.xlsx'
+filename <- '../data/data-main/article891.2.xlsx'
 GET(url, write_disk(filename, overwrite = TRUE))
 article891.2 <- read_excel(filename, sheet = 7)
 
@@ -2084,7 +2084,7 @@ all.results.891.5
 
 # Study 5 - THESE ARE THE ORANGE ROWS WHICH I THINK WE SHOULD REMOVE
 url <- 'https://osf.io/yk75c//?action=download'
-filename <- '../article891.3.xlsx'
+filename <- '../data/data-main/article891.3.xlsx'
 GET(url, write_disk(filename, overwrite = TRUE))
 article891.3 <- read_excel(filename, sheet = 9)
 
@@ -2126,7 +2126,7 @@ all.results.891.8
 # Article 941: Cao --------------------------------------------------------
 # Study 2
 url <- 'https://osf.io/4yu27//?action=download'
-filename <- '../article941.Rda'
+filename <- '../data/data-main/article941.Rda'
 GET(url, write_disk(filename, overwrite = TRUE))
 article941 <- load(filename)
 article941 <- dat
@@ -2161,7 +2161,7 @@ all.results.941
 
 # Article 1031: Bartholow -------------------------------------------------
 url <- 'https://osf.io/zjxhw//?action=download'
-filename <- '../article1031.csv'
+filename <- '../data/data-main/article1031.csv'
 GET(url, write_disk(filename, overwrite = TRUE))
 article1031 <- read.csv2(filename, header=T, na.strings="NA", sep=",")
 colnames(article1031)
@@ -2183,7 +2183,7 @@ colnames(article1031)
 
 # Article 1081: Kim -------------------------------------------------------
 url <- 'https://osf.io/e25yk//?action=download'
-filename <- '../article1081.csv'
+filename <- '../data/data-main/article1081.csv'
 GET(url, write_disk(filename, overwrite = TRUE))
 article1081 <- read.csv2(filename, header=T, na.strings="NA", sep=",")
 
@@ -2208,7 +2208,7 @@ article1081 <- read.csv2(filename, header=T, na.strings="NA", sep=",")
 # Study 2b
 # Comparison 1-3
 url <- 'https://osf.io/ev5yq//?action=download'
-filename <- '../article1111.1.sav'
+filename <- '../data/data-main/article1111.1.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article1111.1 <- read_sav(filename)
 article1111.1$cond <- as.numeric(article1111.1$cond)
@@ -2264,7 +2264,7 @@ all.results.1111.3
 # Study 3
 # Comparison 4-6
 url <- 'https://osf.io/5fubx//?action=download'
-filename <- '../article1111.2.sav'
+filename <- '../data/data-main/article1111.2.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article1111.2 <- read_sav(filename)
 article1111.2$condition <- as.numeric(article1111.2$condition)
@@ -2327,7 +2327,7 @@ all.results.1111.6
 # Study 4
 # Comparisons 7-9
 url <- 'https://osf.io/k2tb6//?action=download'
-filename <- '../article1111.3.sav'
+filename <- '../data/data-main/article1111.3.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article1111.3 <- read_sav(filename)
 article1111.3$cond <- as.numeric(article1111.3$cond)
@@ -2393,7 +2393,7 @@ all.results.1111.9
 
 # Study 5a
 url <- 'https://osf.io/n6sua//?action=download'
-filename <- '../article1111.4.sav'
+filename <- '../data/data-main/article1111.4.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article1111.4 <- read_sav(filename)
 article1111.4$condition <- as.numeric(article1111.4$condition)
@@ -2417,7 +2417,7 @@ all.results.1111.10
 
 # Study 5b
 url <- 'https://osf.io/e6cyf//?action=download'
-filename <- '../article1111.5.sav'
+filename <- '../data/data-main/article1111.5.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article1111.5 <- read_sav(filename)
 article1111.5$condition <- as.numeric(article1111.5$condition)
@@ -2438,7 +2438,7 @@ all.results.1111.11
 
 # Article 1151: Russell ---------------------------------------------------
 url <- 'https://osf.io/7ngqz//?action=download'
-filename <- '../article1151.sav'
+filename <- '../data/data-main/article1151.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article1151 <- read_sav(filename)
 article1151$Condition <- as.numeric(article1151$Condition)
@@ -2592,7 +2592,7 @@ all.results.1261.4
 # Article 1361: Critcher --------------------------------------------------
 # Study 2
 url <- 'https://osf.io/xk3ny//?action=download'
-filename <- '../article1361.1.csv'
+filename <- '../data/data-main/article1361.1.csv'
 GET(url, write_disk(filename, overwrite = TRUE))
 article1361.1 <- read.csv2(filename, header=T, na.strings="NA", sep=",")
 
@@ -2649,7 +2649,7 @@ all.results.1361
 # Study 3
 # Comparisons 2-4
 url <- 'https://osf.io/2n93e//?action=download'
-filename <- '../article1361.2.csv'
+filename <- '../data/data-main/article1361.2.csv'
 GET(url, write_disk(filename, overwrite = TRUE))
 article1361.2 <- read.csv2(filename, header=T, na.strings="NA", sep=",")
 
@@ -2723,7 +2723,7 @@ all.results.1361.4
 
 # Study 4
 url <- 'https://osf.io/uwg4k//?action=download'
-filename <- '../article1361.3.csv'
+filename <- '../data/data-main/article1361.3.csv'
 GET(url, write_disk(filename, overwrite = TRUE))
 article1361.3 <- read.csv2(filename, header=T, na.strings="NA", sep=",")
 
@@ -2872,7 +2872,7 @@ all.results.1421.3
 # Study 1
 # Comparisons 1-3
 url <- 'https://osf.io/t3rhv//?action=download'
-filename <- '../article1501.1.sav'
+filename <- '../data/data-main/article1501.1.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article1501.1 <- read_sav(filename)
 article1501.1$targrel <- as.numeric(article1501.1$targrel)
@@ -2925,7 +2925,7 @@ all.results.1501.3
 # Study 2
 # Comparisons 4-12
 url <- 'https://osf.io/8f7wa//?action=download'
-filename <- '../article1501.2.sav'
+filename <- '../data/data-main/article1501.2.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article1501.2 <- read_sav(filename)
 article1501.2$targrel <- as.numeric(article1501.2$targrel)
@@ -3069,7 +3069,7 @@ all.results.1501.12
 # Study 3
 # Comparisons 13-18
 url <- 'https://osf.io/uh2ce//?action=download'
-filename <- '../article1501.3.sav'
+filename <- '../data/data-main/article1501.3.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article1501.3 <- read_sav(filename)
 article1501.3$targrel <- as.numeric(article1501.3$Targrel)
@@ -3164,7 +3164,7 @@ all.results.1501.18
 # Article 1681: Kouchaki --------------------------------------------------
 # Study 1a
 url <- 'https://osf.io/k948v//?action=download'
-filename <- '../article1681.1.sav'
+filename <- '../data/data-main/article1681.1.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article1681.1 <- read_sav(filename)
 article1681.1$Condition <- as.numeric(article1681.1$Condition)
@@ -3184,7 +3184,7 @@ all.results.1681.1
 
 # Study 1b
 url <- 'https://osf.io/9ejm6//?action=download'
-filename <- '../article1681.2.sav'
+filename <- '../data/data-main/article1681.2.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article1681.2 <- read_sav(filename)
 article1681.2$Condition <- as.numeric(article1681.2$Condition)
@@ -3204,7 +3204,7 @@ all.results.1681.2
 
 # Study 1c
 url <- 'https://osf.io/ys6h8//?action=download'
-filename <- '../article1681.3.sav'
+filename <- '../data/data-main/article1681.3.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article1681.3 <- read_sav(filename)
 article1681.3$Cond <- as.numeric(article1681.3$Cond)
@@ -3224,7 +3224,7 @@ all.results.1681.3
 
 # Study 1d
 url <- 'https://osf.io/tnjz8//?action=download'
-filename <- '../article1681.4.sav'
+filename <- '../data/data-main/article1681.4.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article1681.4 <- read_sav(filename)
 article1681.4$Condition <- as.numeric(article1681.4$Condition)
@@ -3244,7 +3244,7 @@ all.results.1681.4
 
 # Study 2b
 url <- 'https://osf.io/j2uwq//?action=download'
-filename <- '../article1681.5.sav'
+filename <- '../data/data-main/article1681.5.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article1681.5 <- read_sav(filename)
 article1681.5$cond <- as.numeric(article1681.5$cond)
@@ -3398,7 +3398,7 @@ all.results.1721.9
 # Article 1861: Block -----------------------------------------------------
 # Study 1
 url <- 'https://osf.io/tc7ys//?action=download'
-filename <- '../article1861.sav'
+filename <- '../data/data-main/article1861.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article1861 <- read_sav(filename)
 # Syntax here: https://osf.io/khbvp/
@@ -3602,7 +3602,7 @@ all.results.1861.3
 # Study 1
 # Comparisons 1-2
 url <- 'https://osf.io/sfq6a//?action=download'
-filename <- '../article1931.1.sav'
+filename <- '../data/data-main/article1931.1.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article1931.1 <- read_sav(filename)
 article1931.1$ViralOutrage <- as.numeric(article1931.1$ViralOutrage)
@@ -3638,7 +3638,7 @@ all.results.1931.2
 # Study 2
 # Comparisons 3-4
 url <- 'https://osf.io/jbam4//?action=download'
-filename <- '../article1931.2.sav'
+filename <- '../data/data-main/article1931.2.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article1931.2 <- read_sav(filename)
 article1931.2$ViralOutrage <- as.numeric(article1931.2$ViralOutrage)
@@ -3673,7 +3673,7 @@ all.results.1931.4
 # Study 3
 # Comparisons 5-6
 url <- 'https://osf.io/pfzc6//?action=download'
-filename <- '../article1931.3.sav'
+filename <- '../data/data-main/article1931.3.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article1931.3 <- read_sav(filename)
 article1931.3$ViralOutrage <- as.numeric(article1931.3$ViralOutrage)
@@ -3706,7 +3706,7 @@ all.results.1931.6
 # Study 4a
 # Comparisons 7-12
 url <- 'https://osf.io/924gy//?action=download'
-filename <- '../article1931.4.sav'
+filename <- '../data/data-main/article1931.4.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article1931.4 <- read_sav(filename)
 article1931.4$ViralOutrage <- as.numeric(article1931.4$ViralOutrage)
@@ -3796,7 +3796,7 @@ all.results.1931.12
 # Study 4b
 # Comparisons 13-16
 url <- 'https://osf.io/ndfpx//?action=download'
-filename <- '../article1931.5.sav'
+filename <- '../data/data-main/article1931.5.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article1931.5 <- read_sav(filename)
 article1931.5$ViralOutrage <- as.numeric(article1931.5$ViralOutrage)
