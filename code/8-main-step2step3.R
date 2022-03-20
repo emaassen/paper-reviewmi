@@ -246,7 +246,7 @@ all.results.77
 # The chisquare (all 3 models) was satorra bentler adjusted, meaning we should use estimator MLM. 
 # However, MLM requires full data which we do not have, so we used the ML estimator. 
 # This means all chisquare values were irreproducible
-# the fit measures: CFI (all 3 models), SRMR (model 1 and 3), and RMSEA (model 1 and 2) were mostly irreproducible.
+# the fit measures: CFI (all 3 models), SRMR (model 1 and 3), and RMSEA (model 1 and 2) were irreproducible.
 # The authors conclude loading invariance because the change in chisquare was non-significant from config-loading.
 # We find a significant p-value, meaning the result for step 2 is irreproducible.
 # The authors do not state what their cutoffs are to conclude configural invariance. As we find different estimates

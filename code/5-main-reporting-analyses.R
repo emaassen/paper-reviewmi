@@ -19,46 +19,103 @@ count_studies <- function(x) {
   return(no_studies)
 }
 
-df <- read.csv("../data/codebook-main-reporting.csv") # load data
+df <- read.csv("../data/codebook-main-step1.csv") # load data
 colnames(df) # check if column names are correct
 
 # How many journals, articles, studies in total?
 unique(df$journal_id)                             # 2 journals
 count_articles(df)                                # 426 articles
-count_studies(df)                                 # 839 studies
+count_studies(df)                                 # 841 studies
 nrow(df)                                          # 1845 rows
 
 # Quantitative data
 temp <- filter(df, empirical == 1)
-count_articles(temp)                              # 340 articles
-count_articles(temp) / count_articles(df) * 100   # 80% of articles contain empirical data
-count_studies(temp)                               # 744 studies
-count_studies(temp) / count_studies(df) * 100     # 89% of studies contain empirical data
-nrow(temp)                                        # 1749 rows
+count_articles(temp)                                                # 340 articles
+count_articles(temp) / count_articles(df) * 100                     # 80% of articles contain empirical data
+count_studies(temp)                                                 # 746 studies
+count_studies(temp) / count_studies(df) * 100                       # 89% of studies contain empirical data
+nrow(temp)                                                          # 1749 rows
 
-# Group comparison
+# Non-quantitative data
+count_studies(df) - count_studies(temp)                             # 95 studies contain non-empirical data
+(count_studies(df) - count_studies(temp)) / count_studies(df) * 100 # 11% of studies contain non-empirical data
+
+# Filter out non-quantitative data
+df.final <- filter(df, empirical == 1)
+
+# Group comparison in relation to total sample
 temp <- filter(df, compare_group == 1)
-count_articles(temp)                              # 275 articles
-count_articles(temp) / count_articles(df) * 100   # 65% of articles contain group comparisons
-count_studies(temp)                               # 616 studies
-count_studies(temp) / count_studies(df) * 100     # 73% of studies contain group comparisons
-nrow(temp)                                        # 1620 rows
+count_articles(temp)                                                # 275 articles
+count_articles(temp) / count_articles(df) * 100                     # 65% of articles contain group comparisons
+count_studies(temp)                                                 # 617 studies
+count_studies(temp) / count_studies(df) * 100                       # 73% of studies contain group comparisons
+nrow(temp)                                                          # 1620 rows
+
+# Non-group comparisons in relation to total sample
+count_studies(df) - count_studies(temp)                             # 224 studies do not contain group comparisons
+(count_studies(df) - count_studies(temp)) / count_studies(df) * 100 # 27% of studies do not contain group comparisons
+
+# Group comparison in relation to final sample
+temp <- filter(df, compare_group == 1)
+count_articles(temp)                                                # 275 articles
+count_articles(temp) / count_articles(df) * 100                     # 65% of articles contain group comparisons
+count_studies(temp)                                                 # 617 studies
+count_studies(temp) / count_studies(df) * 100                       # 73% of studies contain group comparisons
+nrow(temp)                                                          # 1620 rows
+
+# Non-group comparisons in relation to total sample
+count_studies(df) - count_studies(temp)                             # 224 studies do not contain group comparisons
+(count_studies(df) - count_studies(temp)) / count_studies(df) * 100 # 27% of studies do not contain group comparisons
+
+# Filter out non-group comparisons
+df.rest <- filter(df.final, compare_group == 0)
+count_articles(df.rest)                                               # 84 articles dropped out
+count_studies(df.rest)                                                # 131 studies dropped out
+count_studies(df.rest) / count_studies(df) * 100                      # 16% of studies dropped out from total sample bc no group comparison 
+
+# Filter out group comparisons
+df.final <- filter(df.final, compare_group == 1)
 
 # Comparison made on scale 
 temp <- filter(df, scale == 1)
-count_articles(temp)                              # 196 articles
-count_articles(temp) / count_articles(df) * 100   # 46% of articles contain scales
-count_studies(temp)                               # 402 studies
-count_studies(temp) / count_studies(df) * 100     # 48% of studies contain scales
-nrow(temp)                                        # 1295 rows
+count_articles(temp)                                                # 196 articles
+count_articles(temp) / count_articles(df) * 100                     # 46% of articles contain scales
+count_studies(temp)                                                 # 403 studies
+count_studies(temp) / count_studies(df) * 100                       # 48% of studies contain scales
+count_studies(df) - count_studies(temp)                             # 438 studies do not contain scales
+(count_studies(df) - count_studies(temp)) / count_studies(df) * 100 # 52% of studies do not contain group comparisons
+nrow(temp)                                                          # 1295 rows
+
+# Filter out non-scales
+df.rest <- filter(df.final, scale == 0)
+count_articles(df.rest)                                               # 97 articles dropped out
+count_studies(df.rest)                                                # 216 studies dropped out
+count_studies(df.rest) / count_studies(df) * 100                      # 26% of studies dropped out from total sample bc no group comparison 
+
+# Filter out scales
+df.final <- filter(df.final, scale == 1)
 
 # Comparison made on reflective scale 
 temp <- filter(df, reflective == 1)
-count_articles(temp)                              # 97 articles
-count_articles(temp) / count_articles(df) * 100   # 23% of articles contain reflective scales
-count_studies(temp)                               # 150 studies
-count_studies(temp) / count_studies(df) * 100     # 18% of studies contain reflective scales
-nrow(temp)                                        # 921 rows
+count_articles(temp)                                                # 97 articles
+count_articles(temp) / count_articles(df) * 100                     # 23% of articles contain reflective scales
+count_studies(temp)                                                 # 151 studies
+count_studies(temp) / count_studies(df) * 100                       # 18% of studies contain reflective scales
+count_studies(df) - count_studies(temp)                             # 690 studies do not contain group comparisons
+(count_studies(df) - count_studies(temp)) / count_studies(df) * 100 # 82% of studies do not contain group comparisons
+nrow(temp)                                                          # 921 rows
+
+# Filter out non-scales
+df.rest <- filter(df.final, reflective == 0)
+count_articles(df.rest)                                               # 102 articles dropped out
+count_studies(df.rest)                                                # 252 studies dropped out
+count_studies(df.rest) / count_studies(df) * 100                      # 30% of studies dropped out from total sample bc no group comparison 
+
+# Filter out scales
+df.final <- filter(df.final, reflective == 1)
+count_articles(df.final)                                               # 97 articles left
+count_studies(df.final)                                                # 151 studies left
+count_studies(df.final) / count_studies(df) * 100                      # 18% of studies left 
 
 # Delete rows from dataframe that do not have a comparison on a reflective scale
 # This is our main unit of analysis
@@ -77,7 +134,7 @@ sum(df$type_scale == 1)                     # 473 existing scales
 sum(df$type_scale == 1) / nrow(df) * 100    # 51% of comparisons have existing scales
 
 # Measure scale 
-table(df$measure_scale)                                # dichotomous = 28 / ordinal = 311 / continuous = 268
+table(df$measure_scale)                                # dichotomous = 27 / ordinal = 311 / continuous = 269
 sum(is.na(df$measure_scale))                           # no reporting on measure of scale = 314
 sum(df$measure_scale==0, na.rm=T) / nrow(df) * 100     # 3% of scales have dichotomous items (2 categories)
 sum(df$measure_scale==1, na.rm=T) / nrow(df) * 100     # 34% of scales have ordinal items (3 to 5 categories)
@@ -90,37 +147,44 @@ sum(is.na(df$width_scale_recoded))                     # 317 scales did not indi
 sum(is.na(df$width_scale_recoded)) / nrow(df) * 100    # 34% of scales did not indicate the width of the scale
 summary(as.numeric(df$width_scale_recoded))            # NAs are 319 here because two scales had "mix" instead of a numeric value
 
-# CONTINUE HERE
-
 # Number of items
 table(df$no_items) 
-sum(is.na(df$no_items))                                # 530 scales did not indicate the number of items
-sum(is.na(df$no_items)) / nrow(df) * 100               # 58% of scales did not indicate the number of items
-summary(df$no_items)
+sum(is.na(df$no_items))                                # 297 scales did not indicate the number of items
+sum(is.na(df$no_items)) / nrow(df) * 100               # 32% of scales did not indicate the number of items
+summary(as.numeric(df$no_items))
+
+# Power not mentioned
+length(which(is.na(df$power))) + length(which(df$power == "NA"))            # 628 comparisons do not mention power
+(length(which(is.na(df$power))) + length(which(df$power == "NA")))/nrow(df) # 68% of comparisons do not mention power
+nopwr <- df[which(is.na(df$power)),]                                         
+count_articles(nopwr)                                                        # 59 articles do not mention power
+count_articles(nopwr)/count_articles(df)*100                                 # 61% of remaining 97 articles do not mention power
+count_studies(nopwr)                                                         # 76 studies do not mention power 
+count_studies(nopwr)/count_studies(df)*100                                   # 78% of remaining studies do not mention power.
 
 # Power mentioned
-round((length(which(df$power == "NA"))) /N,3);(length(which(df$power == "NA")) + length(which(is.na(df$power)==T)))
-#628 (0.541) did not report power analysis
+pwr <- df[which(!is.na(df$power)),]                                              
+count_articles(pwr)                                                        # 42 articles mention power
+count_studies(pwr)                                                         # 75 studies mention power
 
-# first check how to finish coding for this variable
-
-# No sample size reported at all
+# Sample size
 sum(is.na(as.numeric(df$n_rep)) & is.na(as.numeric(df$n1_rep)) & is.na(as.numeric(df$n2_rep)) & is.na(as.numeric(df$n3_rep)) & is.na(as.numeric(df$n4_rep)) & is.na(as.numeric(df$n5_rep)))
 # 45 did not report any sample size at all
-
-sum(is.na(as.numeric(df$n_rep)) & is.na(as.numeric(df$n1_rep)) & is.na(as.numeric(df$n2_rep)) & is.na(as.numeric(df$n3_rep)) & is.na(as.numeric(df$n4_rep)) & is.na(as.numeric(df$n5_rep)))/N*100
-# 4.9% did not report any sample size at all
-
-# No reliability estimate reported at all
+sum(is.na(as.numeric(df$n_rep)) & is.na(as.numeric(df$n1_rep)) & is.na(as.numeric(df$n2_rep)) & is.na(as.numeric(df$n3_rep)) & is.na(as.numeric(df$n4_rep)) & is.na(as.numeric(df$n5_rep)))/nrow(df)*100
+# 5% did not report any sample size at all
 sum(is.na(as.numeric(df$reltot)) & is.na(as.numeric(df$rel1)) & is.na(as.numeric(df$rel2)) & is.na(as.numeric(df$rel3)) & is.na(as.numeric(df$rel4)) & is.na(as.numeric(df$rel5)))
 # 538 did not report any reliability estimate at all
+sum(is.na(as.numeric(df$reltot)) & is.na(as.numeric(df$rel1)) & is.na(as.numeric(df$rel2)) & is.na(as.numeric(df$rel3)) & is.na(as.numeric(df$rel4)) & is.na(as.numeric(df$rel5)))/nrow(df)*100
+# 58% did not report any reliability estimate at all
 
-sum(is.na(as.numeric(df$reltot)) & is.na(as.numeric(df$rel1)) & is.na(as.numeric(df$rel2)) & is.na(as.numeric(df$rel3)) & is.na(as.numeric(df$rel4)) & is.na(as.numeric(df$rel5)))/N*100
-# 58.9% did not report any reliability estimate at all
+# Range of reliability
+df$n_rep <- as.numeric(df$n_rep)
+range(df$n_rep, na.rm=T)
+summary(df$n_rep)
 
 # Sample size total
-sum(is.na(as.numeric(df$n_rep)))        # 81 (8.8%) did not report total sample size
-sum(is.na(as.numeric(df$n_rep)))/N*100  # 81 (8.8%) did not report total sample size
+sum(is.na(as.numeric(df$n_rep)))               # 81 did not report total sample size
+sum(is.na(as.numeric(df$n_rep)))/nrow(df)*100  # 81 (9%) did not report total sample size
 summary(as.numeric(df$n_rep))
 
 # Sample size per group
@@ -155,6 +219,8 @@ sum(df$mitest_rep) /N*100 # 41 (4.5%) did report on MI
 # Only select rows that report on MI
 dfmi <- subset(df,mitest_rep == 1)
 N <- nrow(dfmi)
+count_articles(dfmi)
+count_studies(dfmi)
 
 # How many articles studied?
 length(unique(dfmi$article_id_recoded)) # 7
