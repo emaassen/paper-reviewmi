@@ -344,6 +344,7 @@ conf.mod.131.1 <- measEq.syntax(model.131.1,
 conf.fit.131.1 <- cfa(as.character(conf.mod.131.1), article131, group = "depression", estimator = "WLSMV")
 
 # Fit the thresholds + loadings + intercepts invariance model
+#Note that with ternary data Wu and Estabrook suggest using a two-step MI approach.
 load.mod.131.1 <- measEq.syntax(model.131.1,
                                 ID.fac = "std.lv",
                                 ID.cat = "Wu",
@@ -352,6 +353,7 @@ load.mod.131.1 <- measEq.syntax(model.131.1,
                                 parameterization = "delta", 
                                 data = article131,
                                 group.equal = c("thresholds", "loadings", "intercepts")) 
+
 
 load.fit.131.1 <- cfa(as.character(load.mod.131.1), article131, group = "depression", estimator = "WLSMV")
 
@@ -606,7 +608,7 @@ all.results.251.2
 
 # Step 4
 # 3 items, so we must assume configural invariance
-# Metric: nonsig chisq change + change CFI = 0, AIC and BIC smaller; metric invariance holds (but! change RMSEA > .01)
+# Metric: nonsig chisq change + CFI > .95 + RMSEA < .08, AIC and BIC smaller; metric invariance holds 
 # Scalar: nonsig chisq change + change CFI = 0, AIC and BIC smaller, RMSEA > .01 but the fit improves (0.02 to 0), so scalar invariance holds
 
 
@@ -631,9 +633,9 @@ all.results.251.3 <- mi.results(conf.fit.251.3,load.fit.251.3,int.fit.251.3)
 all.results.251.3
 
 # Step 4
-# Three items so we assume configural invariance
-# Metric invariance: nonsig chisq change + CFI change < .01, AIC and BIC lower; metric invariance holds. (but: RMSEA > .01)
-# Scalar invariance: nonsig chisq change + CFI change < .01, AIC and BIC lower; RMSEA change is >.01 but fit improves (.041 to 0); scalar invariance holds.
+# 3 items, so we must assume configural invariance
+# Metric: nonsig chisq change + CFI > .95 + RMSEA < .08, AIC and BIC smaller; metric invariance holds 
+# Scalar: nonsig chisq change + change CFI = 0, AIC and BIC smaller, RMSEA > .01 but the fit improves (0.04 to 0), so scalar invariance holds
 
 # comparison 4
 # grouping variable is hypnosis vs relaxation condition at time 2 (variable name is hypnosis)
@@ -654,9 +656,9 @@ all.results.251.4 <- mi.results(conf.fit.251.4,load.fit.251.4,int.fit.251.4)
 all.results.251.4
 
 # Step 4
-# Three items so we assume configural invariance
-# Metric invariance: nonsig chisq change + CFI and RMSEA change < .01, AIC and BIC lower; metric invariance holds. 
-# Scalar invariance: nonsig chisq change + CFI and RMSEA change < .01, AIC and BIC lower; scalar invariance holds.
+# 3 items, so we must assume configural invariance
+# Metric: nonsig chisq change + CFI > .95 + RMSEA < .08, AIC and BIC smaller; metric invariance holds 
+# Scalar: nonsig chisq change + change CFI = 0 + change RMSEA = 0, AIC and BIC smaller, so scalar invariance holds
 
 # Article 261: Sellier ----------------------------------------------------
 url <- 'https://osf.io/ztsq4//?action=download'
@@ -753,9 +755,9 @@ all.results.301.1 <- mi.results(conf.fit.301.1,load.fit.301.1,int.fit.301.1)
 all.results.301.1
 
 # Step 4
-# Three items so we assume configural invariance
-# Metric invariance: nonsig chisq change + CFI and RMSEA change < .01, AIC and BIC lower; metric invariance holds.
-# Scalar invariance: sig chisq change + RMSEA change > .01. AIC is larger; scalar invariance rejected. (BIC and CFI ok)
+# 3 items, so we must assume configural invariance
+# Metric: nonsig chisq change + CFI > .95 + RMSEA < .08, AIC and BIC smaller; metric invariance holds 
+# Scalar: sig chisq change + change CFI < .01 + BIC smaller; however, AIC larger and change in RMSEA > .01,  so scalar invariance does not hold
 
 # comparison 2
 # Grouping variable: political orientation (very liberal; somewhat liberal; neither; somewhat conservative; very conservative); poli_soc, poli_eco
@@ -960,7 +962,8 @@ all.results.481.9
 
 # Step 4
 # Three items so we assume configural invariance
-# Metric invariance: nonsig chisq change + CFI and RMSEA change > .01, AIC larger; metric invariance rejected (BIC ok)
+# Metric invariance: nonsig chisq change + CFI and RMSEA change > .01, AIC larger; metric invariance holds because chisq non-sig (BIC ok)
+# Scalar invariance: sig chisq change + CFI and RMSEA change > .01, AIC and BIC larger; scalar invariance rejected.
 
 # comparison 10: match - testing - benevolence
 model.481.10 <- 'F =~ benev1 + benev2 + benev3'
@@ -1176,6 +1179,9 @@ article481.2 <- read.csv2(filename, header=T, na.strings="NA", sep=",")
 # remove the first row with text
 article481.2 <- article481.2[-1,]
 
+# change values to numeric for items
+article481.2[,14:19] <- as.numeric(unlist(article481.2[,17:19]))
+
 # comparison 25: match - integrity
 model.481.25 <- 'F =~ integ1 + integ2 + integ3'
 conf.fit.481.25 <- cfa(model.481.25, data = article481.2, group = "match")
@@ -1210,8 +1216,8 @@ all.results.481.27
 
 # Step 4
 # Three items so we assume configural invariance
-# Metric invariance: nonsig chisq change + CFI change < .01, AIC and BIC lower; metric invariance holds (RMSEA change > .01).
-# Scalar invariance: sig chisq change + RMSEA change > .01, AIC larger; we reject scalar invariance (CFI and BIC ok)
+# Metric invariance: sig chisq change + RMSEA change > .01, AIC higher; metric invariance rejected.
+
 
 # comparison 28: care - benevolence
 model.481.28 <- 'F =~ benev1 + benev2 + benev3'
@@ -1223,8 +1229,11 @@ all.results.481.28
 
 # Step 4
 # Three items so we assume configural invariance
-# Metric invariance: nonsig chisq change + CFI and RMSEA change < .01, AIC and BIC lower; metric invariance holds.
-# Scalar invariance: sig chisq change + RMSEA change > .01, AIC larger; we reject scalar invariance (CFI and BIC ok)
+# Metric invariance: sig chisq change + AIC higher 
+# But RMSEA is ok (0.069), CFI change is < .01 and BIC is lower; meaning we cannot reject metric invariance
+# Scalar invariance: sig chisq change + AIC higher
+# But: RMSEA change ok (< .01), CFI ok (< .01) and BIC is ok; we cannot reject scalar invariance; scalar invariance holds.
+
 
 # Article 521: Kristal ----------------------------------------------------
 # comparison 1 (study 2a)
@@ -1268,7 +1277,6 @@ article521.2 <- read_sav(filename)
 # However, since we are interested in checking whether these items fit well to the factor, we do not combine them into an index first.
 # We make difference scores for each subject for before (t2-t1) and after (t3-t2) and test these for MI. 
 
-# ask Damiano: should we remove the absolute from this code or not?
 before_envious <- abs(article521.2$Day2DV_envious - article521.2$Day1DV_envious)
 before_jealous <- abs(article521.2$Day2DV_jealous - article521.2$Day1DV_jealous)
 before_want <- abs(article521.2$Day2DV_want - article521.2$Day1DV_want)
@@ -1379,12 +1387,12 @@ all.results.521.5
 # Grouping variable: past vs distant future (group = 2 for future and group = 1 for past)
 # Scale variable: State self-esteem scale
 # Again, difference scores are calculated. We decided to do this by item and run a MI test on those.
-article521.4$se1 <- article521.4$SelfEsteem_1.0 - SelfEsteem_1
-article521.4$se2 <- article521.4$SelfEsteem_2.0 - SelfEsteem_2
-article521.4$se3 <- article521.4$SelfEsteem_3.0 - SelfEsteem_3
-article521.4$se4 <- article521.4$SelfEsteem_4.0 - SelfEsteem_4
-article521.4$se5 <- article521.4$SelfEsteem_5.0 - SelfEsteem_5
-article521.4$se6 <- article521.4$SelfEsteem_6.0 - SelfEsteem_6
+article521.4$se1 <- article521.4$SelfEsteem_1.0 - article521.4$SelfEsteem_1
+article521.4$se2 <- article521.4$SelfEsteem_2.0 - article521.4$SelfEsteem_2
+article521.4$se3 <- article521.4$SelfEsteem_3.0 - article521.4$SelfEsteem_3
+article521.4$se4 <- article521.4$SelfEsteem_4.0 - article521.4$SelfEsteem_4
+article521.4$se5 <- article521.4$SelfEsteem_5.0 - article521.4$SelfEsteem_5
+article521.4$se6 <- article521.4$SelfEsteem_6.0 - article521.4$SelfEsteem_6
 
 # we only need group=2 and group=1 for this comparison, and will drop out group=0
 article521.4.2 <- article521.4[article521.4[,"GROUP"] != 0,]
@@ -1596,83 +1604,6 @@ all.results.661
 
 # Step 4
 # chisquare is significant, rmsea > 0.08 and CFI < 0.95 so we reject configural invariance
-
-# Article 791: Sun --------------------------------------------------------
-
-# before checking and finishing this one: please check the codebook first, and then go to the article
-# to find the effect we want to test. We may have miscoded this study? 
-# it seems to be an ESM study
-
-url <- 'https://osf.io/v25y7//?action=download'
-filename <- '../data/data-main/article791.csv'
-GET(url, write_disk(filename, overwrite = TRUE))
-article791 <- read.csv2(filename, header=T, na.strings="NA", sep=",")
-
-# remove all irrelevant variables from dataframe
-article791 <- article791[,c(5,14,15,16)]
-colnames(article791)[c(5,14,15,16)]
-
-# Grouping variable: time point (four timepoints; ear.PRO03.w1)
-# Scale variable: Modified Big 5 - Neuroticism (worried, relaxed_r, depressed; ear.BFI19.w1 + ear.BFI09r.w1 + ear.BFI04.w1)
-
-# the data is ordinal, so we construct syntax and estimate model according to Wu and Estabrook
-model.791 <- 'F =~ ear.BFI19.w1 + ear.BFI09r.w1 + ear.BFI04.w1'
-
-# syntax and estimate configural model
-syntax.791.config <- measEq.syntax(model.791, 
-                                     ID.fac = "std.lv", 
-                                     ID.cat = "Wu",
-                                     ordered = colnames(article791)[c(5,14,15,16)],
-                                     parameterization = "delta",
-                                     data = article791,
-                                     group = "ear.PRO03.w1", 
-                                     group.equal = "configural", 
-                                     orthogonal = T)
-
-config.791 <- cfa(as.character(syntax.791.config),
-                  article791, 
-                    ordered = c("ear.BFI19.w1,ear.BFI09r.w1,ear.BFI04.w1"),
-                    group = "ear.PRO03.w1", 
-                    estimator = "WLSMV")
-
-# syntax and estimate thresholds model
-syntax.791.thres <- measEq.syntax(model.791, 
-                                    ID.fac = "std.lv", 
-                                    ID.cat = "Wu",
-                                    ordered = c("ear.BFI19.w1,ear.BFI09r.w1,ear.BFI04.w1"),
-                                    parameterization = "delta",
-                                    data = article791,
-                                    group = "ear.PRO03.w1", 
-                                    group.equal = "thresholds", 
-                                    orthogonal = T)
-
-thres.791 <- cfa(as.character(syntax.791.thres),
-                   article791, 
-                   ordered = c("ear.BFI19.w1,ear.BFI09r.w1,ear.BFI04.w1"),
-                   group = "ear.PRO03.w1", 
-                   estimator = "WLSMV")
-
-# syntax and estimate loadings model
-syntax.791.load <- measEq.syntax(model.791, 
-                                   ID.fac = "std.lv", 
-                                   ID.cat = "Wu",
-                                   ordered = c("ear.BFI19.w1,ear.BFI09r.w1,ear.BFI04.w1"),
-                                   parameterization = "delta",
-                                   data = article791,
-                                   group = "ear.PRO03.w1", 
-                                   group.equal = c("thresholds","loadings"), 
-                                   orthogonal = T)
-
-load.791 <- cfa(as.character(syntax.791.load),
-                  article791, 
-                  ordered = c("ear.BFI19.w1,ear.BFI09r.w1,ear.BFI04.w1"),
-                  group = "ear.PRO03.w1", 
-                  estimator = "WLSMV")
-
-# note that we get the scaled estimates because we have ordinal data
-all.results.791 <- mi.results.sc(config.791,thres.791,load.791)
-all.results.791
-
 
 # Article 811: Catapano -----------------------------------------------------
 # Study 1
@@ -2080,47 +2011,6 @@ all.results.891.5
 # metric: nonsig chisquare change, change CFI < .01; lower BIC; 
 # but: change RMSEA > .01 and AIC is larger; because chisquare change is non-significant, we cannot reject metric invariance; metric invariance holds
 # scalar: nonsig chisquare change, change CFI < .01; lower AIC and BIC; scalar invariance holds (RMSEA change > .01 but fit improves).
-
-
-# Study 5 - THESE ARE THE ORANGE ROWS WHICH I THINK WE SHOULD REMOVE
-url <- 'https://osf.io/yk75c//?action=download'
-filename <- '../data/data-main/article891.3.xlsx'
-GET(url, write_disk(filename, overwrite = TRUE))
-article891.3 <- read_excel(filename, sheet = 9)
-
-# comparison 6
-# grouping variable: fixed or growth mindset fixed or growth mindset (average of growthpersonality1 + growthpersonality2 + growthpersonality3 as found in syntax here https://osf.io/4ey2h/)
-# scale variable: belief that refugees can assimilate in American society (can1 + can2 + can3 + can4 + can5)
-article891.3$cond <- (article891.3$growthpersonality1 + article891.3$growthpersonality2 + article891.3$growthpersonality3)/3
-# they use this variable in a regression, so they don't have dummy groups. Should we delete all rows from study 5 from all our codebooks then
-# since we only used categorical grouping variables?
-
-model.891.6 <- 'F =~ can1 + can2 + can3 + can4 + can5'
-conf.fit.891.6 <- cfa(model.891.6, data = article891.3, group = "cond")
-load.fit.891.6 <- cfa(model.891.6, article891.3, group = "cond", group.equal = "loadings")
-int.fit.891.6 <- cfa(model.891.6, article891.3, group = "cond", group.equal = c("loadings", "intercepts"))
-all.results.891.6 <- mi.results(conf.fit.891.6,load.fit.891.6,int.fit.891.6)
-all.results.891.6
-
-# comparison 7
-# grouping variable: fixed or growth mindset (average of growthpersonality1 + growthpersonality2 + growthpersonality3 as found in syntax here https://osf.io/4ey2h/)
-# scale variable: belief that refugees should assimilate in American society (should1 + should2 + should3 + should4 + should5)
-model.891.7 <- 'F =~ should1 + should2 + should3 + should4 + should5'
-conf.fit.891.7 <- cfa(model.891.7, data = article891.3, group = "cond")
-load.fit.891.7 <- cfa(model.891.7, article891.3, group = "cond", group.equal = "loadings")
-int.fit.891.7 <- cfa(model.891.7, article891.3, group = "cond", group.equal = c("loadings", "intercepts"))
-all.results.891.7 <- mi.results(conf.fit.891.7,load.fit.891.7,int.fit.891.7)
-all.results.891.7
-
-# comparison 8
-# grouping variable: fixed or growth mindset (average of growthpersonality1 + growthpersonality2 + growthpersonality3 as found in syntax here https://osf.io/4ey2h/)
-# scale variable: political orientation (political1 + political2 + political3)
-model.891.8 <- 'F =~ political1 + political2 + political3'
-conf.fit.891.8 <- cfa(model.891.8, data = article891.3, group = "cond")
-load.fit.891.8 <- cfa(model.891.8, article891.3, group = "cond", group.equal = "loadings")
-int.fit.891.8 <- cfa(model.891.8, article891.3, group = "cond", group.equal = c("loadings", "intercepts"))
-all.results.891.8 <- mi.results(conf.fit.891.8,load.fit.891.8,int.fit.891.8)
-all.results.891.8
 
 
 # Article 941: Cao --------------------------------------------------------
@@ -2671,6 +2561,7 @@ all.results.1361.2
 # Grouping variable: inspired-by; awe; or neutral control condition (condition)
 # Scale variable: transcendence (Pekala1r + Pekala2 + Pekala3 + Pekala4r for cond1 and cond3, Q332 + Q333 + Q334 + Q335 for cond2)
 # make dataset for cond1 and cond3
+#Esther: to double check whether the condition name characters are not recognized making the group creation not possible
 keep1 <- c("Pekala1r","Pekala2","Pekala3","Pekala4r","condition")
 cond1 <- subset(article1361.2,condition==1,select=keep1)
 cond3 <- subset(article1361.2,condition==3,select=keep1)
@@ -2731,9 +2622,9 @@ article1361.3 <- read.csv2(filename, header=T, na.strings="NA", sep=",")
 # Grouping variable: inspiration or control (IV_video)
 # Scale variable: Enjoyment; enjoyable + good + feelgood + moving + inspired + skeptical_reversed
 model.1361.5 <- 'F =~ enjoyable + good + feelgood + moving + inspired + skeptical_reversed'
-conf.fit.1361.5 <- cfa(model.1361.5, data = article1361.3, group = "IV_video")
-load.fit.1361.5 <- cfa(model.1361.5, article1361.3, group = "IV_video", group.equal = "loadings")
-int.fit.1361.5 <- cfa(model.1361.5, article1361.3, group = "IV_video", group.equal = c("loadings", "intercepts"))
+conf.fit.1361.5 <- cfa(model.1361.5, data = article1361.3, group = "?..IV_video")
+load.fit.1361.5 <- cfa(model.1361.5, article1361.3, group = "?..IV_video", group.equal = "loadings")
+int.fit.1361.5 <- cfa(model.1361.5, article1361.3, group = "?..IV_video", group.equal = c("loadings", "intercepts"))
 all.results.1361.5 <- mi.results(conf.fit.1361.5,load.fit.1361.5,int.fit.1361.5)
 all.results.1361.5
 
@@ -3526,12 +3417,10 @@ load.fit.1861.2 <- cfa(as.character(load.mod.1861.2), article1861_collapsed, gro
 all.results.1861.2 <- mi.results.sc(conf.fit.1861.2,thres.fit.1861.2,load.fit.1861.2)
 all.results.1861.2
 
-# hi dami this is where I realized my mistake. so in this case I think we have to say that thresholds holds :) 
-
 # Step 4
 # 3 items so we assume configural invariance
-# metric: nonsig chisquare change, change CFI < .01, change RMSEA > .01, AIC and BIC not estimated. Thresholds invariance holds
-# scalar: nonsig chisquare change, change CFI < .01, change RMSEA > .01, AIC and BIC not estimated. Does loadings hold as well?
+# metric: nonsig chisquare change, change CFI < .01, AIC and BIC not estimated. Thresholds invariance holds (RMSEA change is 0.039 which is ok)
+# scalar: nonsig chisquare change, change CFI < .01, change RMSEA > .01 (but fit better), AIC and BIC not estimated. Threshold + loading invariance holds.
 
 
 # Comparison 3
@@ -3892,8 +3781,6 @@ all.results.2091
 
 # Step 4
 # Three items so we assume configural invariance
-# Metric invariance: nonsig chisq change + CFI change < .01, BIC lower; 
-# But: RMSEA change > .01 and AIC larger. Does metric invariance hold?
-
+# Metric invariance: nonsig chisq change + CFI change < .01, BIC lower; But: RMSEA change = .10 and AIC larger. metric invariance holds because we cannot reject chisquare test. 
 # Scalar invariance: nonsig chisq change + CFI change < .01, AIC and BIC lower; scalar invariance holds. (RMSEA > .01 but fit improves)
 

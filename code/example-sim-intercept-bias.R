@@ -1,100 +1,43 @@
 ### CODE FOR MAIN STUDY SYSTEMATIC REVIEW MEASUREMENT INVARIANCE ##
-### This is code to sample articles for which we will attempt to perform measurement invariance checks for step 2, 3, and 4
+## This is code to simulate intercept bias of 0.5 in 1/3 of items and 1/2 of groups,
+## based on a reliability estimate, number of items, number of groups, and sample size
 
-rm(list=ls()) # clean workspace
-require("lavaan") # to simulate factor model and run MI tests
-require("writexl") # to write away final codebooks
+## Please note that the code we used on our real dataset can be found at https://osf.io/fju7n/
 
-# function to check how many groups are compared for each study
-assign.groups <- function(x) {
-  if(is.na(x['n3_rep'])) {
-    no_group <- 2
-  } else if(is.na(x['n4_rep'])) {
-    no_group <- 3
-  } else if(is.na(x['n5_rep'])) {
-    no_group <- 4 
-  } else {
-    no_group <- 5
-  }
-  return(no_group)
-}
+require("lavaan")    # to simulate factor model and run MI tests
+require("truncnorm") # to simulate data via rnorm that is truncated between values (for no_group)
 
-# load data from main study
-df <- read.csv("../data/codebook-main-step1.csv") # load data
+# simulate 50 scale mean comparisons that each have: 
+# a reliability estimate for the scale, a number of items in the scale, and number of groups that are compared
+# we limit the number of groups from 2 to 5
+# we assume the sample size of all groups within one comparison is the same
 
-temp <- df[df$reflective==1,]
-temp <- temp[!is.na(temp$reflective),]
-temp2 <- temp[!temp$mitest_rep==1,]
+n <- 50                                                                 # number of comparisons
+set.seed(017889)                                                        # seed
+reltot <- rnorm(n = n, mean = 0.7, sd = 0.1)                            # reliability estimates for scale
+no_items <- round(rnorm(n = n, mean = 5, sd = 1))                       # number of items in the scale
+no_group <- round(rtruncnorm(n = n, mean = 2, sd = 2, a = 2, b = 5))    # number of groups that are compared
+nobs <- round(rnorm(n = n, mean = 150, sd = 50))
+df <- cbind(reltot,no_items,no_group,nobs)                              # combine all variables in dataframe
+df <- as.data.frame(df)
 
-# give all data points a unique id so we can delete doubles later
-df$id <- 1:nrow(df)
-
-# filter out studies that reported on doing a measurement invariance check
-df$mitest_rep <- as.numeric(df$mitest_rep)
-df.checked <- subset(df,mitest_rep == 1) 
-
-# check distribution of reliabilities of all studies
-df$reltot <- as.numeric(df$reltot)
-hist(as.numeric(df$reltot))
-mean(df$reltot, na.rm=T)
-
-# check distribution of number of items of all studies
-df$no_items <- as.numeric(df$no_items)
-hist(df$no_items)
-
-# remove studies that checked for MI
-df.notchecked <- subset(df,mitest_rep == 0)
-
-# select only studies that report reliability and number of items
-dfs <- df.notchecked[!is.na(df.notchecked$reltot) & df.notchecked$no_items != "NA" & !is.na(df.notchecked$no_items),]
-
-# some studies have sample sizes for groups but not the total one. 
-# we will assign n_rep = sum of all the group sample sizes
-
-# calculate inter item correlation for all studies
-dfs$iic <- -(dfs$reltot / (dfs$no_items * dfs$reltot - dfs$reltot - dfs$no_items))
-dfs <- as.data.frame(dfs)
-
-# how many groups are compared for each row?
-dfs$no_group <- apply(dfs,1,assign.groups)
+# calculate inter item correlation for all comparisons
+df$iic <- -(df$reltot / (df$no_items * df$reltot - df$reltot - df$no_items))
 
 # simulate factor model and check power to detect measurement non-invariance in the intercepts
-for (i in 1:nrow(dfs)) {
+for (i in 1:nrow(df)) {
   
   # simulate one-factor model with specific parameter values
-  k <- dfs$no_group[i]
+  k <- df$no_group[i]
   
-  # extract sample size for each level of k groups
-  if (k == 2) {
-    
-    nobs <- as.numeric(c(dfs$n1_rep[i],dfs$n2_rep[i]))
-    
-  } else if (k == 3) {
-    
-    nobs <- as.numeric(c(dfs$n1_rep[i],dfs$n2_rep[i],dfs$n3_rep[i]))
-    
-  } else if (k == 4) {
-    
-    nobs <- as.numeric(c(dfs$n1_rep[i],dfs$n2_rep[i],dfs$n3_rep[i],dfs$n4_rep[i]))
-    
-  } else if (k == 5) {
-    
-    nobs <- as.numeric(c(dfs$n1_rep[i],dfs$n2_rep[i],dfs$n3_rep[i],dfs$n4_rep[i],dfs$n5_rep[i]))
-    
-  }
-  
-  # if no group sample sizes reported, take the total sample size and divide it by the number of groups
-  if (is.na(nobs[1])) {
-    
-    nobs <- round(rep(as.numeric(dfs$n_rep[i])/k,k))
-
-  }
+  # take the total sample size and divide it by the number of groups
+  nobs <- round(rep(as.numeric(df$nobs[i])/k,k))
   
   # number of items
-  q <- dfs$no_items[i]
+  q <- df$no_items[i]
   
   # factor loadings (square root of the inter-item correlation)
-  lambdas <- rep(sqrt(dfs$iic[i]),q)
+  lambdas <- rep(sqrt(df$iic[i]),q)
   lambda <- matrix(c(lambdas), nrow = q, ncol = 1) 
   
   # error variances (1 - lambda^2)
@@ -106,7 +49,7 @@ for (i in 1:nrow(dfs)) {
   phi <- 1 
   
   # assign values to item intercepts 
-  # (50% of groups gets intercept difference of 0.5 in all items, see line 182 for more info)
+  # 50% of groups gets intercept difference of 0.5 in all items
   if (k == 2) {
     
     nu <- c(0,0.5)
@@ -144,7 +87,6 @@ for (i in 1:nrow(dfs)) {
     sigma.pop.1 <- lambda %*% phi %*% t(lambda) + theta
     colnames(sigma.pop.1) <- colnms
     sigma.pop <- list(sigma.pop.1,sigma.pop.1)
-    
     
   } else if (k == 3) {
     
@@ -184,21 +126,23 @@ for (i in 1:nrow(dfs)) {
     
   }
   
-  # we assigned bias in all indicators for 50% of the groups, but we only need bias in 1/3 of those indicators
-  # here we assign an intercept of 0 (no bias) to 2/3 of the indicators that were 0.50. 
+  # we assigned intercept bias in all items for 50% of the groups, 
+  # but we only need bias in 1/3 of those items
+  # here we assign an intercept of 0 (no bias) to 2/3 of the indicators that were 0.50
+  
   for(x in 2:k){
     mu.pop[[x]][((round(q/3))+1):q] <- 0
   }
   
   # construct model syntax for lavaan to analyze
   mods.metric <- mods.scalar <- NA
-
+  
   for(l in 1:q){
     mods.metric[l] <- c(paste0("F1 =~", 'V', l))
     mods.scalar[l] <- c(paste0("F1 =~", 'V', l))
     
   }
-
+  
   mods.metric[q+1] <- paste0("F1~ c(", paste0(rep(0,k), sep= "",collapse = ","), ")*1")
   mods.scalar[q+1] <- paste0("F1~ c(0,", paste0(rep(NA,k-1), sep= "",collapse = ","), ")*1")
   
@@ -208,7 +152,7 @@ for (i in 1:nrow(dfs)) {
   
   # likelihood ratio test between the models
   mod <- anova(mod.metric,mod.scalar)
-
+  
   # extract chisquare difference between the two models as NCP + extract degrees of freedom
   ncp <- mod$`Chisq diff`[2]
   dof <- mod$`Df`[2] - mod$`Df`[1]
@@ -216,21 +160,9 @@ for (i in 1:nrow(dfs)) {
   # power estimate given degrees of freedom and NCP
   # indicates power to detect intercept non-invariance in 1/3 of the indicators for 1/2 of the groups
   power.cfa.th <- 1 - pchisq(qchisq(.95, df = dof), df = dof, ncp = ncp) 
-  dfs$powerncp[i] <- as.numeric(power.cfa.th)
+  df$powerncp[i] <- as.numeric(power.cfa.th)
 }
 
 # select only those studies that have a power to detect non-invariance of > 0.80
-df.select <- dfs[dfs$powerncp > 0.80,1:39]
-
-# are the colnames for the selected studies and the ones reporting on MI the same?
-colnames(df.select) == colnames(df.checked)
-
-# multiple ids in both dataframes?
-unique(df.checked$id) %in% unique(df.select$id)
-unique(df.select$id) %in% unique(df.checked$id)
-
-# save dataset of studies that investigated MI (step 2 and step 3)
-write_xlsx(df.checked, "../data/codebook-main-step2step3-sample-without-results.xlsx")
-
-# save final dataset of studies that we will attempt to reproduce
-write_xlsx(df.select, "../data/codebook-main-step4-sample-without-results.xlsx")
+df.select <- df[df$powerncp > 0.80,]
+df.select

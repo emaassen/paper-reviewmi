@@ -373,7 +373,7 @@ all.results.207.1
 
 # Step 3: 
 # The data is ordered, meaning we used guidelines proposed by Wu and Estabrook (2016) for MI testing with ordinal data. 
-# This also means we need to construct syntax to estimate treshold invariance.
+# This also means we need to construct syntax to estimate threshold invariance.
 
 # Create and fit configural model
 syntax.207.1.config <- measEq.syntax(mod.207.1, 
@@ -798,6 +798,23 @@ article710$sd8R <- as.numeric(article710$sd8R)
 article710$sd9 <- as.numeric(article710$sd9)
 article710$sd10 <- as.numeric(article710$sd10)
 article710$fast <- as.numeric(article710$fast)
+
+# Fit the configural invariance model
+conf.fit.710<- cfa(mod.710,
+                        article710, 
+                        group = "fast")
+
+load.fit.710 <- cfa(mod.710,
+                        article710, 
+                        group = "fast",
+                        group.equal = "loadings")
+
+int.fit.710 <- cfa(mod.710,
+                       article710, 
+                       estimator = "ML", 
+                       group = "fast",
+                       group.equal =  c("loadings", "intercepts"))
+
 
 # store goodness of fit measures
 all.results.710 <- mi.results(conf.fit.710,load.fit.710,int.fit.710)
