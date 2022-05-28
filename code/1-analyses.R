@@ -1,8 +1,10 @@
 ### CODE FOR MAIN STUDY SYSTEMATIC REVIEW MEASUREMENT INVARIANCE ##
 ### This is code to analyze the reporting results of our main study
-rm(list = ls()) # clear workspace
-options(scipen=999) # no scientific notation
-library(dplyr) # for function to count the total number of studies
+rm(list=ls())        # clear workspace
+options(scipen=999)  # no scientific notation
+require("dplyr")     # for function to count the total number of studies
+require("readxl")    # to load codebook
+require("writexl")   # to write away final codebooks
 
 # function to count the total number of articles and studies in a dataframe
 count_articles <- function(x) {
@@ -18,7 +20,7 @@ count_studies <- function(x) {
   return(no_studies)
 }
 
-df <- read.csv("../data/codebook-main-step1.csv") # load data
+df <- read_excel("../data/codebook-main-step1.xlsx")
 df.final <- df # dataset to save
 colnames(df) # check if column names are correct
 
@@ -80,7 +82,7 @@ df4 <- filter(df3, reflective == 1)
 count_articles(df4)                                    # 96 articles
 count_articles(df4) / count_articles(df) * 100         # 23% of articles contain scales
 count_studies(df4)                                     # 149 studies
-count_studies(df4) / count_studies(df) * 100           # 17% of studies contain scales
+count_studies(df4) / count_studies(df) * 100           # 18% of studies contain scales
 nrow(df4)                                              # 915 rows
 
 # Number of articles and studies that dropped out due to non-scales
@@ -94,14 +96,13 @@ count_studies(df3) - count_studies(df4)                   # 252 studies
 df <- filter(df4, reflective == 1)
 count_articles(df)                                               # 96 articles left
 count_studies(df)                                                # 149 studies left
-count_studies(df) / count_studies(df) * 100                      # 18% of studies left 
 nrow(df)                                                         # 915 comparisons
 
 # Type of group comparison
-sum(df$type_group == 0)                     # 348 comparisons across existing groups
-sum(df$type_group == 0) / nrow(df) * 100    # 38% of comparisons are made across existing groups
-sum(df$type_group == 1)                     # 567 comparisons across new groups
-sum(df$type_group == 1) / nrow(df) * 100    # 62% of comparisons are made across new groups
+sum(df$type_group == 0)                     # 334 comparisons across existing groups
+sum(df$type_group == 0) / nrow(df) * 100    # 37% of comparisons are made across existing groups
+sum(df$type_group == 1)                     # 581 comparisons across new groups
+sum(df$type_group == 1) / nrow(df) * 100    # 63% of comparisons are made across new groups
 
 # Type of scale
 sum(df$type_scale == 0)                     # 447 ad hoc scales
@@ -110,6 +111,7 @@ sum(df$type_scale == 1)                     # 468 existing scales
 sum(df$type_scale == 1) / nrow(df) * 100    # 51% of comparisons have existing scales
 
 # Measure scale 
+df$measure_scale <- as.numeric(df$measure_scale)       # make numeric
 table(df$measure_scale)                                # dichotomous = 27 / ordinal = 309 / continuous = 265
 sum(is.na(df$measure_scale))                           # no reporting on measure of scale = 314
 sum(df$measure_scale==0, na.rm=T) / nrow(df) * 100     # 3% of scales have dichotomous items (2 categories)
@@ -118,23 +120,26 @@ sum(df$measure_scale==2, na.rm=T) / nrow(df) * 100     # 29% of scales have cont
 sum(is.na(df$measure_scale)) / nrow(df) * 100          # 34% of scales did not indicate the measure of the scale
 
 # Width scale
-table(df$width_scale_recoded)
-sum(is.na(df$width_scale_recoded))                     # 317 scales did not indicate the width of the scale
-sum(is.na(df$width_scale_recoded)) / nrow(df) * 100    # 34% of scales did not indicate the width of the scale
-summary(as.numeric(df$width_scale_recoded))            # NAs are 319 here because two scales had "mix" instead of a numeric value
+table(df$width_scale_recoded)                                 # note "mix" and "NA" categories will drop off when making this variable numeric:
+df$width_scale_recoded <- as.numeric(df$width_scale_recoded)  # make numeric
+sum(is.na(df$width_scale_recoded))                            # 317 scales did not indicate the width of the scale
+sum(is.na(df$width_scale_recoded)) / nrow(df) * 100           # 34% of scales did not indicate the width of the scale
+summary(as.numeric(df$width_scale_recoded))                   # NAs are 319 here because two scales had "mix" instead of a numeric value
 
 # Number of items
+table(df$no_items)                                     # note "mix" and "NA" categories will drop off when making this variable numeric:
+df$no_items <- as.numeric(df$no_items)                 # make numeric
 table(df$no_items) 
-sum(is.na(df$no_items))                                # 297 scales did not indicate the number of items
-sum(is.na(df$no_items)) / nrow(df) * 100               # 32% of scales did not indicate the number of items
+sum(is.na(df$no_items))                                # 298 scales did not indicate the number of items
+sum(is.na(df$no_items)) / nrow(df) * 100               # 33% of scales did not indicate the number of items
 summary(as.numeric(df$no_items))
 
 # Power not mentioned
-length(which(is.na(df$power))) + length(which(df$power == "NA"))            # 627 comparisons do not mention power
-(length(which(is.na(df$power))) + length(which(df$power == "NA")))/nrow(df) # 69% of comparisons do not mention power
+length(which(is.na(df$power))) + length(which(df$power == "NA"))                 # 627 comparisons do not mention power
+(length(which(is.na(df$power))) + length(which(df$power == "NA")))/nrow(df)*100  # 69% of comparisons do not mention power
 
 # Keep comparisons that do mention power
-temp <- df[which(!is.na(df$power)),]                                         
+temp <- df[which(!df$power == "NA"),]                                         
 count_articles(df) - count_articles(temp)                                 # 55 articles do not mention power
 (count_articles(df) - count_articles(temp)) / count_articles(df) * 100    # 57% of remaining 97 articles do not mention power
 count_studies(df) - count_studies(temp)                                   # 76 studies do not mention power
@@ -152,7 +157,7 @@ sum(is.na(as.numeric(df$n_rep)) & is.na(as.numeric(df$n1_rep)) & is.na(as.numeri
 
 # Range of sample size
 df$n_rep <- as.numeric(df$n_rep)
-range(df$n_rep, na.rm=T)
+range(df$n_rep, na.rm=T) # 15 - 4393362
 summary(df$n_rep)
 
 # Sample size total
@@ -186,7 +191,7 @@ sum(is.na(as.numeric(temp$rel1))) / nrow(df) * 100 # 39% did not report subsampl
 
 # Range of reliability
 df$reltot <- as.numeric(df$reltot)
-range(df$reltot, na.rm=T)
+range(df$reltot, na.rm=T) # 0.46 - 0.97
 summary(df$reltot)
 
 # No number of items & no item response categories reported
@@ -205,21 +210,24 @@ count_articles(dfmi) # 7
 count_studies(dfmi)  # 7
 
 # MI method
+df$mimethod_rep <- as.numeric(df$mimethod_rep)          # make numeric
 table(df$mimethod_rep, useNA="always")
 sum(df$mimethod_rep==1, na.rm=T)/sum(df$mitest_rep)*100 # 24% of 40 use a scale-based method
 sum(df$mimethod_rep==2, na.rm=T)/sum(df$mitest_rep)*100 # 73% of 40 use an item-based method
 
 # MI result
+df$miresult_rep <- as.numeric(df$miresult_rep)                                                   # make numeric
 table(df$miresult_rep, useNA="always")
 sum(df$miresult_rep==0, na.rm=T) / sum(df$miresult_rep == 0 | df$miresult_rep == 1, na.rm=T)*100 # 24% of 41 do not find MI
 sum(df$miresult_rep==1, na.rm=T) / sum(df$miresult_rep == 0 | df$miresult_rep == 1, na.rm=T)*100 # 76% of 41 do find MI
 
 # MI level
+df$milevel_rep <- as.numeric(df$milevel_rep)              # make numeric
 df.mi <- subset(df, df$miresult_rep == 1)
-table(df.mi$milevel_rep, useNA="always") # 2 = metric invariance, 3 = scalar invariance
-sum(df.mi$milevel_rep==2, na.rm=T)/nrow(df.mi)*100 # 16% of 31 find metric invariance
-sum(df.mi$milevel_rep==3, na.rm=T)/nrow(df.mi)*100 # 10% of 31 find scalar invariance
-sum(is.na(df.mi$milevel_rep), na.rm=T)/nrow(df.mi)*100 # 74% of 31 do not mention the level of MI.
+table(df.mi$milevel_rep, useNA="always")                  # 2 = metric invariance, 3 = scalar invariance
+sum(df.mi$milevel_rep==2, na.rm=T)/nrow(df.mi)*100        # 16% of 31 find metric invariance
+sum(df.mi$milevel_rep==3, na.rm=T)/nrow(df.mi)*100        # 10% of 31 find scalar invariance
+sum(is.na(df.mi$milevel_rep), na.rm=T)/nrow(df.mi)*100    # 74% of 31 do not mention the level of MI.
 
 # Only select rows that have scalar invariance
 dfmi.scalar <- subset(df,milevel_rep == 3)
@@ -228,3 +236,4 @@ N <- nrow(dfmi.scalar)
 # How many articles studied?
 count_articles(dfmi.scalar) # 2
 count_studies(dfmi.scalar) # 2 
+

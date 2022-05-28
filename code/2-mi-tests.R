@@ -1,11 +1,10 @@
 ### CODE FOR MAIN STUDY SYSTEMATIC REVIEW MEASUREMENT INVARIANCE ##
 ### This is code to perform step 2 and step 3 of our main study; reproducing results for studies that reported on MI
-
-rm(list = ls()) # clear workspace
-require("httr") # to load data from OSF into R
-require("haven") # to load sav files into R
-require("readxl") # to load xlsx files into R
-require("lavaan") # to test for measurement invariance
+rm(list = ls())     # clear workspace
+require("httr")     # to load data from OSF into R
+require("haven")    # to load sav files into R
+require("readxl")   # to load xlsx files into R
+require("lavaan")   # to test for measurement invariance
 require("semTools") # construct syntax for thresholds
 
 # function to extract fit measures for models (only works if 3 models are estimated)
@@ -840,3 +839,4 @@ all.results.710
 # https://journals.sagepub.com/doi/suppl/10.1177/0956797619834879/suppl_file/ObaidiSupplementalMaterial.pdf
 # Correlations are reported between factors but not between individual items
 # We cannot do a MI test because we have no data
+

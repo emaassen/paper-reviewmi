@@ -4,9 +4,7 @@
 ### need to sample from Plos One, not from Psychological Science
 
 # Relevant packages
-library("rplos")
-library("dplyr")
-library("tidyr")
+require("rplos")
 
 # Search for subject psychology
 # Search in journal PLoSONE

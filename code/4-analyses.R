@@ -1,11 +1,10 @@
 ### CODE FOR MAIN STUDY SYSTEMATIC REVIEW MEASUREMENT INVARIANCE ##
 ### This is code to analyze step 4 of our main study, in which we 
 ### conducted MI tests for comparisons that did not report on MI
-
-rm(list = ls())     # clear workspace
-options(scipen=999) # no scientific notation
-library(readxl)     # load in the coding sheet of step 4
-library(dplyr)      # for function to count the total number of studies
+rm(list = ls())       # clear workspace
+options(scipen=999)   # no scientific notation
+require("readxl")     # load in the coding sheet of step 4
+require("dplyr")      # for function to count the total number of studies
 
 # function to count the total number of articles and studies in a dataframe
 count_articles <- function(x) {
@@ -21,17 +20,21 @@ count_studies <- function(x) {
   return(no_studies)
 }
 
-# load in data file
+# load in data file step 2+3 and step 4
 df <- read_excel("../data/codebook-main-step4.xlsx")
-nrow(df)                                # we attempt to reproduce 294 comparisons
-count_articles(df)                      # across 35 articles
-count_studies(df)                       # across 65 studies
+step23 <- read_excel("../data/codebook-main-step2step3.xlsx")
 
 # Make certain columns numeric so we can use them in subsequent steps
 df$open_group <- as.numeric(df$open_group)
 df$open_scale <- as.numeric(df$open_scale)
 df$miresult_step4 <- as.numeric(df$miresult_step4)
+df$milevel_step4 <- as.numeric(df$milevel_step4)
 df$config_assumed <- as.numeric(df$config_assumed)
+
+# count comparisons, articles, studies in step 4
+nrow(df)                                # we attempt to test MI for 294 comparisons
+count_articles(df)                      # across 35 articles
+count_studies(df)                       # across 65 studies
 
 # Comparisons for which we could access the data
 df1 <- filter(df, open_data == 1)       # filter out comparisons that had open data
@@ -103,7 +106,7 @@ sum(df_conf_assumed$miresult_step4)                                   # 61 compa
 sum(df_conf_assumed$miresult_step4) / nrow(df_conf_assumed) * 100     # 100% found a level of MI. 
 
 table(df_conf_assumed$milevel_step4)                            # 11 configural, 12 metric, 38 scalar
-table(df_conf_assumed$milevel_step4)/nrow(df_conf_assumed)*100  # 18% configural, 20% metric, 64% scalar
+table(df_conf_assumed$milevel_step4)/nrow(df_conf_assumed)*100  # 18% configural, 20% metric, 62% scalar
 
 # Check how many scales with scalar invariance are unique
 df_scalar <- subset(df, as.numeric(df$milevel_step4) == 3)
@@ -116,32 +119,74 @@ length(unique(df_scalar$name_scale))
 length(which(df_scalar$journal_id == 0)) # 0 to PLOS
 length(which(df_scalar$journal_id == 1)) # 46 to PS
 
+# Comparisons including step 2 and step 3 ---------------------------------
+
+# count comparisons, articles, studies in steps2-3-4
+nrow(step23)                            # we attempted to reproduce 41 comparisons
+count_articles(step23)                  # across 7 articles
+count_studies(step23)                   # across 7 studies
+
+# is there overlap in step2+3 and step4?
+step23$article_id %in% df$article_id
+df$article_id %in% step23$article_id
+
+# count total number of articles, studies in step2+3+4
+count_articles(df) + count_articles(step23)  # 42 articles
+count_studies(df) + count_studies(step23)    # 72 studies
+nrow(df) + nrow(step23)                      # 335 comparisons
+
+# count total number of articles, studies in step2+3+4 that we could test for MI
+dim(df[df$mitest_step4 == 1,])[1] + dim(step23[step23$mitest_step2 == 1,])[1] # 162 comparisons tested for MI across step 2-3-4
+
+# tables for invariance levels across articles, studies in step2+3+4 for those we could test for MI 
+step23$mitest_step3 <- as.numeric(step23$mitest_step3)    # make numeric
+dft <- filter(df, mitest_step4 == 1)                      # filter out comparisons that could do a MI test
+step23t <- filter(step23, mitest_step2 == 1) 
+
+# MI level for step 2, 3, 4
+table(step23t$milevel_step3)  # noninvariant = 4, NA = 1 (this is the only study that was reproduced in step 2 and is partially invariant)
+table(dft$milevel_step4)      # noninvariant = 85, configural = 13, metric = 13, scalar = 46
+table(step23t$milevel_step3)[1] + table(dft$milevel_step4)[1] # noninvariant 89
+
+# make new table
+tab <- matrix(c(89,13,13,46,1), ncol=5)
+colnames(tab) <- c("Noninvariant","Configural","Metric","Scalar","Partial")
+rownames(tab) <- "freq"
+tab <- as.table(tab);tab       # 89 noninvariant, 13 configural, 13 metric, 46 scalar, 1 partial
+round(tab / sum(tab) * 100,1)  # 55% noninvariant, 8% configural, 8% metric, 28% scalar, 1% partial
+
 # how many articles and studies found scalar invariance?
-count_articles(df_scalar) # 14 articles
-count_studies(df_scalar) # 21 studies
+#count_articles(df_scalar) # 14 articles
+#count_studies(df_scalar) # 21 studies
 
-#------------------------------------------------------------------------------------------------------#
-#Exclusion of articles prior to final analyses per journal
-dfPLOS <- subset(df, df$journal_id == 0)
-dfPS <- subset(df, df$journal_id == 1)
+# level of invariance categorized by type of group
+step23$milevel_step3 <- as.numeric(step23$milevel_step3)         # make numeric
+# one comparison that was reproducible in step 2 now has "NA" at milevel_step3, as we did not check this comparison for MI.
+# The comparison should however be counted to the entire sample, so we change the estimate for this comparison to 9.
+step23$milevel_step3[which(step23$reproduced_step2 == 1)] <- 9   
 
-#How many comparisons had enough power?
-nrow(dfPLOS) #141
-nrow(dfPS) #153
+# assign levels of invariance
+df$milevel_step4 <- c("non-invariance","configural","metric","scalar",NA)[ match( df$milevel_step4, c(0,1,2,3,NA))]
+step23$milevel_step3 <- c("non-invariance","configural","metric","scalar","partial invariance",NA)[ match( step23$milevel_step3, c(0,1,2,3,9,NA))]
 
-#How many comparisons had data availbale?
-sum(as.numeric(dfPLOS$open_data), na.rm = T) #73
-sum(as.numeric(dfPS$open_data), na.rm = T) #152
+# combine data
+cat_group <- c(step23$cat_group,df$cat_group)
+type_scale <- c(step23$type_scale,df$type_scale)
+mi_level <- c(step23$milevel_step3,df$milevel_step4)
+step234 <- as.data.frame(cbind(cat_group,type_scale,mi_level))
+step234
 
-#For how many, of those that were available, could we construct a grouping variable?
-sum(as.numeric(dfPLOS$open_group), na.rm = T) #65
-sum(as.numeric(dfPS$open_group), na.rm = T) #152
+# detailed categories
+table(step234$cat_group,step234$mi_level)[,c(3,1,2,5,4)]
+addmargins(table(step234$cat_group,step234$mi_level)[,c(3,1,2,5,4)])
 
-#For how many, of those that were available, could we construct a scale?
-sum(as.numeric(dfPLOS$open_scale), na.rm = T) #10
-sum(as.numeric(dfPS$open_scale), na.rm = T) #148
+# collapsed categories
+step234$cat_group[grepl("dem",step234$cat_group)] <- "demographic"
+step234$cat_group[grepl("exp",step234$cat_group)] <- "experimental"
+table(step234$cat_group,step234$mi_level)[,c(3,1,2,5,4)]
+addmargins(table(step234$cat_group,step234$mi_level)[,c(3,1,2,5,4)])
 
-#For how many, of those that were available, could we construct a grouping variable and a scale?
-length(which(as.numeric(dfPLOS$open_scale) == 1 & as.numeric(dfPLOS$open_group) == 1)) #9
-length(which(as.numeric(dfPS$open_scale) == 1 & as.numeric(dfPS$open_group) == 1)) #148
-
+# level of invariance categorized by type of scale
+step234$type_scale <- c("existing","ad hoc")[ match(step234$type_scale, c(0,1))]
+table(step234$type_scale,step234$mi_level)[,c(3,1,2,5,4)]
+addmargins(table(step234$type_scale,step234$mi_level)[,c(3,1,2,5,4)])

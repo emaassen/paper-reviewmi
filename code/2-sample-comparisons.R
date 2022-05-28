@@ -1,9 +1,9 @@
 ### CODE FOR MAIN STUDY SYSTEMATIC REVIEW MEASUREMENT INVARIANCE ##
 ### This is code to sample articles for which we will attempt to perform measurement invariance checks for step 2, 3, and 4
-
-rm(list=ls()) # clean workspace
-require("lavaan") # to simulate factor model and run MI tests
-require("writexl") # to write away final codebooks
+rm(list=ls())        # clear workspace
+require("lavaan")    # to simulate factor model and run MI tests
+require("readxl")    # to load codebook
+require("writexl")   # to write away final codebooks
 
 # function to check how many groups are compared for each study
 assign.groups <- function(x) {
@@ -20,7 +20,7 @@ assign.groups <- function(x) {
 }
 
 # load data from main study
-df <- read.csv("../data/codebook-main-step1.csv") # load data
+df <- read_excel("../data/codebook-main-step1.xlsx") # load data
 
 temp <- df[df$reflective==1,]
 temp <- temp[!is.na(temp$reflective),]
@@ -36,7 +36,7 @@ df.checked <- subset(df,mitest_rep == 1)
 # check distribution of reliabilities of all studies
 df$reltot <- as.numeric(df$reltot)
 hist(as.numeric(df$reltot))
-mean(df$reltot, na.rm=T)
+mean(df$reltot, na.rm=T) # 0.83
 
 # check distribution of number of items of all studies
 df$no_items <- as.numeric(df$no_items)
@@ -224,6 +224,7 @@ df.select <- dfs[dfs$powerncp > 0.80,1:39]
 
 # are the colnames for the selected studies and the ones reporting on MI the same?
 colnames(df.select) == colnames(df.checked)
+# id variable is only included in df.checked, not df.select
 
 # multiple ids in both dataframes?
 unique(df.checked$id) %in% unique(df.select$id)

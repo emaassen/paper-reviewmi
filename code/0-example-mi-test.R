@@ -2,11 +2,11 @@
 ## This is code to simulate data for a one-factor model and to 
 ## run a measurement invariance test via MGCFA or MGCCFA
 
-## Please note that the code we used to run MI tests on the data in our sample can be found at 
+## Please note that the code we used to run MI tests on the data in our sample can be found at https://osf.io/pd9z5/
 
-library(faux)     # to use rnorm_multi function to simulate data
-library(lavaan)   # to perform measurement invariance tests
-library(semTools) # to construct syntax with thresholds for items for CCFA
+require("faux")     # to use rnorm_multi function to simulate data
+require("lavaan")   # to perform measurement invariance tests
+require("semTools") # to construct syntax with thresholds for items for CCFA
 
 # MGCFA example -----------------------------------------------------------
 
