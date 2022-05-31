@@ -19,6 +19,20 @@ assign.groups <- function(x) {
   return(no_group)
 }
 
+# function to count the total number of articles and studies in a dataframe
+count_articles <- function(x) {
+  length(unique(x$article_id_recoded))
+}
+
+count_studies <- function(x) {
+  df.temp <- x %>%
+    distinct(article_id, study_recoded) %>%
+    group_by(article_id) %>%
+    summarize("studies" = n())
+  no_studies <- sum(df.temp$studies) 
+  return(no_studies)
+}
+
 # load data from main study
 df <- read_excel("../data/codebook-main-step1.xlsx") # load data
 
@@ -47,6 +61,13 @@ df.notchecked <- subset(df,mitest_rep == 0)
 
 # select only studies that report reliability and number of items
 dfs <- df.notchecked[!is.na(df.notchecked$reltot) & df.notchecked$no_items != "NA" & !is.na(df.notchecked$no_items),]
+count_articles(dfs) # 37 articles
+count_studies(dfs)  # 68 studies
+
+# count number of articles and studies that drop out
+count_articles(temp); count_studies(temp)    # 98 articles and 151  studies in total that compare on reflective scale
+count_articles(temp) - count_articles(dfs)   # 61 articles that did not have info on reliability or no items
+count_studies(temp) - count_studies(dfs)     # 83 studies that did not have info on reliability or no items
 
 # some studies have sample sizes for groups but not the total one. 
 # we will assign n_rep = sum of all the group sample sizes
@@ -220,7 +241,11 @@ for (i in 1:nrow(dfs)) {
 }
 
 # select only those studies that have a power to detect non-invariance of > 0.80
-df.select <- dfs[dfs$powerncp > 0.80,1:39]
+df.select <- dfs[dfs$powerncp >= 0.80,1:39]
+
+# calculate dropout of articles/studies/comparisons that do not have enough power
+count_articles(df.select); count_studies(df.select) # 35 articles and 65 studies and 294 comparisons have enough power
+test <- dfs[!dfs$powerncp >= 0.80,1:39]             # 12 comparisons don't have enough power
 
 # are the colnames for the selected studies and the ones reporting on MI the same?
 colnames(df.select) == colnames(df.checked)

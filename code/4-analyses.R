@@ -90,6 +90,14 @@ mi_level_yes <- table(df6$milevel_step4)                  # configural = 1, metr
 mi_level_yes                                              # 13 configural, 13 metric, 46 scalar
 mi_level_yes/nrow(df6)*100                                # 18% configural, 18% metric, 64% scalar
 
+# Subset by level of invariance to count articles and studies
+config <- df6[df6$milevel_step4 == 1,]
+metric <- df6[df6$milevel_step4 == 2,]
+scalar <- df6[df6$milevel_step4 == 3,]
+count_articles(config);count_studies(config) # 6 articles 10 studies
+count_articles(metric);count_studies(metric) # 6 articles 8 studies
+count_articles(scalar);count_studies(scalar) # 14 articles 21 studies
+
 # How many of the comparisons for which a level of MI held had more than 3 items?
 sum(df6$config_assumed == 0, na.rm=T)                     # 11 comparisons had more than 3 items
 
