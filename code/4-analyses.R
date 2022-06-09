@@ -43,6 +43,8 @@ nrow(df1) / nrow(df) * 100              # 77 % of comparisons had open data
 count_articles(df1)                     # 32 articles had open data
 count_studies(df1)                      # 61 studies had open data
 
+
+
 # Comparisons for which we could make a grouping variable
 df2 <- filter(df, open_group == 1)       # filter out comparisons that had open group
 nrow(df2)                                # 217 comparisons
@@ -71,24 +73,26 @@ nrow(df5) / nrow(df) * 100                                # 53% of comparisons c
 count_articles(df5)                                       # 26 articles could to MI test
 count_studies(df5)                                        # 55 studies could to MI test
 
+
+
 # Comparisons for which MI held
 df6 <- filter(df, miresult_step4 == 1)                    # filter out comparisons that found MI
 nrow(df6)                                                 # 72 comparisons
-nrow(df6) / nrow(df) * 100                                # 24% of comparisons MI held
+nrow(df6) / nrow(df5) * 100                               # 46% of comparisons we tested had MI
 count_articles(df6)                                       # 15 articles MI held
 count_studies(df6)                                        # 26 studies MI held
 
 # Comparisons for which MI did not hold
 df7 <- filter(df, miresult_step4 != 1)                    # filter out comparisons that did not find MI
 nrow(df7)                                                 # 85 comparisons did not find MI
-nrow(df7) / nrow(df) * 100                                # 28% of comparisons did not find MI
+nrow(df7) / nrow(df5) * 100                               # 54% of comparisons we tested had MI violations
 count_articles(df7)                                       # 19 articles did not find MI
 count_studies(df7)                                        # 41 studies did not find MI
 
-# Comparisons for which MI hold + level 
-mi_level_yes <- table(df6$milevel_step4)                  # configural = 1, metric = 2, scalar = 3
-mi_level_yes                                              # 13 configural, 13 metric, 46 scalar
-mi_level_yes/nrow(df6)*100                                # 18% configural, 18% metric, 64% scalar
+# Levels of invariance 
+mi_level_yes <- table(df5$milevel_step4)                  # nonconfigural = 85, configural = 13, metric = 13, scalar = 46
+mi_level_yes                                              
+mi_level_yes/nrow(df5)*100                                # of all tested variables, 54% nonconfigural, 18% configural, 18% metric, 29% scalar
 
 # Subset by level of invariance to count articles and studies
 config <- df6[df6$milevel_step4 == 1,]
@@ -130,21 +134,21 @@ length(which(df_scalar$journal_id == 1)) # 46 to PS
 # Comparisons including step 2 and step 3 ---------------------------------
 
 # count comparisons, articles, studies in steps2-3-4
-nrow(step23)                            # we attempted to reproduce 41 comparisons
-count_articles(step23)                  # across 7 articles
-count_studies(step23)                   # across 7 studies
+nrow(step23)                            # we attempted to reproduce 40 comparisons
+count_articles(step23)                  # across 6 articles
+count_studies(step23)                   # across 6 studies
 
 # is there overlap in step2+3 and step4?
 step23$article_id %in% df$article_id
 df$article_id %in% step23$article_id
 
 # count total number of articles, studies in step2+3+4
-count_articles(df) + count_articles(step23)  # 42 articles
-count_studies(df) + count_studies(step23)    # 72 studies
-nrow(df) + nrow(step23)                      # 335 comparisons
+count_articles(df) + count_articles(step23)  # 41 articles
+count_studies(df) + count_studies(step23)    # 71 studies
+nrow(df) + nrow(step23)                      # 334 comparisons
 
 # count total number of articles, studies in step2+3+4 that we could test for MI
-dim(df[df$mitest_step4 == 1,])[1] + dim(step23[step23$mitest_step2 == 1,])[1] # 162 comparisons tested for MI across step 2-3-4
+dim(df[df$mitest_step4 == 1,])[1] + dim(step23[step23$mitest_step2 == 1,])[1] # 161 comparisons tested for MI across step 2-3-4
 
 # tables for invariance levels across articles, studies in step2+3+4 for those we could test for MI 
 step23$mitest_step3 <- as.numeric(step23$mitest_step3)    # make numeric
@@ -152,16 +156,22 @@ dft <- filter(df, mitest_step4 == 1)                      # filter out compariso
 step23t <- filter(step23, mitest_step2 == 1) 
 
 # MI level for step 2, 3, 4
-table(step23t$milevel_step3)  # noninvariant = 4, NA = 1 (this is the only study that was reproduced in step 2 and is partially invariant)
+table(step23t$milevel_step3)  # noninvariant = 4
 table(dft$milevel_step4)      # noninvariant = 85, configural = 13, metric = 13, scalar = 46
 table(step23t$milevel_step3)[1] + table(dft$milevel_step4)[1] # noninvariant 89
 
+# count how many studies and articles per level of invariance
+noncon <- dft[dft$milevel_step4 == 0,];nrow(noncon);count_articles(noncon);count_studies(noncon) # c = 85, k = 19, s = 41
+con <- dft[dft$milevel_step4 == 1,];nrow(con);count_articles(con);count_studies(con) # c = 13, k = 6,  s = 10
+met <- dft[dft$milevel_step4 == 2,];nrow(met);count_articles(met);count_studies(met) # c = 13, k  = 6, s = 8
+scal <- dft[dft$milevel_step4 == 3,];nrow(scal);count_articles(scal);count_studies(scal) # c = 46, k = 14, s = 21
+
 # make new table
-tab <- matrix(c(89,13,13,46,1), ncol=5)
-colnames(tab) <- c("Noninvariant","Configural","Metric","Scalar","Partial")
+tab <- matrix(c(89,13,13,46), ncol=4)
+colnames(tab) <- c("Noninvariant","Configural","Metric","Scalar")
 rownames(tab) <- "freq"
-tab <- as.table(tab);tab       # 89 noninvariant, 13 configural, 13 metric, 46 scalar, 1 partial
-round(tab / sum(tab) * 100,1)  # 55% noninvariant, 8% configural, 8% metric, 28% scalar, 1% partial
+tab <- as.table(tab);tab       # 89 noninvariant, 13 configural, 13 metric, 46 scalar
+round(tab / sum(tab) * 100,1)  # 55% noninvariant, 8% configural, 8% metric, 29% scalar
 
 # how many articles and studies found scalar invariance?
 #count_articles(df_scalar) # 14 articles
@@ -169,13 +179,10 @@ round(tab / sum(tab) * 100,1)  # 55% noninvariant, 8% configural, 8% metric, 28%
 
 # level of invariance categorized by type of group
 step23$milevel_step3 <- as.numeric(step23$milevel_step3)         # make numeric
-# one comparison that was reproducible in step 2 now has "NA" at milevel_step3, as we did not check this comparison for MI.
-# The comparison should however be counted to the entire sample, so we change the estimate for this comparison to 9.
-step23$milevel_step3[which(step23$reproduced_step2 == 1)] <- 9   
 
 # assign levels of invariance
 df$milevel_step4 <- c("non-invariance","configural","metric","scalar",NA)[ match( df$milevel_step4, c(0,1,2,3,NA))]
-step23$milevel_step3 <- c("non-invariance","configural","metric","scalar","partial invariance",NA)[ match( step23$milevel_step3, c(0,1,2,3,9,NA))]
+step23$milevel_step3 <- c("non-invariance","configural","metric","scalar",NA)[ match( step23$milevel_step3, c(0,1,2,3,NA))]
 
 # combine data
 cat_group <- c(step23$cat_group,df$cat_group)
@@ -185,16 +192,17 @@ step234 <- as.data.frame(cbind(cat_group,type_scale,mi_level))
 step234
 
 # detailed categories
-table(step234$cat_group,step234$mi_level)[,c(3,1,2,5,4)]
-addmargins(table(step234$cat_group,step234$mi_level)[,c(3,1,2,5,4)])
+table(step234$cat_group,step234$mi_level)[,c(3,1,2,4)]
+addmargins(table(step234$cat_group,step234$mi_level)[,c(3,1,2,4)])
 
 # collapsed categories
 step234$cat_group[grepl("dem",step234$cat_group)] <- "demographic"
 step234$cat_group[grepl("exp",step234$cat_group)] <- "experimental"
-table(step234$cat_group,step234$mi_level)[,c(3,1,2,5,4)]
-addmargins(table(step234$cat_group,step234$mi_level)[,c(3,1,2,5,4)])
+table(step234$cat_group,step234$mi_level)[,c(3,1,2,4)]
+addmargins(table(step234$cat_group,step234$mi_level)[,c(3,1,2,4)])
 
 # level of invariance categorized by type of scale
 step234$type_scale <- c("existing","ad hoc")[ match(step234$type_scale, c(0,1))]
-table(step234$type_scale,step234$mi_level)[,c(3,1,2,5,4)]
-addmargins(table(step234$type_scale,step234$mi_level)[,c(3,1,2,5,4)])
+table(step234$type_scale,step234$mi_level)[,c(3,1,2,4)]
+addmargins(table(step234$type_scale,step234$mi_level)[,c(3,1,2,4)])
+

@@ -65,10 +65,6 @@ df2 <- filter(df2, mitest_step2 == 1)
 df4 <- filter(df4, mitest_step4 == 1) 
 
 # variables of interest are milevel_step3 and milevel_step4.
-# one comparison that was reproducible in step 2 now has "NA" at milevel_step3, as we did not include this comparison in step 3.
-# The comparison should however be counted to the entire sample, so we change the estimate for this comparison to 5.
-df2$milevel_step3[which(df2$reproduced_step2 == 1)] <- 4
-
 # combine the following variables from dataset 2+3 and dataset 4: cat_group, type_scale, mi_level
 type <- c(df2$cat_group,df4$cat_group,df2$type_scale,df4$type_scale)
 type <- c("Group: Demographic","Group: Experimental between","Group: Experimental within","Scale: existing","Scale: modified")[match (type, c("dem","exp_misc","exp_time","0","1"))]
@@ -76,20 +72,20 @@ type <- c("Group: Demographic","Group: Experimental between","Group: Experimenta
 #type_scale <- c(df2$type_scale,df4$type_scale)
 #type_scale <- c("Existing scale","Modified scale")[ match(type_scale, c(0,1))]
 mi_level <- as.numeric(c(df2$milevel_step3,df4$milevel_step4,df2$milevel_step3,df4$milevel_step4))
-mi_level <- c("Noninvariance","Configural","Metric","Scalar","Partial")[ match(mi_level, c(0,1,2,3,4))]
+mi_level <- c("Noninvariance","Configural","Metric","Scalar")[ match(mi_level, c(0,1,2,3))]
 
 # make factor of milevel
-#mi_level <- factor(mi_level, labels = c("Noninvariance","Configural invariance","Metric invariance","Scalar invariance","Partial invariance"))
+#mi_level <- factor(mi_level, labels = c("Noninvariance","Configural invariance","Metric invariance","Scalar invariance"))
 df <- as.data.frame(cbind(type,mi_level))
 
 # add frequencies to df
 tab <- table("Type" = df$type, "Level" = df$mi_level)
 tab <- as.data.frame(tab)
 tab <- within(tab,
-              Level <- factor(Level,levels=c("Noninvariance","Configural","Metric","Scalar","Partial")),
+              Level <- factor(Level,levels=c("Noninvariance","Configural","Metric","Scalar")),
               Type <- factor(Type,levels=c("Group: Demographic","Group: Experimental between","Group: Experimental within","Scale: existing","Scale: modified")))
 
-cols <- c("#f03b20","#feb24c","#ffeda0","#31a354","#bdbdbd")
+cols <- c("#f03b20","#feb24c","#ffeda0","#31a354")
 
 #tab <- tab %>% mutate(Freq = replace(Freq, Freq  == 0, NA))
 
@@ -112,11 +108,10 @@ col.magma <- rev(magma(5)) # These are colorblind friendly
 #one <- df %>% group_by(Type) %>% summarise(mi_level = sum(mi_level == "Configural invariance"))
 #two <- df %>% group_by(Type) %>% summarise(mi_level = sum(mi_level == "Metric invariance"))
 #three <- df %>% group_by(Type) %>% summarise(mi_level = sum(mi_level == "Scalar invariance"))
-#four <- df %>% group_by(Type) %>% summarise(mi_level = sum(mi_level == "Partial invariance"))
 #group <- levels(factor(Type))
 
 #dfs <- cbind(group,zero[,2],one[,2],two[,2],three[,2],four[,2])
-#colnames(dfs) <- c("Group","Noninvariance","Configural invariance","Metric invariance","Scalar invariance","Partial invariance")
+#colnames(dfs) <- c("Group","Noninvariance","Configural invariance","Metric invariance","Scalar invariance")
 
 # add percentages
 #dfs[,6] <- rowSums(dfs[,2:5])
@@ -140,7 +135,7 @@ tab <- tab %>%
 tab <- filter(tab, Type == "Group: Demographic" | Type == "Group: Experimental between" | Type == "Group: Experimental within")
 
 #plot
-cols <- c("#8b8b8b", "#31a354", "#ffeda0", "#feb24c", "#f03b20")
+cols <- c("#31a354", "#ffeda0", "#feb24c", "#f03b20")
 pdf("../figures/stackedbar.pdf")
 plot3 <- tab %>%
   arrange(Level) %>% 
@@ -176,7 +171,7 @@ pdf("../figures/plot3.pdf", width=12.3, height=8.6, compress=F)
 # Waffle ------------------------------------------------------------------
 mi_level <- c(df2$milevel_step3,df4$milevel_step4)
 milevels <- table(mi_level);milevels
-waffle_vec <- c("Noninvariance (89)" = 89, "Configural invariance (13)" = 13, "Metric invariance (13)" = 13, "Scalar invariance (46)" = 46, "Partial invariance (1)" = 1)
+waffle_vec <- c("Noninvariance (89)" = 89, "Configural invariance (13)" = 13, "Metric invariance (13)" = 13, "Scalar invariance (46)" = 46)
 waffle(waffle_vec,rows=9,colors = cols)
 
 # Pie charts --------------------------------------------------------------

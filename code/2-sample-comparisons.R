@@ -1,9 +1,11 @@
 ### CODE FOR MAIN STUDY SYSTEMATIC REVIEW MEASUREMENT INVARIANCE ##
-### This is code to sample articles for which we will attempt to perform measurement invariance checks for step 2, 3, and 4
+### This is code to select comparisons for which we will attempt to perform measurement invariance checks for step 2, 3, and 4
+
 rm(list=ls())        # clear workspace
 require("lavaan")    # to simulate factor model and run MI tests
 require("readxl")    # to load codebook
 require("writexl")   # to write away final codebooks
+require("dplyr")     # to use  pipe operator in functions
 
 # function to check how many groups are compared for each study
 assign.groups <- function(x) {
@@ -36,10 +38,6 @@ count_studies <- function(x) {
 # load data from main study
 df <- read_excel("../data/codebook-main-step1.xlsx") # load data
 
-temp <- df[df$reflective==1,]
-temp <- temp[!is.na(temp$reflective),]
-temp2 <- temp[!temp$mitest_rep==1,]
-
 # give all data points a unique id so we can delete doubles later
 df$id <- 1:nrow(df)
 
@@ -52,7 +50,7 @@ df$reltot <- as.numeric(df$reltot)
 hist(as.numeric(df$reltot))
 mean(df$reltot, na.rm=T) # 0.83
 
-# check distribution of number of items of all studies
+# check distribution of number of items of all studiescodebook-main-step1.xlsx
 df$no_items <- as.numeric(df$no_items)
 hist(df$no_items)
 
@@ -63,11 +61,7 @@ df.notchecked <- subset(df,mitest_rep == 0)
 dfs <- df.notchecked[!is.na(df.notchecked$reltot) & df.notchecked$no_items != "NA" & !is.na(df.notchecked$no_items),]
 count_articles(dfs) # 37 articles
 count_studies(dfs)  # 68 studies
-
-# count number of articles and studies that drop out
-count_articles(temp); count_studies(temp)    # 98 articles and 151  studies in total that compare on reflective scale
-count_articles(temp) - count_articles(dfs)   # 61 articles that did not have info on reliability or no items
-count_studies(temp) - count_studies(dfs)     # 83 studies that did not have info on reliability or no items
+nrow(dfs) # 306 comparisons c = 306, k = 37, s = 68
 
 # some studies have sample sizes for groups but not the total one. 
 # we will assign n_rep = sum of all the group sample sizes
@@ -241,15 +235,14 @@ for (i in 1:nrow(dfs)) {
 }
 
 # select only those studies that have a power to detect non-invariance of > 0.80
-df.select <- dfs[dfs$powerncp >= 0.80,1:39]
+df.select <- dfs[dfs$powerncp >= 0.80,1:40]
 
 # calculate dropout of articles/studies/comparisons that do not have enough power
 count_articles(df.select); count_studies(df.select) # 35 articles and 65 studies and 294 comparisons have enough power
-test <- dfs[!dfs$powerncp >= 0.80,1:39]             # 12 comparisons don't have enough power
+test <- dfs[!dfs$powerncp >= 0.80,1:40]                 # 12 comparisons don't have enough power
 
 # are the colnames for the selected studies and the ones reporting on MI the same?
 colnames(df.select) == colnames(df.checked)
-# id variable is only included in df.checked, not df.select
 
 # multiple ids in both dataframes?
 unique(df.checked$id) %in% unique(df.select$id)
