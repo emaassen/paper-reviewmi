@@ -6,7 +6,7 @@ options(scipen=999) # no scientific notation
 library(readxl)     # load excel files
 
 # Analysis of Pilot Data --------------------------------------------------
-df <- read_excel("../data/codebook-pilot.xlsx") # load data 
+df <- read_excel("codebook-pilot.xlsx") # load data 
 
 # How many articles and journals studied?
 unique(df$paper_id) # 60
