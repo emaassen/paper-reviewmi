@@ -1,8 +1,11 @@
 # writing files
-/submission/
+/writing/
 
-# data and pdfs used for the reproducibility step of the pilot and mainstudy
-/data/data-pilot/
+# individual article data used for the reproducibility step of the pilot study
+/data/pilot/data-pilot/
+
+# individual article data used for step 2, 3, 4 in the main study
+# note that the code for step 2, 3, and 4 can download these files from OSF
 /data/data-main/
 
 # index used to sample open data articles from in pilot study
@@ -13,6 +16,8 @@
 /data/codebook-main-reporting-em.xlsx
 
 # misc files
+*.Rmd
+*.Rproj
 *.DS_Store
 *.rar
 *.Rhistory
@@ -30,3 +35,4 @@
 *.synctex.gz
 *.gz
 *.tex.DS_Store
+.Rproj.user

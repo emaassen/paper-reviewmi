@@ -32,8 +32,7 @@ pilot.plos
 # these numbers represent the articles we sampled from our existing index (not shared) and included in our pilot data codebook.
 
 # Reproducibility code ----------------------------------------------------
-### This is code to perform reproducibility checks in our pilot study
-### This is example code we used to read in datasets, construct measurement models, and perform measurement invariance checks
+# This is example code we used to read in datasets, construct measurement models, and perform measurement invariance checks
 
 #rm(list = ls())  # clear workspace
 library(lavaan)   # make model + perform measurement invariance tests
