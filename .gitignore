@@ -15,6 +15,11 @@
 /data/codebook-main-reporting-edd.xlsx
 /data/codebook-main-reporting-em.xlsx
 
+# RMarkdown output
+/submission/mi-review.pdf
+/submission/mi-review.docx
+/submission/mi-review.html
+
 # misc files
 *.Rmd
 *.Rproj
