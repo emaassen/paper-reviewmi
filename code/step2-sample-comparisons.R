@@ -21,20 +21,6 @@ assign.groups <- function(x) {
   return(no_group)
 }
 
-# function to count the total number of articles and studies in a dataframe
-count_articles <- function(x) {
-  length(unique(x$article_id_recoded))
-}
-
-count_studies <- function(x) {
-  df.temp <- x %>%
-    distinct(article_id, study_recoded) %>%
-    group_by(article_id) %>%
-    summarize("studies" = n())
-  no_studies <- sum(df.temp$studies) 
-  return(no_studies)
-}
-
 # load data from main study
 df <- read_excel("../data/codebook-main-step1.xlsx") # load data
 

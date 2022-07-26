@@ -1,8 +1,8 @@
 ### CODE FOR MAIN STUDY SYSTEMATIC REVIEW MEASUREMENT INVARIANCE ##
-## This is code to simulate intercept bias of 0.5 in 1/3 of items and 1/2 of groups,
-## based on a reliability estimate, number of items, number of groups, and sample size
+## This is code to simulate an intercept bias of 0.5 in 1/3 of items and 1/2 of groups in a one-factor model,
+## for specific reliability estimates, number of items, number of groups, and sample sizes.
 
-## Please note that the code we used on our real dataset can be found at https://osf.io/fju7n/
+## Please note that the code we used on our data can be found at https://osf.io/j72t4/ and is named "step2-sample-comparisons.R"
 
 require("lavaan")    # to simulate factor model and run MI tests
 require("truncnorm") # to simulate data via rnorm that is truncated between values (for no_group)
