@@ -1,6 +1,5 @@
 # writing files
 /writing/
-/submission/
 
 # individual article data used for the reproducibility step of the pilot study
 /data/pilot/data-pilot/
@@ -20,6 +19,9 @@
 /submission/mi-review.pdf
 /submission/mi-review.docx
 /submission/mi-review.html
+/submission/data package
+/submission/disclosure-of-interests.pdf
+/submission/open-practices-disclosure-form.pdf
 
 # misc files
 *.Rmd
