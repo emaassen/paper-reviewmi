@@ -1,28 +1,6 @@
-# writing files
-/writing/
+/not-public/
 /submission/
 
-# individual article data used for the reproducibility step of the pilot study
-/data/pilot/data-pilot/
-
-# individual article data used for step 2, 3, 4 in the main study
-# note that the code for step 2, 3, and 4 can download these files from OSF
-/data/data-main/
-
-# index used to sample open data articles from in pilot study
-/data/article-index/
-
-# individual codebooks for main study
-/data/codebook-main-reporting-edd.xlsx
-/data/codebook-main-reporting-em.xlsx
-
-# RMarkdown output
-/submission/mi-review.pdf
-/submission/mi-review.docx
-/submission/mi-review.html
-/submission/data package
-/submission/disclosure-of-interests.pdf
-/submission/open-practices-disclosure-form.pdf
 
 # misc files
 *.Rmd
@@ -47,3 +25,4 @@
 *.gz
 *.tex.DS_Store
 .Rproj.user
+.code-workspace
