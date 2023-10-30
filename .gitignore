@@ -1,6 +1,8 @@
-/notpublic/
+/not-public/
 
 /submission/
+
+.code-workspace
 
 
 # misc files
