@@ -1,11 +1,7 @@
-/not-public/
+/misc/
 
 /submission/
 
-.code-workspace
-
-
-# misc files
 *.Rmd
 *.Rproj
 *.DS_Store
