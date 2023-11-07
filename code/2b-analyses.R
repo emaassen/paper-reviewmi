@@ -57,7 +57,7 @@ count.var <- function(df, var, val, dichotomous=TRUE) {
 
 # Analyses ----------------------------------------------------------------
 # Load in data file
-df <- read_excel("data/codebook-main-step2step3.xlsx")
+df <- read_excel("../data/codebook-main-step2step3.xlsx")
 
 # Make columns numeric
 df$measure_scale <- as.numeric(df$measure_scale)

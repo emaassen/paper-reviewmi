@@ -739,7 +739,7 @@ int.fit.251.3 <- cfa(model.251.2.3, article251.2, group = "hypnosis", group.equa
 smc.0251.2.03 <- mi.results(conf.fit.251.3,load.fit.251.3,int.fit.251.3)
 smc.0251.2.03
 # 3 items, so we must assume configural invariance
-# Metric: nonsig chisq change + change CFI < .01, AIC and BIC smaller (only RMSEA change > .01); metric invariance holds 
+# Metric: nonsig chisq change (RMSEA < .08, CFI > .95), AIC and BIC smaller; metric invariance holds 
 # Scalar: nonsig chisq change + change CFI = 0, AIC and BIC smaller, RMSEA > .01 but the fit improves (0.04 to 0), so scalar invariance holds
 
 # Comparison 4
@@ -760,7 +760,7 @@ int.fit.251.4 <- cfa(model.251.2.4, article251.2, group = "hypnosis", group.equa
 smc.0251.2.04 <- mi.results(conf.fit.251.4,load.fit.251.4,int.fit.251.4)
 smc.0251.2.04
 # 3 items, so we must assume configural invariance
-# Metric: nonsig chisq change + CFI and RMSEA change = 0 (and CFI > .95 + RMSEA < .08), AIC and BIC smaller; metric invariance holds 
+# Metric: nonsig chisq + CFI > .95 + RMSEA < .08, AIC and BIC smaller; metric invariance holds 
 # Scalar: nonsig chisq change + CFI and RMSEA change = 0, AIC and BIC smaller, so scalar invariance holds
 
 # Article 261 ----------------------------------------------------------------------
@@ -864,7 +864,7 @@ int.fit.301.2 <- cfa(model.301.1.2, article301.1, group = "pol", group.equal = c
 smc.0301.1.02 <- mi.results(conf.fit.301.2,load.fit.301.2,int.fit.301.2)
 smc.0301.1.02
 # Three items so we assume configural invariance
-# Metric invariance: sig chisq change + RMSEA change > .01, AIC larger; metric invariance rejected (BIC and CFI ok)
+# Metric invariance: sig chisq + RMSEA > .08, AIC larger; metric invariance rejected (BIC and CFI ok)
 
 # Study 2
 url <- 'https://osf.io/cbue5//?action=download'
@@ -886,7 +886,7 @@ int.fit.301.3 <- cfa(model.301.2.3, article301.2, group = "cond", group.equal = 
 smc.0301.2.03 <- mi.results(conf.fit.301.3,load.fit.301.3,int.fit.301.3)
 smc.0301.2.03
 # Three items so we assume configural invariance
-# Metric invariance: nonsig chisq + CFI > .95 and RMSEA < .08 and change < .01, AIC and BIC lower; metric invariance holds.
+# Metric invariance: nonsig chisq + CFI > .95 and RMSEA < .08, AIC and BIC lower; metric invariance holds.
 # Scalar invariance: nonsig chisq change + CFI and RMSEA change < .01, AIC and BIC lower; scalar invariance holds.
 
 # Article 481 ----------------------------------------------------------------------
@@ -919,8 +919,9 @@ int.fit.481.1 <- cfa(model.481.1, article481.capital, group = "match", group.equ
 smc.0481.1.01 <- mi.results(conf.fit.481.1,load.fit.481.1,int.fit.481.1)
 smc.0481.1.01
 # Three items so we assume configural invariance
-# Metric invariance: nonsig chisq change + CFI and RMSEA change < .01, AIC and BIC lower; metric invariance holds.
+# Metric invariance: nonsig chisq + CFI > .95 and RMSEA < .08, AIC and BIC lower; metric invariance holds.
 # Scalar invariance: nonsig chisq change + CFI and RMSEA change < .01, AIC and BIC lower; scalar invariance holds.
+
 # Comparison 2: match - abortion - integrity
 model.481.2 <- 'F =~ integ1 + integ2 + integ3'
 conf.fit.481.2 <- cfa(model.481.2, data = article481.abortion, group = "match")
@@ -929,7 +930,7 @@ int.fit.481.2 <- cfa(model.481.2, article481.abortion, group = "match", group.eq
 smc.0481.1.02 <- mi.results(conf.fit.481.2,load.fit.481.2,int.fit.481.2)
 smc.0481.1.02
 # Three items so we assume configural invariance
-# Metric invariance: nonsig chisq change + CFI and RMSEA change < .01, AIC and BIC lower; metric invariance holds.
+# Metric invariance: nonsig chisq + CFI > .95 and RMSEA < .08, AIC and BIC lower; metric invariance holds.
 # Scalar invariance: nonsig chisq change + CFI and RMSEA change < .01, AIC and BIC lower; scalar invariance holds.
 
 # Comparison 3: match - gun - integrity
@@ -940,7 +941,7 @@ int.fit.481.3 <- cfa(model.481.3, article481.gun, group = "match", group.equal =
 smc.0481.1.03 <- mi.results(conf.fit.481.3,load.fit.481.3,int.fit.481.3)
 smc.0481.1.03
 # Three items so we assume configural invariance
-# Metric invariance: nonsig chisq change + CFI and RMSEA change < .01, AIC and BIC lower; metric invariance holds.
+# Metric invariance: nonsig chisq + CFI > .95 and RMSEA < .08, AIC and BIC lower; metric invariance holds.
 # Scalar invariance: nonsig chisq change + CFI and RMSEA change < .01, AIC and BIC lower; scalar invariance holds.
 
 # Comparison 4: match - testing - integrity
@@ -951,7 +952,7 @@ int.fit.481.4 <- cfa(model.481.4, article481.testing, group = "match", group.equ
 smc.0481.1.04 <- mi.results(conf.fit.481.4,load.fit.481.4,int.fit.481.4)
 smc.0481.1.04
 # Three items so we assume configural invariance
-# Metric invariance: nonsig chisq change + CFI and RMSEA change < .01, AIC and BIC lower; metric invariance holds.
+# Metric invariance: nonsig chisq + CFI > .95 and RMSEA < .08, AIC and BIC lower; metric invariance holds.
 # Scalar invariance: nonsig chisq change + CFI and RMSEA change < .01, AIC and BIC lower; scalar invariance holds.
 
 # Comparison 5: match - suicide - integrity
@@ -962,7 +963,7 @@ int.fit.481.5 <- cfa(model.481.5, article481.suicide, group = "match", group.equ
 smc.0481.1.05 <- mi.results(conf.fit.481.5,load.fit.481.5,int.fit.481.5)
 smc.0481.1.05
 # Three items so we assume configural invariance
-# Metric invariance: nonsig chisq change + CFI change < .01, AIC and BIC lower; metric invariance holds.
+# Metric invariance: nonsig chisq + CFI > .95 and RMSEA < .08, AIC and BIC lower; metric invariance holds.
 # Scalar invariance: 
 # Chisquare nonsignificant, BIC smaller than previous step.
 # RMSEA change too large, AIC larger than previous step. CFI changes more than 0.01, but goes from 0.996 to 0.976.
@@ -977,7 +978,7 @@ int.fit.481.6 <- cfa(model.481.6, article481.1, group = "match", group.equal = c
 smc.0481.1.06 <- mi.results(conf.fit.481.6,load.fit.481.6,int.fit.481.6)
 smc.0481.1.06
 # Three items so we assume configural invariance
-# Metric invariance: nonsig chisq change + CFI change < .01, AIC and BIC lower; metric invariance holds.
+# Metric invariance: nonsig chisq + CFI > .95 and RMSEA < .08, AIC and BIC lower; metric invariance holds.
 # Scalar invariance: nonsig chisq change + CFI change < .01, BIC lower
 # Scalar invariance: RMSEA change is too large (> .01) and AIC is larger than in the previous step. But, 
 # Chisquare is nonsignificant so we cannot reject scalar invariance; scalar invariance holds.
@@ -990,7 +991,7 @@ int.fit.481.7 <- cfa(model.481.7, article481.capital, group = "match", group.equ
 smc.0481.1.07 <- mi.results(conf.fit.481.7,load.fit.481.7,int.fit.481.7)
 smc.0481.1.07
 # Three items so we assume configural invariance
-# Metric invariance: nonsig chisq change + CFI change < .01, AIC and BIC lower; metric invariance holds.
+# Metric invariance: nonsig chisq + CFI > .95 and RMSEA < .08, AIC and BIC lower; metric invariance holds.
 # Scalar invariance: nonsig chisq change + CFI change < .01, AIC and BIC lower, RMSEA change > .01 but the fit improves; scalar invariance holds.
 
 # Comparison 8: match - abortion - benevolence
@@ -1001,7 +1002,7 @@ int.fit.481.8 <- cfa(model.481.8, article481.abortion, group = "match", group.eq
 smc.0481.1.08 <- mi.results(conf.fit.481.8,load.fit.481.8,int.fit.481.8)
 smc.0481.1.08
 # Three items so we assume configural invariance
-# Metric invariance: nonsig chisq change + CFI and RMSEA change < .01, AIC and BIC lower; metric invariance holds.
+# Metric invariance: nonsig chisq + CFI > .95 and RMSEA < .08, AIC and BIC lower; metric invariance holds.
 # Scalar invariance: sig chisq change + CFI and RMSEA change > .01, AIC and BIC larger; scalar invariance rejected
 
 # Comparison 9: match - gun - benevolence
@@ -1012,7 +1013,8 @@ int.fit.481.9 <- cfa(model.481.9, article481.gun, group = "match", group.equal =
 smc.0481.1.09 <- mi.results(conf.fit.481.9,load.fit.481.9,int.fit.481.9)
 smc.0481.1.09
 # Three items so we assume configural invariance
-# Metric invariance: nonsig chisq change + CFI and RMSEA change > .01, AIC larger; metric invariance holds because chisq non-sig (BIC ok)
+# Metric invariance: nonsig chisq change + CFI < .95. 
+# But, RMSEA > .08 and AIC larger; metric invariance holds because chisq non-sig (BIC ok)
 # Scalar invariance: sig chisq change + CFI and RMSEA change > .01, AIC and BIC larger; scalar invariance rejected.
 
 # Comparison 10: match - testing - benevolence
@@ -1023,7 +1025,7 @@ int.fit.481.10 <- cfa(model.481.10, article481.testing, group = "match", group.e
 smc.0481.1.10 <- mi.results(conf.fit.481.10,load.fit.481.10,int.fit.481.10)
 smc.0481.1.10
 # Three items so we assume configural invariance
-# Metric invariance: sig chisq change + CFI and RMSEA change > .01 (with RMSEA being 0.158), AIC larger; metric invariance rejected (BIC ok; CFI decreases but from 0.987 to 0.973).
+# Metric invariance: sig chisq + RMSEA 0.158; metric invariance rejected
 
 # Comparison 11: match - suicide - benevolence
 model.481.11 <- 'F =~ benev1 + benev2 + benev3'
@@ -1033,7 +1035,7 @@ int.fit.481.11 <- cfa(model.481.11, article481.suicide, group = "match", group.e
 smc.0481.1.11 <- mi.results(conf.fit.481.11,load.fit.481.11,int.fit.481.11)
 smc.0481.1.11
 # Three items so we assume configural invariance
-# Metric invariance: nonsig chisq change + CFI and RMSEA change < .01, AIC and BIC lower; metric invariance holds.
+# Metric invariance: nonsig chisq change + CFI and RMSEA ok; metric invariance holds.
 # Scalar invariance: sig chisq change + CFI and RMSEA change > .01, AIC and BIC larger; scalar invariance rejected.
 
 # Comparison 12: match - overall - benevolence
@@ -1044,9 +1046,7 @@ int.fit.481.12 <- cfa(model.481.12, article481.1, group = "match", group.equal =
 smc.0481.1.12 <- mi.results(conf.fit.481.12,load.fit.481.12,int.fit.481.12)
 smc.0481.1.12
 # Three items so we assume configural invariance
-# Metric invariance: nonsig chisq change + CFI change < .01, BIC lower
-# But: RMSEA change > .01, AIC larger. 
-# As the chisquare change is not significant, we cannot reject metric invariance; metric invariance holds
+# Metric invariance: nonsig chisq + CFI and RMSEA ok; metric invariance holds
 # Scalar invariance: sig chisq change + CFI and RMSEA change > .01, AIC and BIC larger; scalar invariance rejected
 
 # Comparison 13: care - capital - integrity
@@ -1057,7 +1057,7 @@ int.fit.481.13 <- cfa(model.481.13, article481.capital, group = "care", group.eq
 smc.0481.1.13 <- mi.results(conf.fit.481.13,load.fit.481.13,int.fit.481.13)
 smc.0481.1.13
 # Three items so we assume configural invariance
-# Metric invariance: nonsig chisq change + CFI change < .01 (and > .95), AIC and BIC lower; metric invariance holds
+# Metric invariance: nonsig chisq + CFI RMSEA ok; metric invariance holds
 # Scalar invariance: nonsig chisq change + CFI and RMSEA change < .01, AIC and BIC lower; scalar invariance holds.
 
 # Comparison 14: care - abortion - integrity
@@ -1068,7 +1068,7 @@ int.fit.481.14 <- cfa(model.481.14, article481.abortion, group = "care", group.e
 smc.0481.1.14 <- mi.results(conf.fit.481.14,load.fit.481.14,int.fit.481.14)
 smc.0481.1.14
 # Three items so we assume configural invariance
-# Metric invariance: nonsig chisq change + CFI and RMSEA change < .01 (and > .95 and < .08), AIC and BIC lower; metric invariance holds.
+# Metric invariance: nonsig chisq + CFI RMSEA ok; metric invariance holds
 # Scalar invariance: nonsig chisq change + CFI change < .01, AIC and BIC lower; scalar invariance holds (but: RMSEA change > .01)
 
 # Comparison 15: care - gun - integrity
@@ -1079,7 +1079,7 @@ int.fit.481.15 <- cfa(model.481.15, article481.gun, group = "care", group.equal 
 smc.0481.1.15 <- mi.results(conf.fit.481.15,load.fit.481.15,int.fit.481.15)
 smc.0481.1.15
 # Three items so we assume configural invariance
-# Metric invariance: nonsig chisq change + CFI and RMSEA change < .01 (and > .95 and < .08), AIC and BIC lower; metric invariance holds.
+# Metric invariance: nonsig chisq + CFI RMSEA ok; metric invariance holds
 # Scalar invariance: sig chisq change + CFI and RMSEA change > .01, AIC larger; scalar invariance rejected (BIC ok).
 
 # Comparison 16: care - testing - integrity
@@ -1090,7 +1090,7 @@ int.fit.481.16 <- cfa(model.481.16, article481.testing, group = "care", group.eq
 smc.0481.1.16 <- mi.results(conf.fit.481.16,load.fit.481.16,int.fit.481.16)
 smc.0481.1.16
 # Three items so we assume configural invariance
-# Metric invariance: nonsig chisq change + CFI change < .01 (and > .95 and < .08), AIC and BIC lower; metric invariance holds (RMSEA change > 01).
+# Metric invariance: nonsig chisq + CFI RMSEA ok; metric invariance holds
 # Scalar invariance: nonsig chisq change + CFI change < .01, RMSEA change > .01 but fit improves, AIC and BIC lower; scalar invariance holds.
 
 # Comparison 17: care - suicide - integrity
@@ -1101,7 +1101,7 @@ int.fit.481.17 <- cfa(model.481.17, article481.suicide, group = "care", group.eq
 smc.0481.1.17 <- mi.results(conf.fit.481.17,load.fit.481.17,int.fit.481.17)
 smc.0481.1.17
 # Three items so we assume configural invariance
-# Metric invariance: nonsig chisq change + CFI change < .01, AIC and BIC lower; metric invariance holds (RMSEA change > .01 and RMSEA > .08).
+# Metric invariance: nonsig chisq + CFI ok; RMSEA exceeds > .08. Metric invariance holds
 # Scalar invariance: nonsig chisq change + RMSEA change < .01, BIC lower
 # But: CFI change > .01, AIC larger
 # As the chisquare difference is non-significant, we cannot reject scalar invariance; scalar invariance holds.
@@ -1114,7 +1114,8 @@ int.fit.481.18 <- cfa(model.481.18, article481.1, group = "care", group.equal = 
 smc.0481.1.18 <- mi.results(conf.fit.481.18,load.fit.481.18,int.fit.481.18)
 smc.0481.1.18
 # Three items so we assume configural invariance
-# Metric invariance: sig chisq change + RMSEA change > .01 (and > .08), AIC larger. We reject metric invariance. (CFI change < .01 and BIC lower)
+# Metric invariance: sig chisq but CFI RMSEA ok; metric invariance holds
+# Scalar invariance: sig chisq change, RMSEA CFI change cutoffs exceeded, AIC and BIC larger; scalar invariance rejected.
 
 # Comparison 19: care - capital - benevolence
 model.481.19 <- 'F =~ benev1 + benev2 + benev3'
@@ -1124,9 +1125,7 @@ int.fit.481.19 <- cfa(model.481.19, article481.capital, group = "care", group.eq
 smc.0481.1.19 <- mi.results(conf.fit.481.19,load.fit.481.19,int.fit.481.19)
 smc.0481.1.19
 # Three items so we assume configural invariance
-# Metric invariance: nonsig chisq change + BIC lower
-# RMSEA change > .01, CFI change > .01, AIC larger. 
-# As the chisquare difference is not significant, we cannot reject metric invariance; metric invariance holds
+# Metric invariance: nonsig chisq + CFI ok; RMSEA exceeds > .08. Metric invariance holds
 # Scalar invariance: nonsig chisq change + CFI change < .01, AIC and BIC lower; scalar invariance holds (RMSEA change > .01 but fit improves)
 
 # Comparison 20: care - abortion - benevolence
@@ -1137,7 +1136,7 @@ int.fit.481.20 <- cfa(model.481.20, article481.abortion, group = "care", group.e
 smc.0481.1.20 <- mi.results(conf.fit.481.20,load.fit.481.20,int.fit.481.20)
 smc.0481.1.20
 # Three items so we assume configural invariance
-# Metric invariance: nonsig chisq change + CFI change < .01, AIC and BIC lower; metric invariance holds (RMSEA change > .01)
+# Metric invariance: nonsig chisq + CFI and RMSEA ok. Metric invariance holds
 # Scalar invariance: nonsig chisq change + CFI change < .01, BIC lower;
 # RMSEA change > .01 and AIC is larger. As the chisquare test is non-sig, we cannot reject scalar invariance; scalar invariance holds.
 
@@ -1149,8 +1148,7 @@ int.fit.481.21 <- cfa(model.481.21, article481.gun, group = "care", group.equal 
 smc.0481.1.21 <- mi.results(conf.fit.481.21,load.fit.481.21,int.fit.481.21)
 smc.0481.1.21
 # Three items so we assume configural invariance
-# Metric invariance: nonsig chisq change + BIC lower
-# CFI change > .01, RMSEA change > .01 (and > .08), AIC larger than previous step. Because chisquare is non-sig we cannot reject metric invariance; metric invariance holds.
+# Metric invariance: nonsig chisq + CFI ok; RMSEA exceeds > .08. Metric invariance holds
 # Scalar invariance: nonsig chisq change + CFI change < .01, AIC and BIC lower; scalar invariance holds (RMSEA change > .01 but fit improves)
 
 # Comparison 22: care - testing - benevolence
@@ -1161,7 +1159,7 @@ int.fit.481.22 <- cfa(model.481.22, article481.testing, group = "care", group.eq
 smc.0481.1.22 <- mi.results(conf.fit.481.22,load.fit.481.22,int.fit.481.22)
 smc.0481.1.22
 # Three items so we assume configural invariance
-# Metric invariance: nonsig chisq change + CFI and RMSEA change < .01, AIC and BIC lower; metric invariance holds.
+# Metric invariance: nonsig chisq + CFI and RMSEA ok. Metric invariance holds
 # Scalar invariance: nonsig chisq change + CFI and RMSEA change < .01, AIC and BIC lower; scalar invariance holds.
 
 # Comparison 23: care - suicide - benevolence
@@ -1172,8 +1170,7 @@ int.fit.481.23 <- cfa(model.481.23, article481.suicide, group = "care", group.eq
 smc.0481.1.23 <- mi.results(conf.fit.481.23,load.fit.481.23,int.fit.481.23)
 smc.0481.1.23
 # Three items so we assume configural invariance
-# Metric invariance: nonsig chisq change + CFI change < .01, BIC lower; 
-# RMSEA change > .01 and AIC larger; because chisquare is nonsig we cannot reject metric invariance; metric invariance holds.
+# Metric invariance: nonsig chisq + CFI ok; RMSEA exceeds > .08. Metric invariance holds.
 # Scalar invariance: nonsig chisq change + CFI and RMSEA change < .01, BIC lower; scalar invariance holds (AIC larger)
 
 # Comparison 24: care - overall - benevolence
@@ -1184,8 +1181,7 @@ int.fit.481.24 <- cfa(model.481.24, article481.1, group = "care", group.equal = 
 smc.0481.1.24 <- mi.results(conf.fit.481.24,load.fit.481.24,int.fit.481.24)
 smc.0481.1.24
 # Three items so we assume configural invariance
-# Metric invariance: nonsig chisq change + CFI change < .01, BIC lower; 
-# RMSEA change > .01, AIC larger; because chisquare nonsig we cannot reject metric invariance; metric invariance holds.
+# Metric invariance: nonsig chisq + CFI and RMSEA ok. Metric invariance holds
 # Scalar invariance: nonsig chisq change + CFI change < .01, AIC and BIC lower; scalar invariance holds (RMSEA change > .01 but fit improves)
 
 # Study 3a + 3b
@@ -1207,7 +1203,7 @@ int.fit.481.25 <- cfa(model.481.25, article481.2, group = "match", group.equal =
 smc.0481.2.25 <- mi.results(conf.fit.481.25,load.fit.481.25,int.fit.481.25)
 smc.0481.2.25
 # Three items so we assume configural invariance
-# Metric invariance: sig chisq change + RMSEA change > .01 (RMSEA > .08 too), AIC larger; we reject metric invariance (CFI and BIC ok)
+# Metric invariance: sig chisq + RMSEA > .08 too; we reject metric invariance
 
 # Comparison 26: care - integrity
 model.481.26 <- 'F =~ integ1 + integ2 + integ3'
@@ -1217,7 +1213,8 @@ int.fit.481.26 <- cfa(model.481.26, article481.2, group = "care", group.equal = 
 smc.0481.2.26 <- mi.results(conf.fit.481.26,load.fit.481.26,int.fit.481.26)
 smc.0481.2.26
 # Three items so we assume configural invariance
-# Metric invariance: sig chisq change + RMSEA change > .01, AIC larger; we reject metric invariance (CFI and BIC ok)
+# Metric invariance: sig chisq but RMSEA + CFI ok; metric invariance holds.
+# Scalar invariance: sig chisq change + AIC larger; scalar invariance holds.
 
 # Comparison 27: match - benevolence
 model.481.27 <- 'F =~ benev1 + benev2 + benev3'
@@ -1227,7 +1224,7 @@ int.fit.481.27 <- cfa(model.481.27, article481.2, group = "match", group.equal =
 smc.0481.2.27 <- mi.results(conf.fit.481.27,load.fit.481.27,int.fit.481.27)
 smc.0481.2.27
 # Three items so we assume configural invariance
-# Metric invariance: sig chisq change + RMSEA change > .01 (and > .08), AIC higher; metric invariance rejected.
+# Metric invariance: sig chisq + RMSEA > .08; metric invariance rejected.
 
 # Comparison 28: care - benevolence
 model.481.28 <- 'F =~ benev1 + benev2 + benev3'
@@ -1237,8 +1234,7 @@ int.fit.481.28 <- cfa(model.481.28, article481.2, group = "care", group.equal = 
 smc.0481.2.28 <- mi.results(conf.fit.481.28,load.fit.481.28,int.fit.481.28)
 smc.0481.2.28
 # Three items so we assume configural invariance
-# Metric invariance: sig chisq change + AIC higher 
-# But RMSEA is ok (< 0.08), CFI change is < .01 (and CFI > .95) and BIC is lower; meaning we cannot reject metric invariance
+# Metric invariance: sig chisq but RMSEA + CFI ok; metric invariance holds.
 # Scalar invariance: sig chisq change + AIC higher
 # But: RMSEA change ok (< .01), CFI ok (< .01) and BIC is ok; we cannot reject scalar invariance; scalar invariance holds.
 
@@ -1678,7 +1674,7 @@ int.fit.811.1.2 <- cfa(model.811.1.2, article811.1, group = "condition", group.e
 smc.0811.1.02 <- mi.results(conf.fit.811.1.2,load.fit.811.1.2,int.fit.811.1.2)
 smc.0811.1.02
 # 3 items so we assume configural invariance
-# Metric: nonsig chisquare change, change RMSEA and CFI < .01 (and RMSEA < .08 and CFI > .95); lower AIC and BIC; metric invariance holds
+# Metric: nonsig chisquare, RMSEA < .08 and CFI > .95); metric invariance holds
 # Scalar: nonsig chisquare change, change RMSEA and CFI < .01; lower AIC and BIC; scalar invariance holds.
 
 # Study 2
@@ -1711,7 +1707,7 @@ int.fit.811.2.2 <- cfa(model.811.2.2, article811.2, group = "condition", group.e
 smc.0811.2.02 <- mi.results(conf.fit.811.2.2,load.fit.811.2.2,int.fit.811.2.2)
 smc.0811.2.02
 # 3 items so we assume configural invariance
-# Metric: nonsig chisquare change, change CFI < .01 (and >.95); lower AIC and BIC; metric invariance holds (RMSEA change > .01 but still < .08)
+# Metric: nonsig chisquare, CFI >.95, RMSEA < .08; metric invariance holds
 # Scalar: nonsig chisquare change, change CFI < .01; lower AIC and BIC; scalar invariance holds (RMSEA change > .01 but fit improves)
 
 # Article 861 ----------------------------------------------------------------------
@@ -1776,7 +1772,7 @@ int.fit.861.3 <- cfa(model.861.3, article861.1, group = "condition", group.equal
 smc.0861.1.03 <- mi.results(conf.fit.861.3,load.fit.861.3,int.fit.861.3)
 smc.0861.1.03
 # 3 items so we assume configural invariance
-# Metric: sig chisquare change, change RMSEA and CFI > .01; larger AIC; metric invariance rejected
+# Metric: sig chisquare, RMSEA > .08; metric invariance rejected
 
 # Comparison 4
 # Grouping variable: giving condition and getting condition
@@ -1849,7 +1845,7 @@ int.fit.861.7 <- cfa(model.861.7, article861.1.tot, group = "time", group.equal 
 smc.0861.1.07 <- mi.results(conf.fit.861.7,load.fit.861.7,int.fit.861.7)
 smc.0861.1.07
 # 3 items so we assume configural invariance
-# Metric: nonsig chisquare change, change RMSEA and CFI < .01 (and < .08 and > .95); lower AIC and BIC; metric invariance holds
+# Metric: nonsig chisquare RMSEA < .08 and CFI > .95); metric invariance holds
 # Scalar: nonsig chisquare change, change CFI < .01; lower AIC and BIC; scalar invariance holds.
 
 # Comparison 8
@@ -1892,7 +1888,7 @@ int.fit.861.9 <- cfa(model.861.9, article861.2, group = "condition", group.equal
 smc.0861.2.09 <- mi.results(conf.fit.861.9,load.fit.861.9,int.fit.861.9)
 smc.0861.2.09
 # 3 items so we assume configural invariance
-# Metric: sig chisquare change, change RMSEA > .01 (and > .08); AIC larger, we reject metric invariance (CFI change and BIC ok)
+# Metric: sig chisquare, change RMSEA > .08; metric invariance rejected
 
 # Comparison 10
 # Grouping variable: round 1 to round 10
@@ -1912,7 +1908,7 @@ int.fit.861.10 <- cfa(model.861.10, article861.2.tot, group = "time", group.equa
 smc.0861.2.10 <- mi.results(conf.fit.861.10,load.fit.861.10,int.fit.861.10)
 smc.0861.2.10
 # 3 items so we assume configural invariance
-# Metric: sig chisquare change, change RMSEA and CFI < .01 (and < .08 and >.95); lower AIC and BIC; metric invariance holds
+# Metric: nonsig chisquare RMSEA < .08 and CFI >.95); metric invariance holds
 # Scalar: sig chisquare change, larger AIC, change RMSEA > .01; we reject scalar invariance.
 
 # Article 891 ----------------------------------------------------------------------
@@ -2293,7 +2289,7 @@ int.fit.1151 <- cfa(model.1151, article1151, group = "Condition", group.equal = 
 smc.1151.1.01 <- mi.results(conf.fit.1151,load.fit.1151,int.fit.1151)
 smc.1151.1.01
 # 3 items so we assume configural invariance
-# Metric: nonsig chisquare change, change RMSEA and CFI < .01 (and < .08 and > .95); lower AIC and BIC; metric invariance holds
+# Metric: nonsig chisquare, change RMSEA < .08 and CFI > .95); metric invariance holds
 # Scalar: sig chisquare change, change RMSEA and CFI > .01; larger AIC; scalar invariance rejected (BIC ok)
 
 # Article 1251 ---------------------------------------------------------------------
@@ -2342,7 +2338,7 @@ int.fit.1261.1 <- cfa(model.1261.1, article1261.1, group = "condition", group.eq
 smc.1261.5.01 <- mi.results(conf.fit.1261.1,load.fit.1261.1,int.fit.1261.1)
 smc.1261.5.01
 # 3 items so we assume configural invariance
-# Metric: sig chisquare change, change RMSEA > .01 (and > .08); larger AIC; metric invariance rejected (BIC ok and CFI change ok and > .95)
+# Metric: sig chisquare, RMSEA > .08; metric invariance rejected
 
 # Comparison 2
 # Grouping variable: exposure: low; high (exposures)
@@ -2354,7 +2350,7 @@ int.fit.1261.2 <- cfa(model.1261.2, article1261.1, group = "exposures", group.eq
 smc.1261.5.02 <- mi.results(conf.fit.1261.2,load.fit.1261.2,int.fit.1261.2)
 smc.1261.5.02
 # 3 items so we assume configural invariance
-# Metric: nonsig chisquare change, change CFI < .01 (and >.95); lower AIC and BIC; metric invariance holds (RMSEA change > .01 but <.08)
+# Metric: nonsig chisquare change, CFI and RMSEA ok; metric invariance holds.
 # Scalar: nonsig chisquare change, change RMSEA and CFI < .01; lower BIC; scalar invariance holds (only AIC larger)
 
 # Study 6
@@ -2381,7 +2377,7 @@ int.fit.1261.3 <- cfa(model.1261.3, article1261.2, group = "condition", group.eq
 smc.1261.6.03 <- mi.results(conf.fit.1261.3,load.fit.1261.3,int.fit.1261.3)
 smc.1261.6.03
 # 3 items so we assume configural invariance
-# Metric: nonsig chisquare change, change CFI < .01 (and <.95); lower AIC and BIC; metric invariance holds (change RMSEA > .01 but < .08)
+# Metric: nonsig chisquare, RMSEA and CFI ok; metric invariance holds.
 # Scalar: nonsig chisquare change, change CFI < .01; lower AIC and BIC; scalar invariance holds (change RMSEA > .01)
 
 # Comparison 2
@@ -2566,8 +2562,7 @@ int.fit.1391.1 <- cfa(model.1391.1, article1391, group = "condition", group.equa
 smc.1391.4.01 <- mi.results(conf.fit.1391.1,load.fit.1391.1,int.fit.1391.1)
 smc.1391.4.01
 # 3 items so we assume configural invariance
-# Metric: nonsig chisquare change, change CFI < .01; lower BIC; 
-# change RMSEA > .01 (but still < .08), AIC larger. Chisquare change is nonsignificant so we cannot reject metric invariance; metric invariance holds 
+# Metric: nonsig chisquare CFI and RMSEA ok; metric invariance holds 
 # Scalar: nonsig chisquare change, change RMSEA and CFI < .01; lower BIC; scalar invariance holds (AIC is larger)
 
 # Comparison 2
@@ -2580,7 +2575,7 @@ int.fit.1391.2 <- cfa(model.1391.2, article1391, group = "day", group.equal = c(
 smc.1391.4.02 <- mi.results(conf.fit.1391.2,load.fit.1391.2,int.fit.1391.2)
 smc.1391.4.02
 # 3 items so we assume configural invariance
-# Metric: nonsig chisquare change, change RMSEA and CFI < .01; lower AIC and BIC; metric invariance holds
+# Metric: nonsig chisquare, CFI and RMSEA ok; metric invariance holds
 # Scalar: nonsig chisquare change, change CFI < .01; lower AIC and BIC; scalar invariance holds (change RMSEA > .01 but still < .08)
 
 # Comparison 3
@@ -2626,7 +2621,7 @@ int.fit.1421.1 <- cfa(model.1421.1, article1421.1, group = "Type", group.equal =
 smc.1421.3.01 <- mi.results(conf.fit.1421.1,load.fit.1421.1,int.fit.1421.1)
 smc.1421.3.01
 # 3 items so we assume configural invariance
-# Metric: nonsig chisquare change, change RMSEA and CFI < .01 (and < .08 and > .95); lower AIC and BIC; metric invariance holds
+# Metric: nonsig chisquare, CFI and RMSEA ok; metric invariance holds
 # Scalar: sig chisquare change, change RMSEA and CFI > .01; larger AIC; scalar invariance rejected (BIC ok)
 
 # Study 5
@@ -2645,7 +2640,7 @@ int.fit.1421.2 <- cfa(model.1421.2, article1421.2, group = "Choice", group.equal
 smc.1421.5.02 <- mi.results(conf.fit.1421.2,load.fit.1421.2,int.fit.1421.2)
 smc.1421.5.02
 # 3 items so we assume configural invariance
-# Metric: nonsig chisquare change, change RMSEA and CFI < .01 (and < .08 and >.95); lower AIC and BIC; metric invariance holds
+# Metric: nonsig chisquare, CFI and RMSEA ok; metric invariance holds
 # Scalar: nonsig chisquare change, change RMSEA and CFI < .01; lower AIC and BIC; scalar invariance holds.
 
 # Comparison 3
@@ -2658,7 +2653,7 @@ int.fit.1421.3 <- cfa(model.1421.3, article1421.2, group = "Choice", group.equal
 smc.1421.5.03 <- mi.results(conf.fit.1421.3,load.fit.1421.3,int.fit.1421.3)
 smc.1421.5.03
 # 3 items so we assume configural invariance
-# Metric: nonsig chisquare change, change CFI < .01 (RMSEA < .08 and CFI > .95); lower AIC and BIC; metric invariance holds 
+# Metric: nonsig chisquare, CFI and RMSEA ok; metric invariance holds
 # Scalar: sig chisquare change, change RMSEA and CFI > .01; larger AIC; scalar invariance rejected (BIC ok)
 
 # Article 1501 ---------------------------------------------------------------------
@@ -2694,7 +2689,7 @@ int.fit.1501.2 <- cfa(model.1501.2, article1501.1, group = "targrel", group.equa
 smc.1501.1.02 <- mi.results(conf.fit.1501.2,load.fit.1501.2,int.fit.1501.2)
 smc.1501.1.02
 # 3 items so we assume configural invariance
-# Metric: nonsig chisquare change, change CFI < .01; lower AIC and BIC; metric invariance holds (RMSEA change > .01 but still < .08)
+# Metric: nonsig chisquare, CFI and RMSEA ok; metric invariance holds
 # Scalar: sig chisquare change, change RMSEA > .01; larger AIC; scalar invariance rejected (CFI BIC ok)
 
 # Comparison 3
@@ -2769,7 +2764,7 @@ int.fit.1501.7 <- cfa(model.1501.7, article1501.2, group = "targrel", group.equa
 smc.1501.2.07 <- mi.results(conf.fit.1501.7,load.fit.1501.7,int.fit.1501.7)
 smc.1501.2.07
 # 3 items so we assume configural invariance
-# Metric: nonsig chisquare change, change RMSEA and CFI < .01 (and < 08 and >.95); lower AIC and BIC; metric invariance holds
+# Metric: nonsig chisquare, CFI and RMSEA ok; metric invariance holds
 # Scalar: sig chisquare change, change RMSEA > .01; larger AIC; scalar invariance rejected (CFI BIC ok)
 
 # Comparison 8
@@ -2782,7 +2777,7 @@ int.fit.1501.8 <- cfa(model.1501.8, article1501.2, group = "targstrat", group.eq
 smc.1501.2.08 <- mi.results(conf.fit.1501.8,load.fit.1501.8,int.fit.1501.8)
 smc.1501.2.08
 # 3 items so we assume configural invariance
-# metric: sig chisquare change, change RMSEA > .01 (and > .08); larger AIC; metric invariance rejected (CFI BIC ok)
+# metric: sig chisquare, change RMSEA > .08); metric invariance rejected
 
 # Comparison 9
 # Grouping variable: religious target and nonreligious target (targrel)
@@ -2794,8 +2789,7 @@ int.fit.1501.9 <- cfa(model.1501.9, article1501.2, group = "targrel", group.equa
 smc.1501.2.09 <- mi.results(conf.fit.1501.9,load.fit.1501.9,int.fit.1501.9)
 smc.1501.2.09
 # 3 items so we assume configural invariance
-# Metric: nonsig chisquare change, change CFI < .01 (and >.95); lower BIC;
-# But: larger AIC, RMSEA change > .01 (and > .08); chisquare nonsignificant so we cannot reject metric invariance; metric invariance holds
+# Metric: nonsig chisquare, CFI ok; metric invariance holds
 # scalar: nonsig chisquare change, change CFI < .01; lower AIC and BIC; scalar invariance holds (change RMSEA > .01 but fit improves)
 
 # Comparison 10
@@ -2808,7 +2802,7 @@ int.fit.1501.10 <- cfa(model.1501.10, article1501.2, group = "targstrat", group.
 smc.1501.2.10 <- mi.results(conf.fit.1501.10,load.fit.1501.10,int.fit.1501.10)
 smc.1501.2.10
 # 3 items so we assume configural invariance
-# Metric: nonsig chisquare change, change RMSEA and CFI < .01 (and < .08 and > .95); lower AIC and BIC; metric invariance holds
+# Metric: nonsig chisquare, CFI and RMSEA ok; metric invariance holds
 # Scalar: sig chisquare change, change RMSEA and CFI > .01; larger AIC and BIC; scalar invariance rejected
 
 # Comparison 11
@@ -2882,7 +2876,7 @@ int.fit.1501.15 <- cfa(model.1501.15, article1501.3, group = "targrel", group.eq
 smc.1501.3.15 <- mi.results(conf.fit.1501.15,load.fit.1501.15,int.fit.1501.15)
 smc.1501.3.15
 # 3 items so we assume configural invariance
-# Metric: sig chisquare change, change RMSEA > .01 (and > .08); larger AIC; metric invariance rejected (CFI change and BIC ok)
+# Metric: sig chisquare, change RMSEA > .08); metric invariance rejected
 
 # Comparison 16
 # Grouping variable: religious target and nonreligious target (targrel)
@@ -2894,7 +2888,7 @@ int.fit.1501.16 <- cfa(model.1501.16, article1501.3, group = "targrel", group.eq
 smc.1501.3.16 <- mi.results(conf.fit.1501.16,load.fit.1501.16,int.fit.1501.16)
 smc.1501.3.16
 # 3 items so we assume configural invariance
-# Metric: nonsig chisquare change, change RMSEA and CFI < .01 (and < .08 and > .95); lower AIC and BIC; metric invariance holds
+# Metric: nonsig chisquare, CFI and RMSEA ok; metric invariance holds
 # Scalar: nonsig chisquare change, change CFI < .01; lower AIC and BIC; scalar invariance holds (change RMSEA > .01)
 
 # Comparison 17
@@ -3434,7 +3428,7 @@ smc.1861.1.02
 
 # Step 4
 # 3 items so we assume configural invariance
-# Metric: nonsig chisquare change, change CFI < .01 (and >.95), AIC and BIC not estimated. Thresholds invariance holds
+# Metric: nonsig chisquare, CFI and RMSEA ok; metric invariance holds
 # Scalar: nonsig chisquare change, change CFI < .01, change RMSEA > .01 (but fit better), AIC and BIC not estimated. Threshold + loading invariance holds.
 
 # Comparison 3
@@ -3766,10 +3760,8 @@ int.fit.2091 <- cfa(model2091, article2091, group = "Multi1", group.equal = c("l
 smc.2091.1.01 <- mi.results(conf.fit.2091,load.fit.2091,int.fit.2091)
 smc.2091.1.01
 # Three items so we assume configural invariance
-# Metric invariance: nonsig chisq change + CFI change < .01, BIC lower; 
-# But: RMSEA change > .10 and AIC larger. Metric invariance holds because we cannot reject chisquare test. 
+# Metric invariance: nonsig chisquare, CFI ok; metric invariance holds
 # Scalar invariance: nonsig chisq change + CFI change < .01, AIC and BIC lower; scalar invariance holds. (RMSEA > .01 but fit improves)
-
 
 # Make list of results ----------------------------------------------------
 # This is Supplement C

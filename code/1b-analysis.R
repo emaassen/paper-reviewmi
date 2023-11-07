@@ -72,10 +72,10 @@ count.var <- function(df, var, val, dichotomous=TRUE) {
 
 # Selected studies---------------------------------------------------------
 # Load the main dataset (codebook) from step 1
-df.raw <- read_excel("data/codebook-main-step1.xlsx")
+df.raw <- read_excel("../data/codebook-main-step1.xlsx")
 
 # Load data to calculate interrater reliability
-irr <- read_excel("data/interraterreliability.xlsx") 
+irr <- read_excel("../data/interraterreliability.xlsx") 
 
 # Check column names
 colnames(df.raw)                                            
@@ -330,6 +330,7 @@ df$n1_rep <- as.numeric(df$n1_rep)
 # PLOS 515 (80.2 %)
 # PS 129 (44.9 %)
 # NA 285 
+count.var(df,"n1_rep", dichotomous = FALSE)
 
 ### Reliability (total sample)
 # Make numeric
@@ -415,6 +416,8 @@ count.articles(df.mi)
 # PLOS: 4 studies
 # PS: 2 studies
 count.studies(df.mi)
+# Type group = ad hoc constructed: 2 comparisons (so 37 demographic)
+sum(df.mi$type_group)
 
 
 ### MI method reported (1 = scale-based; 2 = item-based)

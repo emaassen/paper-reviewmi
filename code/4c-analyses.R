@@ -223,18 +223,18 @@ sum(df.mires.0$journal_id == 1); sum(df.mires.0$journal_id == 1)/287*100
 
 ### MI level reported (0 = none, 1 = config, 2 = metric, 3 = scalar, 4 = residual, 5 = partial, 99 = other, NA = not applicable)
 # No invariance (configural rejected): 101 comparisons (58 %)
-# Configural invariance: 13 (8 %)
-# Metric invariance: 15 (9 %)
-# Scalar invariance: 45 (26 %)
+# Configural invariance: 11 (6 %)
+# Metric invariance: 16 (9 %)
+# Scalar invariance: 46 (26 %)
 Hmisc::describe(df$milevel_step4)
 # PLOS: 13 comparisons
 # No invariance (configural rejected): 13
 Hmisc::describe(df[df$journal_id == 0,]$milevel_step4)
 # PS: 161 comparisons
 # No invariance (configural rejected): 88 
-# Configural invariance: 13
-# Metric invariance: 15
-# Scalar invariance: 45
+# Configural invariance: 11
+# Metric invariance: 16
+# Scalar invariance: 46
 Hmisc::describe(df[df$journal_id == 1,]$milevel_step4)
 
 ### Subset by level of invariance to count articles and studies
@@ -302,17 +302,17 @@ count.studies(df.conf)
 round(nrow(df.conf) / nrow(df.mi) * 100,1)
 
 ### MI level reported (0 = none, 1 = config, 2 = metric, 3 = scalar, 4 = residual, 5 = partial, 99 = other, NA = not applicable)
-# Configural invariance: 11 (18 %)
-# Metric invariance: 13 (21 %)
-# Scalar invariance: 37 (61 %)
+# Configural invariance: 9 (15 %)
+# Metric invariance: 14 (23 %)
+# Scalar invariance: 38 (62 %)
 Hmisc::describe(df.conf$milevel_step4)
 # PLOS: 0 comparisons
 # No invariance (configural rejected): 0
 Hmisc::describe(df.conf[df.conf$journal_id == 0,]$milevel_step4)
 # PS: 61 comparisons
-# Configural invariance: 11
-# Metric invariance: 13
-# Scalar invariance: 37
+# Configural invariance: 9
+# Metric invariance: 14
+# Scalar invariance: 38
 Hmisc::describe(df.conf[df.conf$journal_id == 1,]$milevel_step4)
 
 ### Subset by level of invariance to count articles and studies
@@ -463,3 +463,4 @@ table(df$type_scale, df$milevel_step4)
 # Of 20 existing scales, config assumed in 2 (10%)
 # Of 154 ad hoc scales, config assumed in 59 (38%)
 table(df$type_scale, df$config_assumed)
+

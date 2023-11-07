@@ -24,10 +24,10 @@ library(dplyr)
 
 # Load data from main study
 # Load data step 1
-df <- read_excel("data/codebook-main-step1.xlsx")
+df <- read_excel("../data/codebook-main-step1.xlsx")
 
 # Load data step2+3 to check overlap in IDs
-df.checked <- read_excel("data/codebook-main-step2step3-sample-without-results.xlsx")
+df.checked <- read_excel("../data/codebook-main-step2step3-sample-without-results.xlsx")
 
 # Functions ---------------------------------------------------------------
 # Function to check how many groups are compared for each study

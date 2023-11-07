@@ -13,7 +13,7 @@ library(readxl)
 
 # Analysis of Pilot Data --------------------------------------------------
 # Load data
-df <- read_excel("data/codebook-pilot.xlsx") 
+df <- read_excel("Projects/paper-reviewmi/data/codebook-pilot.xlsx") 
 
 # How many unique articles and journals were studied?
 # 60 articles, 3 journals
@@ -42,7 +42,7 @@ table(df$type_group)
 # 84% of comparisons done across existing groups
 sum(df$type_group, na.rm = T)/Ng
 
-# Among group comparisons and all studies, how many usescales?
+# Among group comparisons and all studies, how many use scales?
 # 37 comparisons, 44% of group comparisons, 32% of all studies
 sum(df$scale, na.rm = T)
 sum(df$scale, na.rm = T)/Ng
