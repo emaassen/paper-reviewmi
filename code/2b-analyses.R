@@ -7,7 +7,7 @@
 
 # `readxl` to load coding sheet step2-3 xlsx
 #install.packages("readxl")
-library(readxl)   
+library(readxl)
 
 # `dplyr` for function to count the total number of studies
 #install.packages("dplyr")
@@ -77,7 +77,7 @@ df$milevel_step2 <- as.numeric(df$milevel_step2)
 # PS: 2 articles, 2 studies
 nrow(df)                             
 count.articles(df)                
-count.studies(df)   
+count.studies(df) 
 
 ### Count articles / studies / variables with open data
 df.data <- filter(df, open_data == 1)
@@ -174,6 +174,24 @@ count.studies(df.mi)
 # PS: 1 comparison
 nrow(df.mi)
 sum(df.mi$journal_id == 1)
+
+### Count articles / studies / variables for which
+### we could NOT test MI
+df.n.mi <- filter(df, mitest_step2 == 0)
+# For 3 articles we CANNOT test MI
+# PLOS: 2
+# PS: 1
+count.articles(df.n.mi)              
+# For 3 studies we CANNOT test MI
+# PLOS: 2 studies
+# PS: 1 study
+count.studies(df.n.mi)                                 
+# For 35 comparisons we CANNOT test MI
+# PLOS: 4 comparisons
+# PS: 31 comparisons
+nrow(df.n.mi)
+sum(df.n.mi$journal_id == 1)
+sum(df.n.mi$journal_id == 0)
 
 ### Count articles / studies / variables for MI result
 df.mires <- filter(df, miresult_step2 == 1)

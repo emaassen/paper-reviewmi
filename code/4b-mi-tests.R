@@ -3,7 +3,7 @@
 
 # Install and load packages/data ------------------------------------------
 # Clear workspace
-rm(list=ls())
+#rm(list=ls())
 
 # `httr` to load data from OSF into R
 #install.packages("httr")

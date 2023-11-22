@@ -13,7 +13,7 @@ library(readxl)
 
 # Analysis of Pilot Data --------------------------------------------------
 # Load data
-df <- read_excel("Projects/paper-reviewmi/data/codebook-pilot.xlsx") 
+df <- read_excel("../data/codebook-pilot.xlsx") 
 
 # How many unique articles and journals were studied?
 # 60 articles, 3 journals
@@ -32,6 +32,7 @@ Ne <- sum(df$empirical)
 
 # Among empirical studies, how many contain group comparisons?
 # 85 comparisons, 76% of all entries in the dataframe.
+# 27 studies drop out (112 - 85)
 sum(df$between_groups, na.rm = T)
 sum(df$between_groups, na.rm = T)/Ne
 Ng <- sum(df$between_groups, na.rm = T)
@@ -44,19 +45,25 @@ sum(df$type_group, na.rm = T)/Ng
 
 # Among group comparisons and all studies, how many use scales?
 # 37 comparisons, 44% of group comparisons, 32% of all studies
+# 48 studies drop out (85 - 37)
 sum(df$scale, na.rm = T)
 sum(df$scale, na.rm = T)/Ng
 sum(df$scale, na.rm = T)/N
 
 # Among group comparisons and all studies, how many use reflective scales?
 # 36 comparisons, 42% of group comparisons, 31% of all studies
+# 1 comparison drops out (37 - 36)
 sum(df$reflective, na.rm = T)
 sum(df$reflective, na.rm = T)/Ng
 sum(df$reflective, na.rm=T)/N
 Ns <- sum(df$reflective, na.rm = T)
 
+# Number of articles: 18
+no_art <- df[df$reflective == 1,]
+length(unique(no_art$paper_id[!is.na(no_art$paper_id)]))
+
 # How many and what percentage of scales are existing (not ad hoc)?
-# 28 scales, 75% of all reflective scales
+# 27 scales, 75% of all reflective scales
 sum(df$type_scale == "existing", na.rm=T)
 sum(df$type_scale == "existing", na.rm=T)/Ns
 
@@ -85,6 +92,10 @@ sum(df$open_scale == 1 & df$open_group == 1, na.rm=T)/Nd
 # 4 comparisons, 11% of comparisons with reflective scale 
 sum(df$mi_rep, na.rm=T)
 sum(df$mi_rep, na.rm=T)/Ns
+
+# Number of articles: 2
+no_art <- df[df$mi_rep == 1,]
+length(unique(no_art$paper_id[!is.na(no_art$paper_id)]))
 
 # Among comparisons with reflective scales, how many test for MI?
 # 1 study, 2% of comparisons with reflective scale 

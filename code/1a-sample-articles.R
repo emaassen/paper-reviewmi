@@ -66,10 +66,7 @@ length(unique(index2019$id)) # 3219
 length(unique(index2018$id)) # 3491
 
 # From the rplos package documentation:
-# "Don't  be  surprised  if  queries  you  perform  in  a  scripting  
-# language,  like  using rplos in  R,  give different results than when 
-# searching for articles on the PLOS website. I am not sure what 
-# exact defaults they use on their website."
+# "Don't  be  surprised  if  queries  you  perform  in  a  scripting  language,  like  using rplos in  R,  give different results than when searching for articles on the PLOS website. I am not sure what exact defaults they use on their website."
 
 # Sample 99 articles from 2019, 114 from 2018 (i.e., the same amount of articles as Psychological Science)
 set.seed(17080904)
@@ -103,5 +100,5 @@ sample.em <- rbind(sample.plos.em,sample.ps.em)
 sample.edd <- rbind(sample.plos.edd,sample.ps.edd)
 
 # Save to file to input in main codebook
-write.table(sample.em, file = "data/sample-em.txt", sep = "")
-write.table(sample.edd, file = "data/sample-edd.txt", sep = "")
+write.table(sample.em, file = "../data/sample-em.txt", sep = "")
+write.table(sample.edd, file = "../data/sample-edd.txt", sep = "")

@@ -101,18 +101,18 @@ count.var(df, "open_data", 1)
 
 ### Count articles / studies / variables without open data
 df.ndata <- filter(df, open_data != 1)
-# 4 articles no open data
+# 3 articles no open data
 # PLOS: 3
-# PS: 1
-count.articles(df.ndata)              
+# PS: 0
+count.articles(df) - count.articles(df.data)              
 # 4 studies no open data
 # PLOS: 3 studies
 # PS: 1 study
-count.studies(df.ndata)                                 
+count.studies(df) - count.studies(df.data)                               
 # 73 comparisons no open data (23 %)
 # PLOS: 72 comparisons (48 %)
 # PS: 1 comparison (1 %)
-count.var(df, "open_data", 0)
+count.var(df, "open_data", 0) - count.var(df.data, "open_data", 0)
 
 ### Count articles / studies / variables for 
 ### which we could construct a grouping variable
@@ -257,6 +257,12 @@ count.articles(nconfig)
 # PLOS: 4
 # PS: 37
 count.studies(nconfig)
+# Comparisons: 101
+# PLOS: 13
+# PS: 88
+nrow(nconfig)
+sum(nconfig$journal_id == 0)
+sum(nconfig$journal_id == 1)
 
 # Configural invariance:
 # Articles: 7
@@ -267,6 +273,12 @@ count.articles(config)
 # PLOS: 0
 # PS: 10
 count.studies(config)
+# Comparisons: 11
+# PLOS: 0
+# PS: 11
+nrow(config)
+sum(config$journal_id == 0)
+sum(config$journal_id == 1)
 
 # Metric invariance:
 # Articles: 8
@@ -277,6 +289,12 @@ count.articles(metric)
 # PLOS: 0
 # PS: 10
 count.studies(metric)
+# Comparisons: 16
+# PLOS: 0
+# PS: 16
+nrow(metric)
+sum(metric$journal_id == 0)
+sum(metric$journal_id == 1)
 
 # Scalar invariance:
 # Articles: 14
@@ -287,6 +305,12 @@ count.articles(scalar)
 # PLOS: 0
 # PS: 20
 count.studies(scalar)
+# Comparisons: 46
+# PLOS: 0
+# PS: 46
+nrow(scalar)
+sum(scalar$journal_id == 0)
+sum(scalar$journal_id == 1)
 
 # Analyses split by number of items (3 and >3) ----------------------------
 ### 3 items
@@ -448,6 +472,18 @@ Hmisc::describe(df.fs$f_total)
 
 # Check results by group
 table(df.fs$f_group)
+
+# Exclude combinations where groups have the same number of factors
+exclude_combinations <- c("1, 1", "2, 2", "3, 3", "4, 4", "5, 5", "6, 6", 
+                          "7, 7", "8, 8", "NA", "1, 1, 1", "2, 2, 2")
+combination_counts <- table(df.fs$f_group)
+# Remove the excluded combinations from the table
+filtered_combination_counts <- combination_counts[!names(combination_counts) %in% exclude_combinations]
+print(filtered_combination_counts)
+# Sum the counts of combinations that are not in the exclude_combinations vector
+# 46 comparisons have different number of factors per group
+count_not_equal_combinations <- sum(combination_counts[!names(combination_counts) %in% exclude_combinations])
+print(count_not_equal_combinations)
 
 # Check how many scales with scalar invariance are unique
 df_scalar <- subset(df, as.numeric(df$milevel_step4) == 3)

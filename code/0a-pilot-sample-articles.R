@@ -6,7 +6,7 @@
 #rm(list=ls())
 
 # No scientific notation
-options(scipen=999)  
+options(scipen=999)
 
 # Sampling studies --------------------------------------------------------
 # We will take a random sample of 20 articles from the JDM article set (total k = 223) for the pilot study.
@@ -109,6 +109,3 @@ fitmeasures(config,c("rmsea","cfi","tli"))
 fitmeasures(weak,c("rmsea","cfi","tli"))
 fitmeasures(strong,c("rmsea","cfi","tli"))
 fitmeasures(strict,c("rmsea","cfi","tli"))
-
-
-

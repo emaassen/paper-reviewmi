@@ -205,3 +205,4 @@ head(df)
 # Select only those studies with power > 0.80 to detect non-invariance
 df.select <- df[df$powerncp > 0.80,]
 df.select
+

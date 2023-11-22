@@ -8,7 +8,7 @@
 #rm(list=ls())
 
 # No scientific notation
-options(scipen=999) 
+options(scipen=999)
 
 # `httr` to load data from OSF
 #install.packages("httr")
@@ -127,7 +127,7 @@ mi.results.sc <- function(x,y,z) {
 url <- 'https://osf.io/3qda9///?action=download'
 
 # Define the filename under which the dataset gets saved
-filename <- 'data/data-main/article22.sav'
+filename <- 'article22.sav'
 
 # Download and save the dataset to file
 GET(url, write_disk(filename, overwrite = TRUE))
@@ -333,7 +333,7 @@ all.results.77
 
 # Load the data
 url <- 'https://dx.plos.org/10.1371/journal.pone.0221696.s001'
-filename <- '../data/data-main/article207.sav'
+filename <- 'article207.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article207 <- read_sav(filename)
 article207 <- as.data.frame(article207)
@@ -594,7 +594,7 @@ all.results.207.2
 # Article 710 -------------------------------------------------------------
 # Data shared is raw data in .sav file: https://osf.io/x7c8w/ 
 url <- 'https://osf.io/x7c8w//?action=download'
-filename <- '../data/data-main/article710.sav'
+filename <- 'article710.sav'
 GET(url, write_disk(filename, overwrite = TRUE))
 article710 <- read_sav(filename)
 

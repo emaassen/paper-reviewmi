@@ -175,7 +175,7 @@ df.ref <- filter(df.scale, reflective == 1)
 # 96 articles with reflective scales (23 %);
 # 50 PLOS (23 %)
 # 46 PS (22 %)
-n.art.ref <- count.articles(df.ref); n.art.ref                                   
+n.art.ref <- count.articles(df.ref); n.art.ref                                 
 round(n.art.ref / n.art * 100)               
 # 149 studies with reflective scales (18 %);
 # 53 PLOS (22 %)
@@ -249,12 +249,13 @@ Hmisc::describe(df[df$journal_id == 1,]$measure_scale)
 # 389 PLOS (61 %)
 # 225 PS (78 %)
 count.var(df,"width_scale_recoded", dichotomous = FALSE)
-# NA 315 
+# NA 317
 # Range: 2 to 81
-# Median: 7 (24.3%)
+# Median: 5
 Hmisc::describe(df$width_scale_recoded)
+round(317 / 929 * 100,1)
 # PLOS range 2 - 11
-# PLOS NA 253 
+# PLOS NA 255
 Hmisc::describe(df[df$journal_id == 0,]$width_scale_recoded)
 # PS range 2 - 81
 # PS NA 62 
@@ -262,16 +263,17 @@ Hmisc::describe(df[df$journal_id == 1,]$width_scale_recoded)
 
 ### Number of items
 # make numeric
-df$no_items <- as.numeric(df$no_items)               
+df$no_items <- as.numeric(df$no_items)
 # 642 comparisons indicates number of items (69 %)
 # 396 PLOS (62 %)
 # 246 PS (86 %)
 count.var(df,"no_items", dichotomous = FALSE)
-# NA: 287 comparisons 
+# NA: 287 comparisons (31 %)
 # Mean number of items: 12.8
 # Median number of items: 7
 # Range number of items: 3 to 135
 Hmisc::describe(df$no_items)
+round(287/929*100,1)
 
 # PLOS: 396 comparisons 
 # PLOS NA: 246 comparisons
@@ -287,7 +289,7 @@ Hmisc::describe(df[df$journal_id == 0,]$no_items)
 Hmisc::describe(df[df$journal_id == 1,]$no_items)
 
 ### Both Width Scale and Number of Items
-# make numeric
+# Make numeric
 df$width_scale_recoded <- as.numeric(df$width_scale_recoded)
 # Missings on width scale and number of items: 206 (22% of comparisons)
 sum(is.na(df$width_scale_recoded) & is.na(df$no_items))
@@ -312,6 +314,7 @@ count.var(df,"n_rep", dichotomous = FALSE)
 # Median: 418
 # Range: 15 to 4393362
 Hmisc::describe(df$n_rep)
+round(53 / 929 * 100, 1)
 # PLOS 590 comparisons indicate sample size
 # PLOS NA 52 
 # PLOS Median: 659
@@ -344,6 +347,7 @@ count.var(df,"rel_rep", dichotomous = FALSE)
 # Mean: 0.83
 # Median: 0.84
 Hmisc::describe(df$rel_rep)
+round(514 / 929 * 100, 1)
 # PLOS 220 comparisons 
 # PLOS NA: 422
 # Range: 0.46 - 0.97
@@ -396,29 +400,25 @@ count.var(df,"mitest_rep",0)
 # Subset of studies that do not report on MI
 df.nmi <- df[df$mitest_rep == 0,]
 # 91 articles
-# PLOS: 46 articles
-# PS: 45 articles
+# PLOS: 46 articles (22 %)
+# PS: 45 articles (21 %)
 count.articles(df.nmi)
+round(count.articles(df.nmi) / n.art * 100, 1)
 
 ### MI test reported
-# 39 comparisons report MI test (4 %)
-# PLOS: 34 (5 %)
-# PS: 5 (2 %)
-count.var(df,"mitest_rep",1)
-
 # Subset of studies that report on MI
 df.mi <- df[df$mitest_rep == 1,]
 # 39 comparisons reported MI in 6 articles
-# PLOS: 4 articles
-# PS: 2 articles
+# PLOS: 4 articles (2 %)
+# PS: 2 articles (1 %)
 count.articles(df.mi)
+round(count.articles(df.mi) / n.art * 100, 1)
 # 39 comparisons reported MI in 6 studies
 # PLOS: 4 studies
 # PS: 2 studies
 count.studies(df.mi)
 # Type group = ad hoc constructed: 2 comparisons (so 37 demographic)
 sum(df.mi$type_group)
-
 
 ### MI method reported (1 = scale-based; 2 = item-based)
 # Make numeric
@@ -439,7 +439,7 @@ Hmisc::describe(df[df$journal_id == 0,]$mimethod_rep)
 # PS: 5 comparisons
 # NA: 282 comparisons
 # Scale-based: 5
-# Item-based: 0 
+# Item-based: 0
 Hmisc::describe(df[df$journal_id == 1,]$mimethod_rep)
 
 ### MI result reported
@@ -487,16 +487,18 @@ unique(df[df$milevel_rep == 5,]$row_id)
 # for all the items, except for one of the items from the EXEC dimension."
 
 # Investigate the Other studies by id
-unique(df[df$milevel_rep == 99,]$row_id)
+unique(df[df$milevel_rep == 99 & df$miresult_rep == 1,]$row_id)
+# No DIF for 22 comparisons.
+unique(df[df$milevel_rep == 99 & df$miresult_rep == 0,]$row_id)
 # There is DIF reported for 8 comparisons:
-# 429: MIMIC; DIF at item level for 10 items in 2 subscales; so no measurement invariance
-# 431: MIMIC; DIF at item level for 10 items in 2 subscales; so no measurement invariance
-# 432: MIMIC; DIF at item level for 10 items in 2 subscales; so no measurement invariance
 # 433: MIMIC; DIF at item level for 10 items in 2 subscales; so no measurement invariance
-# 434: MIMIC; DIF at item level for 10 items in 2 subscales; so no measurement invariance
 # 435: MIMIC; DIF at item level for 10 items in 2 subscales; so no measurement invariance
+# 436: MIMIC; DIF at item level for 10 items in 2 subscales; so no measurement invariance
+# 437: MIMIC; DIF at item level for 10 items in 2 subscales; so no measurement invariance
+# 438: MIMIC; DIF at item level for 10 items in 2 subscales; so no measurement invariance
 # 439: MIMIC; DIF at item level for 10 items in 2 subscales; so no measurement invariance
-# 440: MIMIC; DIF at item level for 10 items in 2 subscales; so no measurement invariance
+# 443: MIMIC; DIF at item level for 10 items in 2 subscales; so no measurement invariance
+# 444: MIMIC; DIF at item level for 10 items in 2 subscales; so no measurement invariance
 
 # Interrater reliability --------------------------------------------------
 # Empirical study; 0.77
@@ -551,4 +553,4 @@ count.var(df,"consistency",1)
 df.checked <- subset(df,mitest_rep == 1) 
 
 # Save dataset of studies that investigated MI (step 2 and step 3)
-write_xlsx(df.checked, "data/codebook-main-step2step3-sample-without-results.xlsx")
+write_xlsx(df.checked, "../data/codebook-main-step2step3-sample-without-results.xlsx")

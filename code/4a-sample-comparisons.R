@@ -327,8 +327,15 @@ df.select <- dfs[dfs$powerncp >= 0.80,1:43]
 nrow(df.select)
 
 # Number of comparisons dropout
+# 2 articles (1 PLOS, 1 PS)
+# 34 studies (2 PLOS, 32 PS)
 df.dropout <- dfs[!dfs$powerncp >= 0.80,1:43] 
-nrow(df.dropout)                
+count.articles(dfs) - count.articles(df.select)
+count.studies(dfs) - count.articles(df.select)
+# 13 comparisons (7 for PLOS, 6 for PS)
+nrow(df.dropout)
+nrow(df.dropout[df.dropout$journal_id==0,]) 
+nrow(df.dropout[df.dropout$journal_id==1,]) 
 
 ### Number of comparisons to include in step 4
 # Total: 35 articles, 66 studies
@@ -345,14 +352,6 @@ sum(df.select$journal_id)
 # PLOS comparisons (PLOS = 0, PS = 1)
 # 151 
 nrow(df.select) - sum(df.select$journal_id)
-
-# Dropout count
-count.articles(dfs) - count.articles(df.select)
-# 13 comparisons dropout
-# 7 for PLOS, 6 for PS
-nrow(df.dropout)
-nrow(df.dropout[df.dropout$journal_id==0,]) 
-nrow(df.dropout[df.dropout$journal_id==1,]) 
 
 # Are the colnames for the selected studies and the ones reporting on MI the same?
 df.select <- df.select[,1:length(colnames(df.select))-1]

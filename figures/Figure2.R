@@ -23,9 +23,9 @@ library(ggrepel)
 options(scipen=999) 
 
 # Load data
-df1 <- read_excel("Projects/paper-reviewmi/data/codebook-main-step1.xlsx")
-df2 <- read_excel("Projects/paper-reviewmi/data/codebook-main-step2step3.xlsx")
-df4 <- read_excel("Projects/paper-reviewmi/data/codebook-main-step4.xlsx")
+df1 <- read_excel("../data/codebook-main-step1.xlsx")
+df2 <- read_excel("../data/codebook-main-step2step3.xlsx")
+df4 <- read_excel("../data/codebook-main-step4.xlsx")
 
 # Barplots cat_group stacked ----------------------------------------------
 # Make some variables numeric
@@ -74,7 +74,7 @@ fig2 <- tab %>%
   ggplot(aes(x = Type, y = Freq, label = Freq)) +
   geom_bar(stat = "identity", position = position_stack(reverse = TRUE), aes(fill = Level), width = 0.8) +
   geom_label_repel(aes(x = Type, label = Freq),
-            colour = "#000000", position=position_stack(reverse = TRUE, vjust = 0.8), size = 4.5) + 
+            colour = "#000000", position=position_stack(reverse = TRUE, vjust = 0.69), size = 4.5) + 
   theme(legend.title=element_blank()) +
   ylab(element_blank()) + 
   xlab(element_blank()) +
