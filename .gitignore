@@ -1,6 +1,10 @@
 /misc/
-
-/submission/
+/submission/literature/
+/submission/pm_first_submission/
+/submission/pm_review_1/
+/submission/pm_review_2/
+/submission/pm_submission
+/submission/notes.txt
 
 *.Rmd
 *.Rproj
