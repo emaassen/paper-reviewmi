@@ -40,93 +40,93 @@ Below is a description of the main components of this repository.
 
 ### Code
 -	0-example-mi-test.R  
-    &nbsp;&nbsp;&nbsp;&nbsp;R script demonstrating a sample measurement invariance test.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;R script demonstrating a sample measurement invariance test.
 -	0-example-simulation.R  
-    &nbsp;&nbsp;&nbsp;&nbsp;R script with simulation code to determine whether a scale mean comparison has enough statistical power to identify a moderate degree of scalar measurement noninvariance.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;R script with simulation code to determine whether a scale mean comparison has enough statistical power to identify a moderate degree of scalar measurement noninvariance.
 -	0a-pilot-sample-articles.R  
-    &nbsp;&nbsp;&nbsp;&nbsp;R script used to sample articles to analyze for the pilot study.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;R script used to sample articles to analyze for the pilot study.
 -	0b-pilot-mi-tests.zip  
-    &nbsp;&nbsp;&nbsp;&nbsp;Zip file with individual R scripts used to test for measurement invariance in the articles from the pilot study.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Zip file with individual R scripts used to test for measurement invariance in the articles from the pilot study.
 -	0c-pilot-analyses.R  
-    &nbsp;&nbsp;&nbsp;&nbsp;R script for the analysis of results in the pilot study.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;R script for the analysis of results in the pilot study.
 -	1a-sample-articles.R  
-    &nbsp;&nbsp;&nbsp;&nbsp;R script used to sample articles to analyze for the main study.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;R script used to sample articles to analyze for the main study.
 -	1b-analysis.R  
-    &nbsp;&nbsp;&nbsp;&nbsp;R script for the analysis of results of Step 1.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;R script for the analysis of results of Step 1.
 -	2a-mi-tests.R  
-    &nbsp;&nbsp;&nbsp;&nbsp;R script to reproduce measurement invariance tests in Step 2.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;R script to reproduce measurement invariance tests in Step 2.
 -	2b-analyses.R  
-    &nbsp;&nbsp;&nbsp;&nbsp;R script for the analysis of results of Step 2 and 3.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;R script for the analysis of results of Step 2 and 3.
 -	4a-sample-comparisons.R  
-    &nbsp;&nbsp;&nbsp;&nbsp;R script used to sample scale mean comparisons for Step 4.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;R script used to sample scale mean comparisons for Step 4.
 -	4b-mi-tests.R  
-    &nbsp;&nbsp;&nbsp;&nbsp;R script to run measurement invariance tests in Step 4.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;R script to run measurement invariance tests in Step 4.
 -	4c-analyses.R  
-    &nbsp;&nbsp;&nbsp;&nbsp;R script for the analysis of results of Step 4.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;R script for the analysis of results of Step 4.
 
 ### Data
 -	article-index/article-index-pilot.txt  
-    &nbsp;&nbsp;&nbsp;&nbsp;Text file with indices referring to studies in journals to sample for the pilot study. 
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text file with indices referring to studies in journals to sample for the pilot study. 
 -	article-index/sample-edd.txt  
-    &nbsp;&nbsp;&nbsp;&nbsp;Text file with indices and dois for studies in Step 1. This is the order in which author E.D.D. coded the studies.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text file with indices and dois for studies in Step 1. This is the order in which author E.D.D. coded the studies.
 -	article-index/sample-em.txt  
-    &nbsp;&nbsp;&nbsp;&nbsp;Text file with indices and dois for studies in Step 1. This is the order in which author E.M. coded the studies.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text file with indices and dois for studies in Step 1. This is the order in which author E.M. coded the studies.
 -	article-index/sample-ps.txt  
-    &nbsp;&nbsp;&nbsp;&nbsp;Text file with indices and dois for studies from Psychological Science, used in Step 1.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text file with indices and dois for studies from Psychological Science, used in Step 1.
 -	codebook-main-step1.xlsx   
-    &nbsp;&nbsp;&nbsp;&nbsp;Codebook of Step 1.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Codebook of Step 1.
 -	codebook-main-step2step3-sample-without-results.xlsx  
-    &nbsp;&nbsp;&nbsp;&nbsp;Codebook of Step 2 and Step 3 without results.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Codebook of Step 2 and Step 3 without results.
 -	codebook-main-step2step3.xlsx  
-    &nbsp;&nbsp;&nbsp;&nbsp;Codebook of Step 2 and Step 3.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Codebook of Step 2 and Step 3.
 -	codebook-main-step4-sample-without-results.xlsx  
-    &nbsp;&nbsp;&nbsp;&nbsp;Codebook of Step 4 without results. This codebook is generated by 4a-sample-comparisons.R.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Codebook of Step 4 without results. This codebook is generated by 4a-sample-comparisons.R.
 -	codebook-main-step4.xlsx  
-    &nbsp;&nbsp;&nbsp;&nbsp;Codebook of Step 4.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Codebook of Step 4.
 -	codebook-pilot.xlsx  
-    &nbsp;&nbsp;&nbsp;&nbsp;Codebook of pilot study.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Codebook of pilot study.
 -	codebook-variables-description.html  
-    &nbsp;&nbsp;&nbsp;&nbsp;HTML file with description of all variables used in the codebooks, for all steps.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HTML file with description of all variables used in the codebooks, for all steps.
 -	codebook-variables-description.Rmd  
-    &nbsp;&nbsp;&nbsp;&nbsp;RMarkdown file to generate the HTML file codebook-variables-description.html.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RMarkdown file to generate the HTML file codebook-variables-description.html.
 -	interraterreliability.xlsx   
-    &nbsp;&nbsp;&nbsp;&nbsp;Results from the individual codebooks of coders E.D.D. and E.M. to determine the interrater reliability.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Results from the individual codebooks of coders E.D.D. and E.M. to determine the interrater reliability.
 
 ### Figures
 -	Figure1.drawio  
-    &nbsp;&nbsp;&nbsp;&nbsp;Diagram file to generate Figure 1.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Diagram file to generate Figure 1.
 -	Figure1.jpg  
-    JPG file of Figure 1, saved from Figure1.drawio.
--	&nbsp;&nbsp;&nbsp;&nbsp;Figure2.jpg  
-    JPG file of Figure 2, saved from Figure2.R.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JPG file of Figure 1, saved from Figure1.drawio.
+-	Figure2.jpg  
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JPG file of Figure 2, saved from Figure2.R.
 -	Figure2.R  
-    &nbsp;&nbsp;&nbsp;&nbsp;R script to generate Figure 2.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;R script to generate Figure 2.
 
 ### Supplemental Materials
 -	Addendum A.pdf  
-    &nbsp;&nbsp;&nbsp;&nbsp;Supplemental Material A, results of the pilot study.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Supplemental Material A, results of the pilot study.
 -   Addendum A.Rmd  
-    &nbsp;&nbsp;&nbsp;&nbsp;Rmarkdown file to generate Addendum A.pdf
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rmarkdown file to generate Addendum A.pdf
 -	Addendum B.drawio  
-    &nbsp;&nbsp;&nbsp;&nbsp;Diagram file to generate Supplemental Material B. 
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Diagram file to generate Supplemental Material B. 
 -	Addendum B.pdf  
-    &nbsp;&nbsp;&nbsp;&nbsp;Supplemental Material B, generated from Addendum B.drawio.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Supplemental Material B, generated from Addendum B.drawio.
 -	Addendum C.pdf   
-    &nbsp;&nbsp;&nbsp;&nbsp;Supplemental Material C, generated from 4b-mi-tests.R.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Supplemental Material C, generated from 4b-mi-tests.R.
 
 ### Submission
 -	240114-manuscript.pdf  
-    &nbsp;&nbsp;&nbsp;&nbsp;PDF document of the final manuscript,
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PDF document of the final manuscript,
 -	240114-manuscript.docx  
-    &nbsp;&nbsp;&nbsp;&nbsp;Word document of the final manuscript, generated by 240114-manuscript.Rmd.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Word document of the final manuscript, generated by 240114-manuscript.Rmd.
 -	240114-manuscript.Rmd  
-    &nbsp;&nbsp;&nbsp;&nbsp;RMarkdown file to generate final manuscript.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RMarkdown file to generate final manuscript.
 -	apa7.csl  
-    &nbsp;&nbsp;&nbsp;&nbsp;CSL file needed to run RMarkdown file.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CSL file needed to run RMarkdown file.
 -	mi-bibliography.bib  
-    &nbsp;&nbsp;&nbsp;&nbsp;Bib file needed to run RMarkdown file.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bib file needed to run RMarkdown file.
 -	Table1.docx  
-    &nbsp;&nbsp;&nbsp;&nbsp;Word document of Table 1.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Word document of Table 1.
 
 ## License
 Shield: [![CC BY 4.0][cc-by-shield]][cc-by]
