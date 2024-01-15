@@ -1,0 +1,96 @@
+---
+output:
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: true
+fontsize: 12pt
+linestretch: 1.5
+csl: "../submission/apa7.csl"
+bibliography: "../submission/mi-bibliography.bib"
+header-includes:
+  - \usepackage[sfdefault,light]{FiraSans}
+  - \usepackage{fancyhdr}
+  - \pagestyle{fancy}
+  - \setlength{\headheight}{14.5pt}
+  - \addtolength{\topmargin}{-2.5pt}
+
+---
+
+\begin{center}
+\large{Supplemental Material A}
+\end{center}
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE) 
+```
+
+\vspace{12pt}
+
+\centerline{\textbf{Description of the pilot study}}
+
+\setlength\parindent{34pt}This document contains the methods and results of the pilot study of the *The Dire Disregard of Measurement Invariance Testing in Psychological Science* article. All analyses were conducted in R [@r2023]. We used the following packages for data (pre)processing: *dplyr* [@wickham2023-dplyr], *foreign* [@r2023], *haven* [@wickham2023-haven], *readxl* [@wickham2023-readxl], and *reshape* [@wickham2007]. For the analyses we used the *lavaan* [@rosseel2012], *psych* [@revelle2023], *semPlot* [@epskamp2022], and *semTools* [@jorgensen2022] packages. 
+
+\centerline{\textbf{Deviations from preregistration}}
+
+\setlength\parindent{34pt}Our pilot preregistration initially contained cutoffs for CFI values to reject certain levels of measurement invariance that were reported as $\Delta$CFI $>$ 0.01 and $\Delta$CFI $>$ 0.02, which indicates we would reject invariance as the CFI estimate increased. The correct values for these cutoffs should be $\Delta$CFI $<$ -0.01 and $\Delta$CFI $<$ -0.02. In other words, we would reject invariance when the CFI estimate decreased more than 0.01 and 0.02 between models, respectively. 
+
+We furthermore regarded a sample size per group or timepoint of *N* = 75 to be too small to perform measurement invariance analyses and planned to exclude these studies from the reproducibility step. However, since our ﬁnal sample of studies was particularly small and we aimed to investigate the issues we could possibly run into when performing measurement invariance tests, we attempted to test for measurement invariance for all studies that made comparisons across groups or time on a scale and shared usable data.
+
+\vspace{12pt}
+
+\centerline{\textbf{Method}}
+
+\noindent{\textbf{Reporting}}
+
+We sampled articles with open data from three journals: Judgment and Decision Making (JDM), PLOS ONE (PLOS), and Psychological Science (PS). The sample included JDM articles published from April 2011 to December 2014 (223 articles with 426 data sets), PLOS articles published from 2013 to 2015 (252 articles with 530 data sets), and PS articles published from 2014 to 2016 (144 articles with 324 data sets). We randomly sampled 20 articles from each journal, resulting in a total of 60 articles.
+
+We assessed each article to determine if the authors reported comparisons between groups or time on a scale. To be included, a scale had to measure a construct (i.e., we assume a latent trait underlies the scores on the indicators) by multiple indicators (at least three) or subscales. The groups or time points should be compared on a mean scale score (e.g., total score or sum score). Additionally, the article needed to interpret the results of this scale comparison as the primary outcome of the study. For all studies that met these criteria, we coded whether the study reported a measurement invariance test, and if so, which level of measurement invariance held. We also documented whether the scale had been previously validated or modified by the authors, the level of measurement of the items, the number of items, the total sample size, and the sample size per group or time point.
+
+\noindent{\textbf{Reproducibility}}
+
+For all studies that compared a scale across groups or time we attempted to reproduce the reported measurement invariance test if one was reported, and we attempted to perform measurement invariance tests for those studies that compared scales across groups or time but did not report on measurement invariance.
+
+For each study comparing groups or time points on a scale, we first determined whether we could locate and open the data shared by the authors. Next, we attempted to identify or construct scale and grouping variables from the data. We then fit a conﬁgural, metric (i.e., loadings equivalent), and scalar (i.e., intercepts equivalent) model to the data and indicated which level of measurement invariance held. If the study reported a measurement invariance test, we also noted whether our results were consistent with those reported by the authors.
+
+We rejected configural invariance if the $\chi^2$ test was statistically significant ($\alpha$ = .05), and at least one alternative fit measure was above a specific cutoff value (i.e., RMSEA $>$ .08 and CFI $<$ .95). If configural invariance held, we rejected metric invariance if the $\chi^2$ difference between the configural and metric model was statistically significant, and at least one alternative ﬁt measure between the conﬁgural and metric step was above speciﬁc cutoff values (i.e., $\Delta$RMSEA $>$ 0.03, $\Delta$CFI $<$ -0.02). If metric invariance held, we rejected scalar invariance if the $\chi^2$ difference between the metric and scalar model was statistically significant, and at least one alternative ﬁt measure between the metric and scalar step was above specific cutoff values (i.e., $\Delta$RMSEA $>$ 0.01, $\Delta$CFI $<$ -0.01)
+
+\vspace{12pt}
+
+\centerline{\textbf{Results}}
+
+For each article, we indicated the number of studies, and within each study, we indicated the number of comparisons made between groups and time points. Five studies were excluded because they did not collect any human data (e.g., simulation or animal studies), whereas 27 studies were ineligible because they did not compare any groups. Additionally, 48 studies were excluded because they did not measure any scale. Lastly, one study was excluded because it measured a scale but did not assume any latent trait underlying the item scores. Consequently, 18 articles were left, containing 36 comparisons in which groups or time points were compared on a scale assuming an underlying latent variable.
+
+Out of the 36 comparisons, only four comparisons (across two articles) mentioned measurement invariance, of which one comparison included a test of measurement invariance. This study reported that metric invariance held in their sample. We attempted to reproduce the results for the comparison that tested measurement invariance and also attempted to test measurement invariance for the other 35 comparisons. We were not able to reproduce the results of the one study that tested measurement invariance.
+
+Although all selected articles indicated data sharing, we were only able to access the data for 30 out of 36 comparisons. Out of these 30 data sets, 15 provided usable and interpretable data, which included clearly named variables, sufficient details for group construction, and identifiable items to construct scales based on the information in the articles.
+
+Overall, we managed to conduct measurement invariance tests for 15 out of the 36 comparisons. Of these, four models failed to converge, while the remaining 11 did not meet any level of measurement invariance (i.e., configural non-invariance).
+
+\vspace{12pt}
+
+\centerline{\textbf{Discussion}}
+
+We found that one third of the articles in our sample of psychology articles used scales to compare groups or time points. However, only a small fraction of these articles reported on measurement invariance, and out of those articles, only one included a test for measurement invariance. In this case, the level of invariance was insufficient for valid mean comparisons between groups. Based on our pilot study, we concluded that authors do not often assess or report on measurement invariance in psychological articles.
+
+Our findings indicate that testing for measurement invariance is feasible using the information and data shared in manuscripts. However, this requires that the data be easily accessible, compatible with non-proprietary software, and clearly defined, with variable meanings made explicit. The data sets must at least contain item scores and grouping variables. Furthermore, authors must clearly document their data preprocessing steps, including any exclusion criteria and handling of missing data.
+
+\vspace{12pt}
+
+\centerline{\textbf{Changes from the pilot study to the main study}}
+
+From the three journals assessed in our pilot study, we selected only PLOS ONE and Psychological Science for the main study. We excluded JDM because it contained fewer studies comparing scales across groups or over time, and our aim was to focus on journals encompassing broader psychological research.
+
+We encountered a significant number of articles that did not meet our first criterion (i.e., an empirical study comparing outcomes across groups or time) or had inaccessible data, resulting in their exclusion from the pilot study. Thus, for the main study, we decided to limit our sample to only open data articles, rather than comparing them with those that do not share their data. By only focusing on articles that share their data, we have access to a larger sample to investigate both measurement invariance reporting and reproducibility.
+
+In our pilot study, we attempted to identify principal outcomes that compared scales between groups or over time. However, it was challenging to decide and agree on which tests or outcomes constituted principal outcomes in the articles. Therefore, for our main study, we decided to include all outcomes in an article (excluding supplemental material) that compared a scale over groups or time.
+
+Because our pilot sample was small, we tested for measurement invariance across all scales compared between groups and time. However, we noted that some studies may be underpowered and a measurement invariance test is not feasible. Therefore, in our main study, we will only run measurement invariance tests for those studies we deem to have enough statistical power to ﬁnd measurement non-invariance.
+
+We decided to modify the RMSEA and CFI cutoff criteria to reject metric measurement invariance in the main study. In the pilot study we adhered to cutoffs by @rutkowski2013, which are suitable for comparisons of more than 10 groups. For our main study, we will adhere to cutoffs by @chen2007 and @cheung2002, as they performed simulation studies with two groups, which is more applicable to our sample. We will also supplement the RMSEA and CFI criteria with two information criteria (AIC and BIC) to more accurately assess measurement invariance, given the varying performance of fit measures and cutoffs across conditions [@putnick2016].
+
+\newpage
+\centerline{References}
+\setlength{\parindent}{-0.2in}
+\setlength{\leftskip}{0.2in}
+\setlength{\parskip}{8pt}
+\noindent

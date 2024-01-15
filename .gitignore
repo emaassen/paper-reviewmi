@@ -7,7 +7,6 @@
 /submission/notes.txt
 /supplemental-materials/Addendum C.docx
 
-*.Rmd
 *.Rproj
 *.DS_Store
 *.rar
