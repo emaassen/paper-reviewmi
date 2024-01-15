@@ -46,7 +46,7 @@ Below is a description of the main components of this repository.
 -	0a-pilot-sample-articles.R  
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;R script used to sample articles to analyze for the pilot.
 -	0b-pilot-mi-tests.zip  
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Zip file with individual R scripts used to test for measurement invariance in the articles from the pilot study.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Zip file with individual R scripts used to MI test the articles from the pilot study.
 -	0c-pilot-analyses.R  
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;R script for the analysis of results in the pilot study.
 -	1a-sample-articles.R  
