@@ -42,9 +42,9 @@ Below is a description of the main components of this repository.
 -	0-example-mi-test.R  
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;R script demonstrating a sample measurement invariance test.
 -	0-example-simulation.R  
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;R script with simulation code to determine whether a scale mean comparison has enough statistical power to identify a moderate degree of scalar measurement noninvariance.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;R script to determine if a comparison has enough statistical power to identify a moderate degree of scalar measurement noninvariance.
 -	0a-pilot-sample-articles.R  
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;R script used to sample articles to analyze for the pilot study.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;R script used to sample articles to analyze for the pilot.
 -	0b-pilot-mi-tests.zip  
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Zip file with individual R scripts used to test for measurement invariance in the articles from the pilot study.
 -	0c-pilot-analyses.R  
@@ -68,11 +68,11 @@ Below is a description of the main components of this repository.
 -	article-index/article-index-pilot.txt  
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text file with indices referring to studies in journals to sample for the pilot study. 
 -	article-index/sample-edd.txt  
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text file with indices and dois for studies in Step 1. This is the order in which author E.D.D. coded the studies.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text file with indices for studies in Step 1 in the order in which author E.D.D. coded the studies.
 -	article-index/sample-em.txt  
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text file with indices and dois for studies in Step 1. This is the order in which author E.M. coded the studies.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text file with indices for studies in Step 1 in the order in which author E.M. coded the studies.
 -	article-index/sample-ps.txt  
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text file with indices and dois for studies from Psychological Science, used in Step 1.
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text file with indices for studies from Psychological Science, used in Step 1.
 -	codebook-main-step1.xlsx   
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Codebook of Step 1.
 -	codebook-main-step2step3-sample-without-results.xlsx  
