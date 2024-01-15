@@ -5,6 +5,7 @@
 /submission/pm_review_2/
 /submission/pm_submission
 /submission/notes.txt
+/supplemental-materials/Addendum C.docx
 
 *.Rmd
 *.Rproj
@@ -12,9 +13,6 @@
 *.rar
 *.Rhistory
 *.Rdata
-*.bib
-*.docx
-*.csl
 *.aux
 *.bbl
 *.bcf
